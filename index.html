@@ -1,0 +1,1276 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="format-detection" content="telephone=no">
+  <title>Netflix Style Video App</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <style>
+    /* Reinicio básico */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background-color: #000000;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      overscroll-behavior: contain;
+      color: #ffffff;
+      position: relative;
+    }
+
+    /* Header estilo Twitter */
+    .header {
+      width: 100%;
+      padding: 12px 16px;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 0.5px solid #333639;
+      position: sticky;
+      top: 0;
+      z-index: 900;
+    }
+
+    .search-container {
+      position: relative;
+      max-width: 500px;
+      margin: 0 auto;
+    }
+
+    .search-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+      background: #202327;
+      border-radius: 50px;
+      border: 1px solid #333639;
+      transition: all 0.2s ease;
+    }
+
+    .search-wrapper:focus-within {
+      background: #000000;
+      border-color: #1d9bf0;
+      box-shadow: 0 0 0 1px #1d9bf0;
+    }
+
+    .search-icon {
+      padding: 0 16px;
+      color: #71767b;
+      font-size: 18px;
+    }
+
+    .search-wrapper:focus-within .search-icon {
+      color: #1d9bf0;
+    }
+
+    .header input {
+      flex: 1;
+      padding: 12px 0;
+      border: none;
+      background: transparent;
+      color: #ffffff;
+      font-size: 15px;
+      outline: none;
+      border-radius: 50px;
+    }
+
+    .header input::placeholder {
+      color: #71767b;
+    }
+
+    .search-btn {
+      background: transparent;
+      border: none;
+      color: #71767b;
+      padding: 8px 16px;
+      cursor: pointer;
+      border-radius: 50px;
+      transition: all 0.2s ease;
+    }
+
+    .search-btn:hover {
+      background: rgba(29, 155, 240, 0.1);
+      color: #1d9bf0;
+    }
+
+    /* Contenedor principal estilo Netflix */
+    .app-container {
+      min-height: calc(100vh - 80px);
+      width: 100%;
+      background: #000000;
+      padding-bottom: 80px;
+    }
+
+    /* Banner principal estilo Netflix */
+    .hero-banner {
+      position: relative;
+      height: 60vh;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1920') center/cover;
+      display: flex;
+      align-items: flex-end;
+      padding: 40px 16px;
+    }
+
+    .hero-content {
+      max-width: 500px;
+    }
+
+    .hero-title {
+      font-size: 48px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    }
+
+    .hero-description {
+      font-size: 18px;
+      line-height: 1.4;
+      margin-bottom: 24px;
+      color: #e7e9ea;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    }
+
+    .hero-buttons {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .hero-btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .hero-btn.primary {
+      background: #1d9bf0;
+      color: #ffffff;
+    }
+
+    .hero-btn.primary:hover {
+      background: #1a8cd8;
+      transform: translateY(-1px);
+    }
+
+    .hero-btn.secondary {
+      background: rgba(255,255,255,0.2);
+      color: #ffffff;
+      backdrop-filter: blur(12px);
+    }
+
+    .hero-btn.secondary:hover {
+      background: rgba(255,255,255,0.3);
+    }
+
+    /* Secciones de carruseles */
+    .content-sections {
+      padding: 40px 0;
+    }
+
+    .section {
+      margin-bottom: 40px;
+    }
+
+    .section-title {
+      font-size: 24px;
+      font-weight: 800;
+      margin-bottom: 16px;
+      padding: 0 16px;
+      color: #ffffff;
+    }
+
+    .carousel-container {
+      position: relative;
+      overflow: hidden;
+    }
+
+    .carousel {
+      display: flex;
+      gap: 12px;
+      padding: 0 16px;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+
+    .carousel::-webkit-scrollbar {
+      display: none;
+    }
+
+    .carousel-item {
+      flex-shrink: 0;
+      width: 280px;
+      height: 160px;
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      position: relative;
+      background: #202327;
+    }
+
+    .carousel-item:hover {
+      transform: scale(1.05);
+      box-shadow: 0 8px 32px rgba(29, 155, 240, 0.3);
+    }
+
+    .carousel-item img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .carousel-item-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.8));
+      padding: 16px;
+      color: #ffffff;
+    }
+
+    .carousel-item-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .carousel-item-info {
+      font-size: 12px;
+      color: #71767b;
+    }
+
+    /* Vista expandida de serie */
+    .series-detail {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #000000;
+      z-index: 3000;
+      display: none;
+      overflow-y: auto;
+    }
+
+    .series-detail.active {
+      display: block;
+    }
+
+    .series-detail-header {
+      position: relative;
+      height: 50vh;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url('') center/cover;
+      display: flex;
+      align-items: flex-end;
+      padding: 40px 16px;
+    }
+
+    .series-close-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      background: rgba(0,0,0,0.75);
+      border: none;
+      color: #ffffff;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(12px);
+    }
+
+    .series-close-btn:hover {
+      background: rgba(255,255,255,0.2);
+      transform: scale(1.1);
+    }
+
+    .series-detail-content {
+      max-width: 500px;
+    }
+
+    .series-detail-title {
+      font-size: 36px;
+      font-weight: 800;
+      margin-bottom: 12px;
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+    }
+
+    .series-detail-meta {
+      display: flex;
+      gap: 16px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      color: #71767b;
+    }
+
+    .series-detail-description {
+      font-size: 16px;
+      line-height: 1.5;
+      color: #e7e9ea;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+    }
+
+    .series-actions {
+      padding: 24px 16px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .series-btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 50px;
+      font-weight: 700;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .series-btn.primary {
+      background: #1d9bf0;
+      color: #ffffff;
+    }
+
+    .series-btn.secondary {
+      background: transparent;
+      color: #ffffff;
+      border: 1px solid #333639;
+    }
+
+    .series-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    /* Lista de episodios */
+    .episodes-section {
+      padding: 0 16px 40px 16px;
+    }
+
+    .episodes-title {
+      font-size: 20px;
+      font-weight: 800;
+      margin-bottom: 20px;
+      color: #ffffff;
+    }
+
+    .episode-item {
+      display: flex;
+      gap: 16px;
+      padding: 16px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      background: #202327;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      border: 1px solid #333639;
+    }
+
+    .episode-item:hover {
+      background: #333639;
+      border-color: #1d9bf0;
+      transform: translateY(-1px);
+    }
+
+    .episode-thumbnail {
+      width: 120px;
+      height: 68px;
+      border-radius: 8px;
+      overflow: hidden;
+      flex-shrink: 0;
+      background: #71767b;
+      position: relative;
+    }
+
+    .episode-thumbnail img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .episode-play-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(29, 155, 240, 0.9);
+      border-radius: 50%;
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 12px;
+    }
+
+    .episode-info {
+      flex: 1;
+    }
+
+    .episode-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+
+    .episode-number {
+      font-size: 14px;
+      color: #71767b;
+      font-weight: 600;
+    }
+
+    .episode-duration {
+      font-size: 12px;
+      color: #71767b;
+    }
+
+    .episode-title {
+      font-size: 16px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      color: #ffffff;
+    }
+
+    .episode-description {
+      font-size: 14px;
+      color: #71767b;
+      line-height: 1.4;
+    }
+
+    /* Reproductor de video mejorado */
+    .video-player {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #000000;
+      z-index: 4000;
+      display: none;
+    }
+
+    .video-player.active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .video-player-container {
+      flex: 1;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .video-player video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      pointer-events: none;
+    }
+
+    /* Ocultar controles nativos */
+    .video-player video::-webkit-media-controls,
+    .video-player video::-webkit-media-controls-enclosure,
+    .video-player video::-webkit-media-controls-panel,
+    .video-player video::-webkit-media-controls-play-button,
+    .video-player video::-webkit-media-controls-start-playback-button,
+    .video-player video::-webkit-media-controls-timeline-container,
+    .video-player video::-webkit-media-controls-current-time-display,
+    .video-player video::-webkit-media-controls-time-remaining-display,
+    .video-player video::-webkit-media-controls-timeline,
+    .video-player video::-webkit-media-controls-volume-slider-container,
+    .video-player video::-webkit-media-controls-volume-slider,
+    .video-player video::-webkit-media-controls-mute-button,
+    .video-player video::-webkit-media-controls-fullscreen-button,
+    .video-player video::-webkit-media-controls-rewind-button,
+    .video-player video::-webkit-media-controls-return-to-realtime-button,
+    .video-player video::-webkit-media-controls-toggle-closed-captions-button {
+      display: none !important;
+      -webkit-appearance: none !important;
+    }
+
+    .video-player-header {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(rgba(0,0,0,0.8), transparent);
+      padding: 20px 16px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      z-index: 10;
+    }
+
+    .video-player-title {
+      color: #ffffff;
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .video-player-close {
+      background: rgba(255,255,255,0.2);
+      border: none;
+      color: #ffffff;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      cursor: pointer;
+      backdrop-filter: blur(12px);
+    }
+
+    .video-player-controls {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(transparent, rgba(0,0,0,0.8));
+      padding: 40px 16px 20px 16px;
+      z-index: 10;
+    }
+
+    .video-progress-container {
+      margin-bottom: 20px;
+    }
+
+    .video-progress {
+      width: 100%;
+      height: 4px;
+      background: rgba(113, 118, 123, 0.3);
+      border-radius: 2px;
+      overflow: hidden;
+      cursor: pointer;
+    }
+
+    .video-progress-fill {
+      height: 100%;
+      background: #1d9bf0;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    .video-controls-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .video-controls-left {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .video-controls-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .video-control-btn {
+      background: transparent;
+      border: none;
+      color: #ffffff;
+      font-size: 20px;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 50%;
+      transition: all 0.2s ease;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .video-control-btn:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .video-control-btn.play-pause {
+      font-size: 24px;
+    }
+
+    .video-time {
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    /* Indicador de pausa */
+    .pause-indicator {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      color: #ffffff;
+      font-size: 64px;
+      opacity: 0;
+      transition: all 0.3s ease;
+      background: rgba(0, 0, 0, 0.75);
+      backdrop-filter: blur(12px);
+      border-radius: 50%;
+      width: 96px;
+      height: 96px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 20;
+    }
+
+    .pause-indicator.visible {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+    }
+
+    /* Barra de navegación inferior */
+    .bottom-nav {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: rgba(0, 0, 0, 0.85);
+      backdrop-filter: blur(12px);
+      border-top: 0.5px solid #333639;
+      display: flex;
+      justify-content: space-around;
+      padding: 12px 0;
+      z-index: 1000;
+    }
+
+    .bottom-nav button {
+      background: none;
+      border: none;
+      color: #71767b;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      padding: 8px 16px;
+      border-radius: 50px;
+      transition: all 0.2s ease;
+      min-width: 80px;
+    }
+
+    .bottom-nav button:hover,
+    .bottom-nav button.active {
+      color: #1d9bf0;
+      background: rgba(29, 155, 240, 0.1);
+    }
+
+    .bottom-nav button i {
+      font-size: 24px;
+      margin-bottom: 4px;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .hero-title {
+        font-size: 32px;
+      }
+
+      .carousel-item {
+        width: 200px;
+        height: 112px;
+      }
+
+      .series-detail-title {
+        font-size: 28px;
+      }
+
+      .episode-thumbnail {
+        width: 80px;
+        height: 45px;
+      }
+    }
+
+    .hidden {
+      display: none;
+    }
+    .spinner {
+      margin-left: 8px;
+      color: #1d9bf0;
+    }
+  </style>
+</head>
+<body>
+  <!-- Header de búsqueda -->
+  <header class="header">
+    <div class="search-container">
+      <div class="search-wrapper">
+        <div class="search-icon">
+          <i class="fas fa-search"></i>
+        </div>
+        <input type="text" id="searchInput" placeholder="Buscar series y películas">
+        <button class="search-btn" id="searchBtn">
+          <i class="fas fa-arrow-right"></i>
+        </button>
+        <div id="searchSpinner" class="spinner hidden">
+          <i class="fas fa-spinner fa-spin"></i>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Sección principal -->
+  <div id="homeSection" class="app-container">
+    <!-- Banner principal -->
+    <div class="hero-banner" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1920');">
+      <div class="hero-content">
+        <h1 class="hero-title">Inuyasha</h1>
+        <p class="hero-description">Un medio demonio y una estudiante de secundaria se embarcan en una aventura épica para recolectar los fragmentos de la Perla de Shikon.</p>
+        <div class="hero-buttons">
+          <button class="hero-btn primary" onclick="playTrailer()">
+            <i class="fas fa-play"></i>
+            Ver Trailer
+          </button>
+          <button class="hero-btn secondary" onclick="showSeriesDetail('inuyasha')">
+            <i class="fas fa-info-circle"></i>
+            Más Info
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Secciones de contenido -->
+    <div class="content-sections">
+      <!-- Series destacadas -->
+      <div class="section">
+        <h2 class="section-title">Series Destacadas</h2>
+        <div class="carousel-container">
+          <div class="carousel" id="featuredCarousel">
+            <div class="carousel-item" onclick="showSeriesDetail('inuyasha')">
+              <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400" alt="Inuyasha">
+              <div class="carousel-item-overlay">
+                <div class="carousel-item-title">Inuyasha</div>
+                <div class="carousel-item-info">2000 • Anime • Aventura</div>
+              </div>
+            </div>
+            <div class="carousel-item" onclick="showSeriesDetail('sample1')">
+              <img src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400" alt="Serie Ejemplo">
+              <div class="carousel-item-overlay">
+                <div class="carousel-item-title">Aventura Épica</div>
+                <div class="carousel-item-info">2023 • Acción • Drama</div>
+              </div>
+            </div>
+            <div class="carousel-item" onclick="showSeriesDetail('sample2')">
+              <img src="https://images.unsplash.com/photo-1489599762810-b857f95eb5f1?w=400" alt="Serie Ejemplo 2">
+              <div class="carousel-item-overlay">
+                <div class="carousel-item-title">Mundo Fantástico</div>
+                <div class="carousel-item-info">2023 • Fantasía • Aventura</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tendencias -->
+      <div class="section">
+        <h2 class="section-title">Tendencias</h2>
+        <div class="carousel-container">
+          <div class="carousel" id="trendingCarousel">
+            <div class="carousel-item" onclick="showSeriesDetail('inuyasha')">
+              <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400" alt="Inuyasha">
+              <div class="carousel-item-overlay">
+                <div class="carousel-item-title">Inuyasha</div>
+                <div class="carousel-item-info">Temporada 1</div>
+              </div>
+            </div>
+            <div class="carousel-item" onclick="showSeriesDetail('sample3')">
+              <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400" alt="Serie Trending">
+              <div class="carousel-item-overlay">
+                <div class="carousel-item-title">Serie Popular</div>
+                <div class="carousel-item-info">2023 • Romance</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Anime -->
+      <div class="section">
+        <h2 class="section-title">Anime</h2>
+        <div class="carousel-container">
+          <div class="carousel" id="animeCarousel">
+            <div class="carousel-item" onclick="showSeriesDetail('inuyasha')">
+              <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400" alt="Inuyasha">
+              <div class="carousel-item-overlay">
+                <div class="carousel-item-title">Inuyasha</div>
+                <div class="carousel-item-info">167 episodios</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Vista detallada de serie -->
+  <div id="seriesDetail" class="series-detail">
+    <div class="series-detail-header" id="seriesDetailHeader">
+      <button class="series-close-btn" onclick="closeSeriesDetail()">
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="series-detail-content">
+        <h1 class="series-detail-title" id="seriesDetailTitle">Inuyasha</h1>
+        <div class="series-detail-meta">
+          <span>2000</span>
+          <span>167 episodios</span>
+          <span>Anime</span>
+          <span>16+</span>
+        </div>
+        <p class="series-detail-description" id="seriesDetailDescription">
+          Un medio demonio y una estudiante de secundaria viajan por el Japón feudal en busca de los fragmentos de la Perla de Shikon, enfrentándose a demonios y descubriendo secretos del pasado.
+        </p>
+      </div>
+    </div>
+
+    <div class="series-actions">
+      <button class="series-btn primary" onclick="playEpisode(1, 1)">
+        <i class="fas fa-play"></i>
+        Reproducir
+      </button>
+      <button class="series-btn secondary" onclick="playTrailer()">
+        <i class="fas fa-film"></i>
+        Trailer
+      </button>
+    </div>
+
+    <div class="episodes-section">
+      <h3 class="episodes-title">Episodios - Temporada 1</h3>
+      <div id="episodesList">
+        <!-- Los episodios se cargarán dinámicamente -->
+      </div>
+    </div>
+  </div>
+
+  <!-- Reproductor de video -->
+  <div id="videoPlayer" class="video-player">
+    <div class="video-player-container">
+      <div class="video-player-header">
+        <div class="video-player-title" id="videoPlayerTitle">Reproduciendo...</div>
+        <button class="video-player-close" onclick="closeVideoPlayer()">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <video id="videoElement" 
+             playsinline
+             webkit-playsinline
+             x5-playsinline
+             preload="metadata">
+      </video>
+
+      <div class="pause-indicator" id="pauseIndicator">
+        <i class="fas fa-pause"></i>
+      </div>
+
+      <div class="video-player-controls">
+        <div class="video-progress-container">
+          <div class="video-progress" id="videoProgress">
+            <div class="video-progress-fill" id="videoProgressFill"></div>
+          </div>
+        </div>
+        <div class="video-controls-row">
+          <div class="video-controls-left">
+            <button class="video-control-btn play-pause" id="playPauseBtn" onclick="togglePlayPause()">
+              <i class="fas fa-play"></i>
+            </button>
+            <button class="video-control-btn" onclick="rewind()">
+              <i class="fas fa-backward"></i>
+            </button>
+            <button class="video-control-btn" onclick="forward()">
+              <i class="fas fa-forward"></i>
+            </button>
+            <div class="video-time">
+              <span id="currentTime">0:00</span> / <span id="duration">0:00</span>
+            </div>
+          </div>
+          <div class="video-controls-right">
+            <button class="video-control-btn" id="volumeBtn" onclick="toggleMute()">
+              <i class="fas fa-volume-up"></i>
+            </button>
+            <button class="video-control-btn" onclick="toggleSubtitles()">
+              <i class="fas fa-closed-captioning"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Navegación inferior -->
+  <nav class="bottom-nav">
+    <button id="navHome" class="active">
+      <i class="fas fa-home"></i>
+      <span>Inicio</span>
+    </button>
+    <button id="navSearch">
+      <i class="fas fa-search"></i>
+      <span>Buscar</span>
+    </button>
+    <button id="navProfile">
+      <i class="fas fa-user"></i>
+      <span>Perfil</span>
+    </button>
+  </nav>
+
+  <script>
+    // Base de datos de series y episodios
+    const seriesDatabase = {
+      inuyasha: {
+        id: 'inuyasha',
+        title: 'Inuyasha',
+        year: '2000',
+        genre: 'Anime, Aventura, Romance',
+        rating: '16+',
+        description: 'Un medio demonio y una estudiante de secundaria viajan por el Japón feudal en busca de los fragmentos de la Perla de Shikon, enfrentándose a demonios y descubriendo secretos del pasado.',
+        poster: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1920',
+        trailer: 'https://limewire.com/d/r2JU7#5jtPIbfULj',
+        episodes: [
+          {
+            id: 1,
+            title: 'La Chica que Viajó en el Tiempo y el Chico que Fue Sellado',
+            description: 'Kagome, una estudiante de secundaria, es transportada al Japón feudal donde conoce a Inuyasha, un medio demonio sellado a un árbol.',
+            duration: '24:30',
+            thumbnail: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400',
+            videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+          },
+          {
+            id: 2,
+            title: 'Los Guerreros Buscadores de la Perla de Shikon',
+            description: 'Inuyasha y Kagome comienzan su búsqueda de los fragmentos de la Perla de Shikon.',
+            duration: '24:15',
+            thumbnail: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400',
+            videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
+          },
+          {
+            id: 3,
+            title: 'Hueso que Devora!',
+            description: 'El grupo se enfrenta a un demonio que devora huesos humanos.',
+            duration: '24:45',
+            thumbnail: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400',
+            videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4'
+          }
+        ]
+      }
+    };
+
+    // Variables globales
+    let currentSeries = null;
+    let currentVideo = null;
+    let progressUpdateInterval = null;
+
+    // Elementos del DOM
+    const videoPlayer = document.getElementById('videoPlayer');
+    const videoElement = document.getElementById('videoElement');
+    const videoPlayerTitle = document.getElementById('videoPlayerTitle');
+    const playPauseBtn = document.getElementById('playPauseBtn');
+    const pauseIndicator = document.getElementById('pauseIndicator');
+    const videoProgressFill = document.getElementById('videoProgressFill');
+    const currentTimeElement = document.getElementById('currentTime');
+    const durationElement = document.getElementById('duration');
+    const volumeBtn = document.getElementById('volumeBtn');
+
+    // Función para mostrar detalles de serie
+    function showSeriesDetail(seriesId) {
+      const series = seriesDatabase[seriesId];
+      if (!series) return;
+
+      currentSeries = series;
+
+      // Actualizar contenido
+      document.getElementById('seriesDetailTitle').textContent = series.title;
+      document.getElementById('seriesDetailDescription').textContent = series.description;
+      document.getElementById('seriesDetailHeader').style.backgroundImage = 
+        `linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url('${series.poster}')`;
+
+      // Cargar episodios
+      loadEpisodes(series.episodes);
+
+      // Mostrar vista detallada
+      document.getElementById('seriesDetail').classList.add('active');
+    }
+
+    // Función para cerrar detalles de serie
+    function closeSeriesDetail() {
+      document.getElementById('seriesDetail').classList.remove('active');
+      currentSeries = null;
+    }
+
+    // Función para cargar episodios
+    function loadEpisodes(episodes) {
+      const episodesList = document.getElementById('episodesList');
+      episodesList.innerHTML = '';
+
+      episodes.forEach(episode => {
+        const episodeElement = document.createElement('div');
+        episodeElement.className = 'episode-item';
+        episodeElement.onclick = () => playEpisode(1, episode.id);
+
+        episodeElement.innerHTML = `
+          <div class="episode-thumbnail">
+            <img src="${episode.thumbnail}" alt="${episode.title}">
+            <div class="episode-play-overlay">
+              <i class="fas fa-play"></i>
+            </div>
+          </div>
+          <div class="episode-info">
+            <div class="episode-header">
+              <span class="episode-number">${episode.id}. ${episode.title}</span>
+              <span class="episode-duration">${episode.duration}</span>
+            </div>
+            <div class="episode-description">${episode.description}</div>
+          </div>
+        `;
+
+        episodesList.appendChild(episodeElement);
+      });
+    }
+
+    // Función para reproducir episodio
+    function playEpisode(season, episodeId) {
+      if (!currentSeries) return;
+
+      const episode = currentSeries.episodes.find(ep => ep.id === episodeId);
+      if (!episode) return;
+
+      currentVideo = episode;
+
+      // Configurar video
+      videoElement.src = episode.videoUrl;
+      videoPlayerTitle.textContent = `${currentSeries.title} - ${episode.title}`;
+
+      // Configurar video para iOS
+      videoElement.controls = false;
+      videoElement.setAttribute('controls', 'false');
+      videoElement.setAttribute('playsinline', 'true');
+      videoElement.setAttribute('webkit-playsinline', 'true');
+      videoElement.setAttribute('x5-playsinline', 'true');
+      videoElement.muted = false;
+
+      // Mostrar reproductor
+      videoPlayer.classList.add('active');
+
+      // Reproducir video
+      videoElement.play().catch(e => console.log('Play prevented:', e));
+
+      // Iniciar actualización de progreso
+      startProgressUpdate();
+
+      // Event listeners del video
+      videoElement.addEventListener('loadedmetadata', updateDuration);
+      videoElement.addEventListener('play', () => {
+        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        pauseIndicator.classList.remove('visible');
+      });
+      videoElement.addEventListener('pause', () => {
+        playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+        pauseIndicator.classList.add('visible');
+      });
+    }
+
+    // Función para reproducir trailer
+    function playTrailer() {
+      // Crear objeto de trailer para reproducir en el reproductor integrado
+      const trailerVideo = {
+        id: 'trailer',
+        title: 'Trailer Oficial',
+        description: 'Trailer oficial de la serie',
+        duration: '2:30',
+        thumbnail: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400',
+        videoUrl: '3139741268393071007.mp4'
+      };
+
+      currentVideo = trailerVideo;
+
+      // Configurar video
+      videoElement.src = trailerVideo.videoUrl;
+      videoPlayerTitle.textContent = `${currentSeries ? currentSeries.title : 'Trailer'} - ${trailerVideo.title}`;
+
+      // Configurar video para iOS
+      videoElement.controls = false;
+      videoElement.setAttribute('controls', 'false');
+      videoElement.setAttribute('playsinline', 'true');
+      videoElement.setAttribute('webkit-playsinline', 'true');
+      videoElement.setAttribute('x5-playsinline', 'true');
+      videoElement.muted = false;
+
+      // Mostrar reproductor
+      videoPlayer.classList.add('active');
+
+      // Reproducir video
+      videoElement.play().catch(e => console.log('Play prevented:', e));
+
+      // Iniciar actualización de progreso
+      startProgressUpdate();
+
+      // Event listeners del video
+      videoElement.addEventListener('loadedmetadata', updateDuration);
+      videoElement.addEventListener('play', () => {
+        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        pauseIndicator.classList.remove('visible');
+      });
+      videoElement.addEventListener('pause', () => {
+        playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+        pauseIndicator.classList.add('visible');
+      });
+    }
+
+    // Función para cerrar reproductor
+    function closeVideoPlayer() {
+      videoPlayer.classList.remove('active');
+      videoElement.pause();
+      videoElement.src = '';
+      clearInterval(progressUpdateInterval);
+      currentVideo = null;
+    }
+
+    // Controles del reproductor
+    function togglePlayPause() {
+      if (videoElement.paused) {
+        videoElement.play();
+      } else {
+        videoElement.pause();
+      }
+    }
+
+    function rewind() {
+      videoElement.currentTime = Math.max(0, videoElement.currentTime - 10);
+    }
+
+    function forward() {
+      videoElement.currentTime = Math.min(videoElement.duration, videoElement.currentTime + 10);
+    }
+
+    function toggleMute() {
+      if (videoElement.muted || videoElement.volume === 0) {
+        videoElement.muted = false;
+        videoElement.volume = 1.0;
+        volumeBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+      } else {
+        videoElement.muted = true;
+        volumeBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+      }
+    }
+
+    function toggleSubtitles() {
+      // Implementar función de subtítulos
+      console.log('Subtítulos toggled');
+    }
+
+    // Función para actualizar progreso
+    function startProgressUpdate() {
+      clearInterval(progressUpdateInterval);
+      progressUpdateInterval = setInterval(() => {
+        if (videoElement.duration) {
+          const progress = (videoElement.currentTime / videoElement.duration) * 100;
+          videoProgressFill.style.width = `${progress}%`;
+          updateCurrentTime();
+        }
+      }, 100);
+    }
+
+    function updateDuration() {
+      const duration = formatTime(videoElement.duration);
+      durationElement.textContent = duration;
+    }
+
+    function updateCurrentTime() {
+      const current = formatTime(videoElement.currentTime);
+      currentTimeElement.textContent = current;
+    }
+
+    function formatTime(seconds) {
+      const mins = Math.floor(seconds / 60);
+      const secs = Math.floor(seconds % 60);
+      return `${mins}:${secs.toString().padStart(2, '0')}`;
+    }
+
+    // Event listeners para la barra de progreso
+    document.getElementById('videoProgress').addEventListener('click', (e) => {
+      const rect = e.target.getBoundingClientRect();
+      const clickX = e.clientX - rect.left;
+      const width = rect.width;
+      const percentage = clickX / width;
+      videoElement.currentTime = percentage * videoElement.duration;
+    });
+
+    // Event listeners para toques en el video (play/pause)
+    videoElement.addEventListener('click', togglePlayPause);
+
+    // Prevenir comportamientos nativos de iOS
+    videoElement.addEventListener('webkitbeginfullscreen', (e) => {
+      e.preventDefault();
+      return false;
+    });
+
+    videoElement.addEventListener('webkitendfullscreen', (e) => {
+      e.preventDefault();
+      return false;
+    });
+
+    // Prevenir contexto de menú
+    videoElement.addEventListener('contextmenu', (e) => {
+      e.preventDefault();
+      return false;
+    });
+
+    // Búsqueda
+    document.getElementById('searchBtn').addEventListener('click', () => {
+      const query = document.getElementById('searchInput').value.trim();
+      if (query) {
+        console.log('Buscando:', query);
+        // Implementar lógica de búsqueda
+      }
+    });
+
+    // Navegación inferior
+    document.querySelectorAll('.bottom-nav button').forEach(button => {
+      button.addEventListener('click', () => {
+        document.querySelectorAll('.bottom-nav button').forEach(btn => 
+          btn.classList.remove('active')
+        );
+        button.classList.add('active');
+      });
+    });
+
+    // Inicialización
+    document.addEventListener('DOMContentLoaded', () => {
+      console.log('Netflix-style app loaded');
+    });
+  </script>
+</body>
+</html>
