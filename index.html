@@ -254,6 +254,34 @@
       color: #71767b;
     }
 
+    /* Etiqueta animada para películas */
+    .movie-badge {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background: linear-gradient(45deg, #ff6b6b, #ff8e53);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      animation: moviePulse 2s ease-in-out infinite;
+      box-shadow: 0 2px 8px rgba(255, 107, 107, 0.4);
+      z-index: 10;
+    }
+
+    @keyframes moviePulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 2px 8px rgba(255, 107, 107, 0.4);
+      }
+      50% {
+        transform: scale(1.05);
+        box-shadow: 0 4px 16px rgba(255, 107, 107, 0.6);
+      }
+    }
+
     /* Vista expandida de serie */
     .series-detail {
       position: fixed;
@@ -723,6 +751,191 @@
       margin-left: 8px;
       color: #1d9bf0;
     }
+
+    /* Sección de búsqueda */
+    .search-section {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #000000;
+      z-index: 2000;
+      display: none;
+      overflow-y: auto;
+      padding-top: 80px;
+    }
+
+    .search-section.active {
+      display: block;
+    }
+
+    .search-results-header {
+      padding: 20px 16px;
+      border-bottom: 1px solid #333639;
+    }
+
+    .search-results-title {
+      font-size: 24px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .search-results-count {
+      font-size: 14px;
+      color: #71767b;
+    }
+
+    .search-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 16px;
+      text-align: center;
+    }
+
+    .search-loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(29, 155, 240, 0.2);
+      border-top: 3px solid #1d9bf0;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 16px;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .search-loading-text {
+      color: #71767b;
+      font-size: 16px;
+    }
+
+    .search-results-grid {
+      padding: 20px 16px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .search-result-item {
+      background: #202327;
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 1px solid #333639;
+      position: relative;
+    }
+
+    .search-result-item:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(29, 155, 240, 0.3);
+      border-color: #1d9bf0;
+    }
+
+    .search-result-poster {
+      width: 100%;
+      height: 200px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .search-result-poster img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .search-result-content {
+      padding: 16px;
+    }
+
+    .search-result-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 8px;
+      line-height: 1.3;
+    }
+
+    .search-result-meta {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 12px;
+      font-size: 12px;
+      color: #71767b;
+      flex-wrap: wrap;
+    }
+
+    .search-result-description {
+      font-size: 14px;
+      color: #71767b;
+      line-height: 1.4;
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+
+    .search-no-results {
+      text-align: center;
+      padding: 60px 16px;
+      color: #71767b;
+    }
+
+    .search-no-results i {
+      font-size: 48px;
+      margin-bottom: 16px;
+      display: block;
+    }
+
+    .search-no-results h3 {
+      font-size: 20px;
+      margin-bottom: 8px;
+      color: #ffffff;
+    }
+
+    .search-close-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(0,0,0,0.75);
+      border: none;
+      color: #ffffff;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(12px);
+      z-index: 10;
+    }
+
+    .search-close-btn:hover {
+      background: rgba(255,255,255,0.2);
+      transform: scale(1.1);
+    }
+
+    @media (max-width: 768px) {
+      .search-results-grid {
+        grid-template-columns: 1fr;
+        gap: 16px;
+      }
+
+      .search-result-poster {
+        height: 160px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -785,11 +998,12 @@
                 <div class="carousel-item-info">2023 • Acción • Drama</div>
               </div>
             </div>
-            <div class="carousel-item" onclick="showSeriesDetail('sample2')">
-              <img src="https://images.unsplash.com/photo-1489599762810-b857f95eb5f1?w=400" alt="Serie Ejemplo 2">
+            <div class="carousel-item" onclick="showSeriesDetail('dontlookaway')">
+              <img src="https://i.ytimg.com/vi/4f3hG-5grlw/maxresdefault.jpg" alt="DON'T LOOK AWAY">
+              <div class="movie-badge">Película</div>
               <div class="carousel-item-overlay">
-                <div class="carousel-item-title">Mundo Fantástico</div>
-                <div class="carousel-item-info">2023 • Fantasía • Aventura</div>
+                <div class="carousel-item-title">DON'T LOOK AWAY</div>
+                <div class="carousel-item-info">2024 • Terror • Thriller</div>
               </div>
             </div>
           </div>
@@ -808,11 +1022,12 @@
                 <div class="carousel-item-info">Temporada 1</div>
               </div>
             </div>
-            <div class="carousel-item" onclick="showSeriesDetail('sample3')">
-              <img src="https://images.unsplash.com/photo-1518709268805-4e9042af2176?w=400" alt="Serie Trending">
+            <div class="carousel-item" onclick="showSeriesDetail('dontlookaway')">
+              <img src="https://i.ytimg.com/vi/4f3hG-5grlw/maxresdefault.jpg" alt="DON'T LOOK AWAY">
+              <div class="movie-badge">Película</div>
               <div class="carousel-item-overlay">
-                <div class="carousel-item-title">Serie Popular</div>
-                <div class="carousel-item-info">2023 • Romance</div>
+                <div class="carousel-item-title">DON'T LOOK AWAY</div>
+                <div class="carousel-item-info">2024 • Terror</div>
               </div>
             </div>
           </div>
@@ -829,6 +1044,23 @@
               <div class="carousel-item-overlay">
                 <div class="carousel-item-title">Inuyasha</div>
                 <div class="carousel-item-info">167 episodios</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Terror -->
+      <div class="section">
+        <h2 class="section-title">Terror</h2>
+        <div class="carousel-container">
+          <div class="carousel" id="terrorCarousel">
+            <div class="carousel-item" onclick="showSeriesDetail('dontlookaway')">
+              <img src="https://i.ytimg.com/vi/4f3hG-5grlw/maxresdefault.jpg" alt="DON'T LOOK AWAY">
+              <div class="movie-badge">Película</div>
+              <div class="carousel-item-overlay">
+                <div class="carousel-item-title">DON'T LOOK AWAY</div>
+                <div class="carousel-item-info">Película completa</div>
               </div>
             </div>
           </div>
@@ -922,12 +1154,39 @@
             <button class="video-control-btn" id="volumeBtn" onclick="toggleMute()">
               <i class="fas fa-volume-up"></i>
             </button>
-            <button class="video-control-btn" onclick="toggleSubtitles()">
+            <button class="video-control-btn" id="subtitlesBtn" onclick="toggleSubtitles()">
               <i class="fas fa-closed-captioning"></i>
             </button>
           </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Sección de búsqueda -->
+  <div id="searchSection" class="search-section">
+    <button class="search-close-btn" onclick="closeSearchSection()">
+      <i class="fas fa-times"></i>
+    </button>
+    
+    <div class="search-results-header">
+      <div class="search-results-title" id="searchResultsTitle">Resultados de búsqueda</div>
+      <div class="search-results-count" id="searchResultsCount"></div>
+    </div>
+
+    <div id="searchLoading" class="search-loading hidden">
+      <div class="search-loading-spinner"></div>
+      <div class="search-loading-text">Buscando contenido...</div>
+    </div>
+
+    <div id="searchResultsGrid" class="search-results-grid">
+      <!-- Los resultados se cargarán aquí -->
+    </div>
+
+    <div id="searchNoResults" class="search-no-results hidden">
+      <i class="fas fa-search"></i>
+      <h3>No se encontraron resultados</h3>
+      <p>Intenta con otros términos de búsqueda</p>
     </div>
   </div>
 
@@ -956,6 +1215,7 @@
         year: '2000',
         genre: 'Anime, Aventura, Romance',
         rating: '16+',
+        type: 'series', // Detector de tipo
         description: 'Un medio demonio y una estudiante de secundaria viajan por el Japón feudal en busca de los fragmentos de la Perla de Shikon, enfrentándose a demonios y descubriendo secretos del pasado.',
         poster: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1920',
         trailer: 'https://limewire.com/d/r2JU7#5jtPIbfULj',
@@ -983,6 +1243,32 @@
             duration: '24:45',
             thumbnail: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400',
             videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4'
+          }
+        ]
+      },
+      dontlookaway: {
+        id: 'dontlookaway',
+        title: "DON'T LOOK AWAY",
+        year: '2024',
+        genre: 'Terror, Thriller, Suspenso',
+        rating: '18+',
+        type: 'movie', // Detector de tipo
+        description: 'Una película de terror psicológico que te mantendrá al borde del asiento. La historia sigue a un grupo de personas que se enfrentan a una amenaza sobrenatural que los obliga a no apartar la mirada.',
+        poster: 'https://i.ytimg.com/vi/4f3hG-5grlw/maxresdefault.jpg',
+        trailer: 'https://www.dropbox.com/scl/fi/1kpsf3351raocgyiwb1rd/3984583787530253122.mp4?rlkey=ac3xzejk67taj2odw9q94rc07&st=y2152ek3&dl=1',
+        youtubeReference: 'https://youtu.be/4f3hG-5grlw?si=adowKM2_Y8GX4G99', // Video de referencia para subtítulos
+        subtitles: {
+          spanish: 'subtitles/dont-look-away-es.vtt', // Subtítulos en español
+          english: 'subtitles/dont-look-away-en.vtt'  // Subtítulos en inglés
+        },
+        episodes: [
+          {
+            id: 1,
+            title: "DON'T LOOK AWAY",
+            description: 'Una aterradora experiencia cinematográfica que desafía los límites del horror psicológico.',
+            duration: null, // Se detectará en tiempo real
+            thumbnail: 'https://i.ytimg.com/vi/4f3hG-5grlw/maxresdefault.jpg',
+            videoUrl: 'https://www.dropbox.com/scl/fi/1kpsf3351raocgyiwb1rd/3984583787530253122.mp4?rlkey=ac3xzejk67taj2odw9q94rc07&st=y2152ek3&dl=1'
           }
         ]
       }
@@ -1017,8 +1303,27 @@
       document.getElementById('seriesDetailHeader').style.backgroundImage = 
         `linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url('${series.poster}')`;
 
-      // Cargar episodios
-      loadEpisodes(series.episodes);
+      // Actualizar metadatos según el tipo
+      const metaElement = document.querySelector('.series-detail-meta');
+      if (series.type === 'movie') {
+        metaElement.innerHTML = `
+          <span>${series.year}</span>
+          <span>Película</span>
+          <span>${series.genre.split(',')[0]}</span>
+          <span>${series.rating}</span>
+        `;
+      } else {
+        const episodeCount = series.episodes ? series.episodes.length : 0;
+        metaElement.innerHTML = `
+          <span>${series.year}</span>
+          <span>${episodeCount} episodios</span>
+          <span>${series.genre.split(',')[0]}</span>
+          <span>${series.rating}</span>
+        `;
+      }
+
+      // Cargar episodios o película
+      loadContent(series);
 
       // Mostrar vista detallada
       document.getElementById('seriesDetail').classList.add('active');
@@ -1030,15 +1335,28 @@
       currentSeries = null;
     }
 
-    // Función para cargar episodios
-    function loadEpisodes(episodes) {
+    // Función para cargar contenido (episodios o película)
+    function loadContent(series) {
       const episodesList = document.getElementById('episodesList');
+      const episodesTitle = document.querySelector('.episodes-title');
+      
+      // Cambiar título según el tipo
+      if (series.type === 'movie') {
+        episodesTitle.textContent = 'Película';
+      } else {
+        episodesTitle.textContent = 'Episodios - Temporada 1';
+      }
+      
       episodesList.innerHTML = '';
 
-      episodes.forEach(episode => {
+      series.episodes.forEach(episode => {
         const episodeElement = document.createElement('div');
         episodeElement.className = 'episode-item';
         episodeElement.onclick = () => playEpisode(1, episode.id);
+
+        // Para películas, no mostrar número de episodio
+        const episodeNumber = series.type === 'movie' ? '' : `${episode.id}. `;
+        const durationDisplay = episode.duration || 'Cargando...';
 
         episodeElement.innerHTML = `
           <div class="episode-thumbnail">
@@ -1049,8 +1367,8 @@
           </div>
           <div class="episode-info">
             <div class="episode-header">
-              <span class="episode-number">${episode.id}. ${episode.title}</span>
-              <span class="episode-duration">${episode.duration}</span>
+              <span class="episode-number">${episodeNumber}${episode.title}</span>
+              <span class="episode-duration" id="duration-${episode.id}">${durationDisplay}</span>
             </div>
             <div class="episode-description">${episode.description}</div>
           </div>
@@ -1071,7 +1389,13 @@
 
       // Configurar video
       videoElement.src = episode.videoUrl;
-      videoPlayerTitle.textContent = `${currentSeries.title} - ${episode.title}`;
+      
+      // Título diferente para películas vs series
+      if (currentSeries.type === 'movie') {
+        videoPlayerTitle.textContent = currentSeries.title;
+      } else {
+        videoPlayerTitle.textContent = `${currentSeries.title} - ${episode.title}`;
+      }
 
       // Configurar video para iOS
       videoElement.controls = false;
@@ -1080,6 +1404,9 @@
       videoElement.setAttribute('webkit-playsinline', 'true');
       videoElement.setAttribute('x5-playsinline', 'true');
       videoElement.muted = false;
+
+      // Configurar subtítulos si están disponibles
+      configureSubtitles();
 
       // Mostrar reproductor
       videoPlayer.classList.add('active');
@@ -1091,7 +1418,10 @@
       startProgressUpdate();
 
       // Event listeners del video
-      videoElement.addEventListener('loadedmetadata', updateDuration);
+      videoElement.addEventListener('loadedmetadata', () => {
+        updateDuration();
+        updateRealTimeDuration(episodeId);
+      });
       videoElement.addEventListener('play', () => {
         playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
         pauseIndicator.classList.remove('visible');
@@ -1186,9 +1516,170 @@
       }
     }
 
+    // Función para actualizar duración en tiempo real
+    function updateRealTimeDuration(episodeId) {
+      if (videoElement.duration) {
+        const realDuration = formatTime(videoElement.duration);
+        
+        // Actualizar en la base de datos
+        if (currentSeries && currentVideo) {
+          currentVideo.duration = realDuration;
+        }
+        
+        // Actualizar en la UI
+        const durationElement = document.getElementById(`duration-${episodeId}`);
+        if (durationElement) {
+          durationElement.textContent = realDuration;
+        }
+        
+        console.log(`Duración real detectada: ${realDuration}`);
+      }
+    }
+
+    // Función para configurar subtítulos
+    function configureSubtitles() {
+      // Limpiar subtítulos existentes
+      const existingTracks = videoElement.querySelectorAll('track');
+      existingTracks.forEach(track => track.remove());
+
+      // Resetear contador de subtítulos
+      currentSubtitleTrack = -1;
+
+      // Agregar subtítulos disponibles
+      if (currentSeries && currentSeries.subtitles) {
+        let trackCount = 0;
+
+        // Agregar subtítulos en español
+        if (currentSeries.subtitles.spanish) {
+          const spanishTrack = document.createElement('track');
+          spanishTrack.kind = 'subtitles';
+          spanishTrack.src = currentSeries.subtitles.spanish;
+          spanishTrack.srclang = 'es';
+          spanishTrack.label = 'Español';
+          spanishTrack.default = trackCount === 0; // Primer track como default
+          videoElement.appendChild(spanishTrack);
+          trackCount++;
+        }
+
+        // Agregar subtítulos en inglés
+        if (currentSeries.subtitles.english) {
+          const englishTrack = document.createElement('track');
+          englishTrack.kind = 'subtitles';
+          englishTrack.src = currentSeries.subtitles.english;
+          englishTrack.srclang = 'en';
+          englishTrack.label = 'English';
+          englishTrack.default = trackCount === 0; // Si no hay español, inglés como default
+          videoElement.appendChild(englishTrack);
+          trackCount++;
+        }
+
+        // Mostrar mensaje de subtítulos disponibles
+        if (trackCount > 0) {
+          const languages = [];
+          if (currentSeries.subtitles.spanish) languages.push('Español');
+          if (currentSeries.subtitles.english) languages.push('English');
+          
+          setTimeout(() => {
+            showSubtitleMessage(`Subtítulos disponibles: ${languages.join(', ')}`);
+          }, 1000);
+        }
+      }
+
+      // Actualizar botón de subtítulos
+      updateSubtitlesButton();
+    }
+
+    // Variables para subtítulos
+    let currentSubtitleTrack = -1; // -1 = sin subtítulos, 0+ = índice del track
+
+    // Función para alternar subtítulos
     function toggleSubtitles() {
-      // Implementar función de subtítulos
-      console.log('Subtítulos toggled');
+      const tracks = videoElement.textTracks;
+      
+      if (tracks.length === 0) {
+        showSubtitleMessage('No hay subtítulos disponibles para este contenido');
+        return;
+      }
+
+      // Desactivar track actual
+      if (currentSubtitleTrack >= 0 && tracks[currentSubtitleTrack]) {
+        tracks[currentSubtitleTrack].mode = 'hidden';
+      }
+
+      // Avanzar al siguiente track
+      currentSubtitleTrack++;
+      
+      if (currentSubtitleTrack >= tracks.length) {
+        currentSubtitleTrack = -1; // Sin subtítulos
+        showSubtitleMessage('Subtítulos desactivados');
+      } else {
+        tracks[currentSubtitleTrack].mode = 'showing';
+        const language = tracks[currentSubtitleTrack].language;
+        const label = tracks[currentSubtitleTrack].label;
+        showSubtitleMessage(`Subtítulos: ${label || language}`);
+      }
+
+      updateSubtitlesButton();
+    }
+
+    // Función para mostrar mensaje de subtítulos
+    function showSubtitleMessage(message) {
+      // Crear elemento de mensaje temporal
+      const messageEl = document.createElement('div');
+      messageEl.style.cssText = `
+        position: absolute;
+        top: 20%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        font-size: 16px;
+        z-index: 100;
+        pointer-events: none;
+      `;
+      messageEl.textContent = message;
+      
+      const playerContainer = document.querySelector('.video-player-container');
+      playerContainer.appendChild(messageEl);
+      
+      // Remover mensaje después de 2 segundos
+      setTimeout(() => {
+        if (messageEl.parentNode) {
+          messageEl.parentNode.removeChild(messageEl);
+        }
+      }, 2000);
+    }
+
+    // Función para actualizar el botón de subtítulos
+    function updateSubtitlesButton() {
+      const subtitlesBtn = document.getElementById('subtitlesBtn');
+      const tracks = videoElement.textTracks;
+      
+      // Verificar si hay track activo
+      const hasActiveTrack = currentSubtitleTrack >= 0 && 
+                            tracks[currentSubtitleTrack] && 
+                            tracks[currentSubtitleTrack].mode === 'showing';
+
+      // Cambiar color del botón
+      if (hasActiveTrack) {
+        subtitlesBtn.style.color = '#1d9bf0';
+        subtitlesBtn.style.background = 'rgba(29, 155, 240, 0.2)';
+      } else {
+        subtitlesBtn.style.color = '#ffffff';
+        subtitlesBtn.style.background = 'transparent';
+      }
+
+      // Siempre mostrar el botón pero cambiar opacidad según disponibilidad
+      subtitlesBtn.style.display = 'flex';
+      if (tracks.length > 0) {
+        subtitlesBtn.style.opacity = '1';
+        subtitlesBtn.style.cursor = 'pointer';
+      } else {
+        subtitlesBtn.style.opacity = '0.5';
+        subtitlesBtn.style.cursor = 'not-allowed';
+      }
     }
 
     // Función para actualizar progreso
@@ -1248,24 +1739,221 @@
       return false;
     });
 
-    // Búsqueda
+    // Variables de búsqueda
+    let searchTimeout = null;
+    let isSearching = false;
+
+    // Función para realizar búsqueda
+    function performSearch(query) {
+      if (!query.trim()) {
+        closeSearchSection();
+        return;
+      }
+
+      // Mostrar sección de búsqueda
+      document.getElementById('searchSection').classList.add('active');
+      
+      // Mostrar indicador de carga
+      showSearchLoading(true);
+      
+      // Actualizar título
+      document.getElementById('searchResultsTitle').textContent = `Resultados para "${query}"`;
+      
+      // Simular búsqueda con delay
+      setTimeout(() => {
+        const results = searchContent(query);
+        displaySearchResults(results, query);
+        showSearchLoading(false);
+      }, 800); // Simular tiempo de búsqueda
+    }
+
+    // Función para buscar en la base de datos
+    function searchContent(query) {
+      const results = [];
+      const searchTerm = query.toLowerCase();
+
+      // Buscar en todas las series/películas
+      Object.values(seriesDatabase).forEach(series => {
+        const titleMatch = series.title.toLowerCase().includes(searchTerm);
+        const genreMatch = series.genre.toLowerCase().includes(searchTerm);
+        const descriptionMatch = series.description.toLowerCase().includes(searchTerm);
+        
+        if (titleMatch || genreMatch || descriptionMatch) {
+          results.push({
+            ...series,
+            relevance: titleMatch ? 3 : (genreMatch ? 2 : 1) // Prioridad de relevancia
+          });
+        }
+      });
+
+      // Ordenar por relevancia
+      results.sort((a, b) => b.relevance - a.relevance);
+      
+      return results;
+    }
+
+    // Función para mostrar resultados
+    function displaySearchResults(results, query) {
+      const resultsGrid = document.getElementById('searchResultsGrid');
+      const noResults = document.getElementById('searchNoResults');
+      const resultsCount = document.getElementById('searchResultsCount');
+
+      // Limpiar resultados anteriores
+      resultsGrid.innerHTML = '';
+
+      if (results.length === 0) {
+        resultsGrid.classList.add('hidden');
+        noResults.classList.remove('hidden');
+        resultsCount.textContent = 'No se encontraron resultados';
+        return;
+      }
+
+      // Ocultar mensaje de "no resultados"
+      noResults.classList.add('hidden');
+      resultsGrid.classList.remove('hidden');
+      
+      // Actualizar contador
+      const pluralText = results.length === 1 ? 'resultado' : 'resultados';
+      resultsCount.textContent = `${results.length} ${pluralText} encontrados`;
+
+      // Crear elementos de resultados
+      results.forEach(series => {
+        const resultElement = document.createElement('div');
+        resultElement.className = 'search-result-item';
+        resultElement.onclick = () => {
+          closeSearchSection();
+          showSeriesDetail(series.id);
+        };
+
+        // Determinar metadatos según el tipo
+        let metaInfo = '';
+        if (series.type === 'movie') {
+          metaInfo = `
+            <span>${series.year}</span>
+            <span>Película</span>
+            <span>${series.genre.split(',')[0].trim()}</span>
+            <span>${series.rating}</span>
+          `;
+        } else {
+          const episodeCount = series.episodes ? series.episodes.length : 0;
+          metaInfo = `
+            <span>${series.year}</span>
+            <span>${episodeCount} episodios</span>
+            <span>${series.genre.split(',')[0].trim()}</span>
+            <span>${series.rating}</span>
+          `;
+        }
+
+        resultElement.innerHTML = `
+          <div class="search-result-poster">
+            <img src="${series.poster}" alt="${series.title}">
+            ${series.type === 'movie' ? '<div class="movie-badge">Película</div>' : ''}
+          </div>
+          <div class="search-result-content">
+            <div class="search-result-title">${series.title}</div>
+            <div class="search-result-meta">${metaInfo}</div>
+            <div class="search-result-description">${series.description}</div>
+          </div>
+        `;
+
+        resultsGrid.appendChild(resultElement);
+      });
+    }
+
+    // Función para mostrar/ocultar loading
+    function showSearchLoading(show) {
+      const loading = document.getElementById('searchLoading');
+      const resultsGrid = document.getElementById('searchResultsGrid');
+      const noResults = document.getElementById('searchNoResults');
+      
+      if (show) {
+        loading.classList.remove('hidden');
+        resultsGrid.classList.add('hidden');
+        noResults.classList.add('hidden');
+        isSearching = true;
+      } else {
+        loading.classList.add('hidden');
+        isSearching = false;
+      }
+    }
+
+    // Función para cerrar sección de búsqueda
+    function closeSearchSection() {
+      document.getElementById('searchSection').classList.remove('active');
+      document.getElementById('searchInput').value = '';
+    }
+
+    // Event listeners para búsqueda
     document.getElementById('searchBtn').addEventListener('click', () => {
       const query = document.getElementById('searchInput').value.trim();
-      if (query) {
-        console.log('Buscando:', query);
-        // Implementar lógica de búsqueda
+      if (query && !isSearching) {
+        performSearch(query);
+      }
+    });
+
+    // Búsqueda en tiempo real mientras escribes
+    document.getElementById('searchInput').addEventListener('input', (e) => {
+      const query = e.target.value.trim();
+      
+      // Limpiar timeout anterior
+      if (searchTimeout) {
+        clearTimeout(searchTimeout);
+      }
+      
+      // Si no hay query, cerrar búsqueda
+      if (!query) {
+        closeSearchSection();
+        return;
+      }
+      
+      // Búsqueda con delay para evitar muchas llamadas
+      searchTimeout = setTimeout(() => {
+        if (!isSearching) {
+          performSearch(query);
+        }
+      }, 500); // Esperar 500ms después de que el usuario deje de escribir
+    });
+
+    // Enter para buscar
+    document.getElementById('searchInput').addEventListener('keypress', (e) => {
+      if (e.key === 'Enter') {
+        const query = e.target.value.trim();
+        if (query && !isSearching) {
+          // Cancelar búsqueda automática y hacer búsqueda inmediata
+          if (searchTimeout) {
+            clearTimeout(searchTimeout);
+          }
+          performSearch(query);
+        }
       }
     });
 
     // Navegación inferior
-    document.querySelectorAll('.bottom-nav button').forEach(button => {
-      button.addEventListener('click', () => {
-        document.querySelectorAll('.bottom-nav button').forEach(btn => 
-          btn.classList.remove('active')
-        );
-        button.classList.add('active');
-      });
+    document.getElementById('navHome').addEventListener('click', () => {
+      closeSearchSection();
+      closeSeriesDetail();
+      updateNavigation('navHome');
     });
+
+    document.getElementById('navSearch').addEventListener('click', () => {
+      closeSeriesDetail();
+      document.getElementById('searchInput').focus();
+      updateNavigation('navSearch');
+    });
+
+    document.getElementById('navProfile').addEventListener('click', () => {
+      closeSearchSection();
+      closeSeriesDetail();
+      updateNavigation('navProfile');
+    });
+
+    // Función para actualizar navegación
+    function updateNavigation(activeId) {
+      document.querySelectorAll('.bottom-nav button').forEach(btn => 
+        btn.classList.remove('active')
+      );
+      document.getElementById(activeId).classList.add('active');
+    }
 
     // Inicialización
     document.addEventListener('DOMContentLoaded', () => {
