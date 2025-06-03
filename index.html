@@ -960,16 +960,17 @@
   <!-- Sección principal -->
   <div id="homeSection" class="app-container">
     <!-- Banner principal -->
-    <div class="hero-banner" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1920');">
+    <div class="hero-banner" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url('https://i.ytimg.com/vi/4f3hG-5grlw/maxresdefault.jpg');">
       <div class="hero-content">
-        <h1 class="hero-title">Inuyasha</h1>
-        <p class="hero-description">Un medio demonio y una estudiante de secundaria se embarcan en una aventura épica para recolectar los fragmentos de la Perla de Shikon.</p>
+        <h1 class="hero-title">DON'T LOOK AWAY</h1>
+        <p class="hero-description">Una aterradora experiencia cinematográfica que desafía los límites del horror psicológico.</p>
+
         <div class="hero-buttons">
           <button class="hero-btn primary" onclick="playTrailer()">
             <i class="fas fa-play"></i>
             Ver Trailer
           </button>
-          <button class="hero-btn secondary" onclick="showSeriesDetail('inuyasha')">
+          <button class="hero-btn secondary" onclick="showSeriesDetail('dontlookaway')">
             <i class="fas fa-info-circle"></i>
             Más Info
           </button>
@@ -984,13 +985,7 @@
         <h2 class="section-title">Series Destacadas</h2>
         <div class="carousel-container">
           <div class="carousel" id="featuredCarousel">
-            <div class="carousel-item" onclick="showSeriesDetail('inuyasha')">
-              <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400" alt="Inuyasha">
-              <div class="carousel-item-overlay">
-                <div class="carousel-item-title">Inuyasha</div>
-                <div class="carousel-item-info">2000 • Anime • Aventura</div>
-              </div>
-            </div>
+           
             <div class="carousel-item" onclick="showSeriesDetail('sample1')">
               <img src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400" alt="Serie Ejemplo">
               <div class="carousel-item-overlay">
@@ -1015,13 +1010,7 @@
         <h2 class="section-title">Tendencias</h2>
         <div class="carousel-container">
           <div class="carousel" id="trendingCarousel">
-            <div class="carousel-item" onclick="showSeriesDetail('inuyasha')">
-              <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400" alt="Inuyasha">
-              <div class="carousel-item-overlay">
-                <div class="carousel-item-title">Inuyasha</div>
-                <div class="carousel-item-info">Temporada 1</div>
-              </div>
-            </div>
+           
             <div class="carousel-item" onclick="showSeriesDetail('dontlookaway')">
               <img src="https://i.ytimg.com/vi/4f3hG-5grlw/maxresdefault.jpg" alt="DON'T LOOK AWAY">
               <div class="movie-badge">Película</div>
@@ -1039,13 +1028,7 @@
         <h2 class="section-title">Anime</h2>
         <div class="carousel-container">
           <div class="carousel" id="animeCarousel">
-            <div class="carousel-item" onclick="showSeriesDetail('inuyasha')">
-              <img src="https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400" alt="Inuyasha">
-              <div class="carousel-item-overlay">
-                <div class="carousel-item-title">Inuyasha</div>
-                <div class="carousel-item-info">167 episodios</div>
-              </div>
-            </div>
+           
           </div>
         </div>
       </div>
@@ -1076,15 +1059,15 @@
         <i class="fas fa-times"></i>
       </button>
       <div class="series-detail-content">
-        <h1 class="series-detail-title" id="seriesDetailTitle">Inuyasha</h1>
+        <h1 class="series-detail-title" id="seriesDetailTitle">DON'T LOOK AWAY</h1>
         <div class="series-detail-meta">
-          <span>2000</span>
-          <span>167 episodios</span>
-          <span>Anime</span>
-          <span>16+</span>
+          <span>2024</span>
+          <span>Película</span>
+          <span>Terror</span>
+          <span>18+</span>
         </div>
         <p class="series-detail-description" id="seriesDetailDescription">
-          Un medio demonio y una estudiante de secundaria viajan por el Japón feudal en busca de los fragmentos de la Perla de Shikon, enfrentándose a demonios y descubriendo secretos del pasado.
+          Una aterradora experiencia cinematográfica que desafía los límites del horror psicológico.
         </p>
       </div>
     </div>
@@ -1101,7 +1084,7 @@
     </div>
 
     <div class="episodes-section">
-      <h3 class="episodes-title">Episodios - Temporada 1</h3>
+      <h3 class="episodes-title">Película</h3>
       <div id="episodesList">
         <!-- Los episodios se cargarán dinámicamente -->
       </div>
@@ -1168,7 +1151,7 @@
     <button class="search-close-btn" onclick="closeSearchSection()">
       <i class="fas fa-times"></i>
     </button>
-    
+
     <div class="search-results-header">
       <div class="search-results-title" id="searchResultsTitle">Resultados de búsqueda</div>
       <div class="search-results-count" id="searchResultsCount"></div>
@@ -1209,43 +1192,7 @@
   <script>
     // Base de datos de series y episodios
     const seriesDatabase = {
-      inuyasha: {
-        id: 'inuyasha',
-        title: 'Inuyasha',
-        year: '2000',
-        genre: 'Anime, Aventura, Romance',
-        rating: '16+',
-        type: 'series', // Detector de tipo
-        description: 'Un medio demonio y una estudiante de secundaria viajan por el Japón feudal en busca de los fragmentos de la Perla de Shikon, enfrentándose a demonios y descubriendo secretos del pasado.',
-        poster: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1920',
-        trailer: 'https://limewire.com/d/r2JU7#5jtPIbfULj',
-        episodes: [
-          {
-            id: 1,
-            title: 'La Chica que Viajó en el Tiempo y el Chico que Fue Sellado',
-            description: 'Kagome, una estudiante de secundaria, es transportada al Japón feudal donde conoce a Inuyasha, un medio demonio sellado a un árbol.',
-            duration: '24:30',
-            thumbnail: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400',
-            videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
-          },
-          {
-            id: 2,
-            title: 'Los Guerreros Buscadores de la Perla de Shikon',
-            description: 'Inuyasha y Kagome comienzan su búsqueda de los fragmentos de la Perla de Shikon.',
-            duration: '24:15',
-            thumbnail: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400',
-            videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
-          },
-          {
-            id: 3,
-            title: 'Hueso que Devora!',
-            description: 'El grupo se enfrenta a un demonio que devora huesos humanos.',
-            duration: '24:45',
-            thumbnail: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400',
-            videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4'
-          }
-        ]
-      },
+      
       dontlookaway: {
         id: 'dontlookaway',
         title: "DON'T LOOK AWAY",
@@ -1339,14 +1286,14 @@
     function loadContent(series) {
       const episodesList = document.getElementById('episodesList');
       const episodesTitle = document.querySelector('.episodes-title');
-      
+
       // Cambiar título según el tipo
       if (series.type === 'movie') {
         episodesTitle.textContent = 'Película';
       } else {
         episodesTitle.textContent = 'Episodios - Temporada 1';
       }
-      
+
       episodesList.innerHTML = '';
 
       series.episodes.forEach(episode => {
@@ -1389,7 +1336,7 @@
 
       // Configurar video
       videoElement.src = episode.videoUrl;
-      
+
       // Título diferente para películas vs series
       if (currentSeries.type === 'movie') {
         videoPlayerTitle.textContent = currentSeries.title;
@@ -1520,18 +1467,18 @@
     function updateRealTimeDuration(episodeId) {
       if (videoElement.duration) {
         const realDuration = formatTime(videoElement.duration);
-        
+
         // Actualizar en la base de datos
         if (currentSeries && currentVideo) {
           currentVideo.duration = realDuration;
         }
-        
+
         // Actualizar en la UI
         const durationElement = document.getElementById(`duration-${episodeId}`);
         if (durationElement) {
           durationElement.textContent = realDuration;
         }
-        
+
         console.log(`Duración real detectada: ${realDuration}`);
       }
     }
@@ -1578,7 +1525,7 @@
           const languages = [];
           if (currentSeries.subtitles.spanish) languages.push('Español');
           if (currentSeries.subtitles.english) languages.push('English');
-          
+
           setTimeout(() => {
             showSubtitleMessage(`Subtítulos disponibles: ${languages.join(', ')}`);
           }, 1000);
@@ -1595,7 +1542,7 @@
     // Función para alternar subtítulos
     function toggleSubtitles() {
       const tracks = videoElement.textTracks;
-      
+
       if (tracks.length === 0) {
         showSubtitleMessage('No hay subtítulos disponibles para este contenido');
         return;
@@ -1608,7 +1555,7 @@
 
       // Avanzar al siguiente track
       currentSubtitleTrack++;
-      
+
       if (currentSubtitleTrack >= tracks.length) {
         currentSubtitleTrack = -1; // Sin subtítulos
         showSubtitleMessage('Subtítulos desactivados');
@@ -1640,10 +1587,10 @@
         pointer-events: none;
       `;
       messageEl.textContent = message;
-      
+
       const playerContainer = document.querySelector('.video-player-container');
       playerContainer.appendChild(messageEl);
-      
+
       // Remover mensaje después de 2 segundos
       setTimeout(() => {
         if (messageEl.parentNode) {
@@ -1656,7 +1603,7 @@
     function updateSubtitlesButton() {
       const subtitlesBtn = document.getElementById('subtitlesBtn');
       const tracks = videoElement.textTracks;
-      
+
       // Verificar si hay track activo
       const hasActiveTrack = currentSubtitleTrack >= 0 && 
                             tracks[currentSubtitleTrack] && 
@@ -1752,13 +1699,13 @@
 
       // Mostrar sección de búsqueda
       document.getElementById('searchSection').classList.add('active');
-      
+
       // Mostrar indicador de carga
       showSearchLoading(true);
-      
+
       // Actualizar título
       document.getElementById('searchResultsTitle').textContent = `Resultados para "${query}"`;
-      
+
       // Simular búsqueda con delay
       setTimeout(() => {
         const results = searchContent(query);
@@ -1777,7 +1724,7 @@
         const titleMatch = series.title.toLowerCase().includes(searchTerm);
         const genreMatch = series.genre.toLowerCase().includes(searchTerm);
         const descriptionMatch = series.description.toLowerCase().includes(searchTerm);
-        
+
         if (titleMatch || genreMatch || descriptionMatch) {
           results.push({
             ...series,
@@ -1788,7 +1735,7 @@
 
       // Ordenar por relevancia
       results.sort((a, b) => b.relevance - a.relevance);
-      
+
       return results;
     }
 
@@ -1811,7 +1758,7 @@
       // Ocultar mensaje de "no resultados"
       noResults.classList.add('hidden');
       resultsGrid.classList.remove('hidden');
-      
+
       // Actualizar contador
       const pluralText = results.length === 1 ? 'resultado' : 'resultados';
       resultsCount.textContent = `${results.length} ${pluralText} encontrados`;
@@ -1865,7 +1812,7 @@
       const loading = document.getElementById('searchLoading');
       const resultsGrid = document.getElementById('searchResultsGrid');
       const noResults = document.getElementById('searchNoResults');
-      
+
       if (show) {
         loading.classList.remove('hidden');
         resultsGrid.classList.add('hidden');
@@ -1894,18 +1841,18 @@
     // Búsqueda en tiempo real mientras escribes
     document.getElementById('searchInput').addEventListener('input', (e) => {
       const query = e.target.value.trim();
-      
+
       // Limpiar timeout anterior
       if (searchTimeout) {
         clearTimeout(searchTimeout);
       }
-      
+
       // Si no hay query, cerrar búsqueda
       if (!query) {
         closeSearchSection();
         return;
       }
-      
+
       // Búsqueda con delay para evitar muchas llamadas
       searchTimeout = setTimeout(() => {
         if (!isSearching) {
