@@ -986,7 +986,7 @@
         <div class="carousel-container">
           <div class="carousel" id="featuredCarousel">
            
-            <div class="carousel-item" onclick="showSeriesDetail('sample1')">
+            <div class="carousel-item" onclick="showSeriesDetail('sampleSeries')">
               <img src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400" alt="Serie Ejemplo">
               <div class="carousel-item-overlay">
                 <div class="carousel-item-title">Aventura Épica</div>
@@ -1202,20 +1202,50 @@
         type: 'movie', // Detector de tipo
         description: 'Una película de terror psicológico que te mantendrá al borde del asiento. La historia sigue a un grupo de personas que se enfrentan a una amenaza sobrenatural que los obliga a no apartar la mirada.',
         poster: 'https://i.ytimg.com/vi/4f3hG-5grlw/maxresdefault.jpg',
-        trailer: 'https://www.dropbox.com/scl/fi/1kpsf3351raocgyiwb1rd/3984583787530253122.mp4?rlkey=ac3xzejk67taj2odw9q94rc07&st=y2152ek3&dl=1',
-        youtubeReference: 'https://youtu.be/4f3hG-5grlw?si=adowKM2_Y8GX4G99', // Video de referencia para subtítulos
+        trailer: 'https://dl.dropboxusercontent.com/scl/fi/1kpsf3351raocgyiwb1rd/3984583787530253122.mp4?rlkey=ac3xzejk67taj2odw9q94rc07&st=y2152ek3',
+        youtubeReference: 'https://youtu.be/4f3hG-5grlw?si=adowKM2_Y8GX4G99',
         subtitles: {
-          spanish: 'subtitles/dont-look-away-es.vtt', // Subtítulos en español
-          english: 'subtitles/dont-look-away-en.vtt'  // Subtítulos en inglés
+          spanish: 'subtitles/dont-look-away-es.vtt',
+          english: 'subtitles/dont-look-away-en.vtt'
         },
         episodes: [
           {
             id: 1,
             title: "DON'T LOOK AWAY",
             description: 'Una aterradora experiencia cinematográfica que desafía los límites del horror psicológico.',
-            duration: null, // Se detectará en tiempo real
+            duration: null,
             thumbnail: 'https://i.ytimg.com/vi/4f3hG-5grlw/maxresdefault.jpg',
-            videoUrl: 'https://www.dropbox.com/scl/fi/1kpsf3351raocgyiwb1rd/3984583787530253122.mp4?rlkey=ac3xzejk67taj2odw9q94rc07&st=y2152ek3&dl=1'
+            videoUrl: 'https://dl.dropboxusercontent.com/scl/fi/1kpsf3351raocgyiwb1rd/3984583787530253122.mp4?rlkey=ac3xzejk67taj2odw9q94rc07&st=y2152ek3'
+          }
+        ]
+      },
+      
+      sampleSeries: {
+        id: 'sampleSeries',
+        title: "Aventura Épica",
+        year: '2023',
+        genre: 'Acción, Drama, Aventura',
+        rating: '13+',
+        type: 'series',
+        description: 'Una épica aventura que te llevará a mundos inexplorados llenos de acción y emoción.',
+        poster: 'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400',
+        trailer: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
+        episodes: [
+          {
+            id: 1,
+            title: "El Comienzo",
+            description: 'El inicio de una gran aventura que cambiará todo.',
+            duration: '45:30',
+            thumbnail: 'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400',
+            videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
+          },
+          {
+            id: 2,
+            title: "El Descubrimiento",
+            description: 'Nuevos secretos salen a la luz en este emocionante episodio.',
+            duration: '42:15',
+            thumbnail: 'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400',
+            videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
           }
         ]
       }
@@ -1334,8 +1364,19 @@
 
       currentVideo = episode;
 
-      // Configurar video
-      videoElement.src = episode.videoUrl;
+      // Limpiar video anterior
+      videoElement.removeAttribute('src');
+      videoElement.load();
+
+      // Configurar video para máxima compatibilidad móvil
+      videoElement.setAttribute('playsinline', 'true');
+      videoElement.setAttribute('webkit-playsinline', 'true');
+      videoElement.setAttribute('x5-playsinline', 'true');
+      videoElement.setAttribute('x5-video-player-type', 'h5');
+      videoElement.setAttribute('x5-video-player-fullscreen', 'true');
+      videoElement.controls = false;
+      videoElement.preload = 'metadata';
+      videoElement.crossOrigin = 'anonymous';
 
       // Título diferente para películas vs series
       if (currentSeries.type === 'movie') {
@@ -1344,86 +1385,207 @@
         videoPlayerTitle.textContent = `${currentSeries.title} - ${episode.title}`;
       }
 
-      // Configurar video para iOS
-      videoElement.controls = false;
-      videoElement.setAttribute('controls', 'false');
-      videoElement.setAttribute('playsinline', 'true');
-      videoElement.setAttribute('webkit-playsinline', 'true');
-      videoElement.setAttribute('x5-playsinline', 'true');
-      videoElement.muted = false;
-
       // Configurar subtítulos si están disponibles
       configureSubtitles();
 
       // Mostrar reproductor
       videoPlayer.classList.add('active');
 
-      // Reproducir video
-      videoElement.play().catch(e => console.log('Play prevented:', e));
+      // Configurar fuente de video
+      videoElement.src = episode.videoUrl;
+
+      // Event listeners del video
+      const onLoadedMetadata = () => {
+        updateDuration();
+        updateRealTimeDuration(episodeId);
+        // Intentar reproducir automáticamente
+        const playPromise = videoElement.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(e => {
+            console.log('Autoplay prevented, user interaction required:', e);
+            // Mostrar botón de play prominente
+            showPlayButton();
+          });
+        }
+      };
+
+      const onPlay = () => {
+        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        pauseIndicator.classList.remove('visible');
+        hidePlayButton();
+      };
+
+      const onPause = () => {
+        playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+        pauseIndicator.classList.add('visible');
+      };
+
+      const onError = (e) => {
+        console.error('Video error:', e);
+        showErrorMessage('Error al cargar el video. Verifica tu conexión e intenta de nuevo.');
+      };
+
+      // Remover listeners anteriores
+      videoElement.removeEventListener('loadedmetadata', onLoadedMetadata);
+      videoElement.removeEventListener('play', onPlay);
+      videoElement.removeEventListener('pause', onPause);
+      videoElement.removeEventListener('error', onError);
+
+      // Agregar nuevos listeners
+      videoElement.addEventListener('loadedmetadata', onLoadedMetadata);
+      videoElement.addEventListener('play', onPlay);
+      videoElement.addEventListener('pause', onPause);
+      videoElement.addEventListener('error', onError);
 
       // Iniciar actualización de progreso
       startProgressUpdate();
-
-      // Event listeners del video
-      videoElement.addEventListener('loadedmetadata', () => {
-        updateDuration();
-        updateRealTimeDuration(episodeId);
-      });
-      videoElement.addEventListener('play', () => {
-        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
-        pauseIndicator.classList.remove('visible');
-      });
-      videoElement.addEventListener('pause', () => {
-        playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
-        pauseIndicator.classList.add('visible');
-      });
     }
 
     // Función para reproducir trailer
     function playTrailer() {
-      // Crear objeto de trailer para reproducir en el reproductor integrado
+      if (!currentSeries || !currentSeries.trailer) {
+        showErrorMessage('Trailer no disponible');
+        return;
+      }
+
+      // Crear objeto de trailer para reproducir
       const trailerVideo = {
         id: 'trailer',
         title: 'Trailer Oficial',
-        description: 'Trailer oficial de la serie',
+        description: 'Trailer oficial',
         duration: '2:30',
-        thumbnail: 'https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=400',
-        videoUrl: '3139741268393071007.mp4'
+        thumbnail: currentSeries.poster,
+        videoUrl: currentSeries.trailer
       };
 
       currentVideo = trailerVideo;
 
-      // Configurar video
-      videoElement.src = trailerVideo.videoUrl;
-      videoPlayerTitle.textContent = `${currentSeries ? currentSeries.title : 'Trailer'} - ${trailerVideo.title}`;
+      // Limpiar video anterior
+      videoElement.removeAttribute('src');
+      videoElement.load();
 
-      // Configurar video para iOS
-      videoElement.controls = false;
-      videoElement.setAttribute('controls', 'false');
+      // Configurar video para máxima compatibilidad móvil
       videoElement.setAttribute('playsinline', 'true');
       videoElement.setAttribute('webkit-playsinline', 'true');
       videoElement.setAttribute('x5-playsinline', 'true');
-      videoElement.muted = false;
+      videoElement.setAttribute('x5-video-player-type', 'h5');
+      videoElement.controls = false;
+      videoElement.preload = 'metadata';
+      videoElement.crossOrigin = 'anonymous';
+
+      videoPlayerTitle.textContent = `${currentSeries.title} - ${trailerVideo.title}`;
 
       // Mostrar reproductor
       videoPlayer.classList.add('active');
 
-      // Reproducir video
-      videoElement.play().catch(e => console.log('Play prevented:', e));
+      // Configurar fuente
+      videoElement.src = trailerVideo.videoUrl;
 
-      // Iniciar actualización de progreso
-      startProgressUpdate();
+      // Event listeners
+      const onLoadedMetadata = () => {
+        updateDuration();
+        const playPromise = videoElement.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(e => {
+            console.log('Autoplay prevented:', e);
+            showPlayButton();
+          });
+        }
+      };
 
-      // Event listeners del video
-      videoElement.addEventListener('loadedmetadata', updateDuration);
-      videoElement.addEventListener('play', () => {
+      const onPlay = () => {
         playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
         pauseIndicator.classList.remove('visible');
-      });
-      videoElement.addEventListener('pause', () => {
+        hidePlayButton();
+      };
+
+      const onPause = () => {
         playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
         pauseIndicator.classList.add('visible');
-      });
+      };
+
+      const onError = (e) => {
+        console.error('Trailer error:', e);
+        showErrorMessage('Error al cargar el trailer');
+      };
+
+      videoElement.addEventListener('loadedmetadata', onLoadedMetadata);
+      videoElement.addEventListener('play', onPlay);
+      videoElement.addEventListener('pause', onPause);
+      videoElement.addEventListener('error', onError);
+
+      startProgressUpdate();
+    }
+
+    // Función para mostrar botón de play prominente
+    function showPlayButton() {
+      let bigPlayBtn = document.getElementById('bigPlayButton');
+      if (!bigPlayBtn) {
+        bigPlayBtn = document.createElement('div');
+        bigPlayBtn.id = 'bigPlayButton';
+        bigPlayBtn.style.cssText = `
+          position: absolute;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: rgba(29, 155, 240, 0.9);
+          border-radius: 50%;
+          width: 80px;
+          height: 80px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: white;
+          font-size: 32px;
+          cursor: pointer;
+          z-index: 30;
+          backdrop-filter: blur(12px);
+          border: 3px solid rgba(255,255,255,0.3);
+        `;
+        bigPlayBtn.innerHTML = '<i class="fas fa-play"></i>';
+        bigPlayBtn.onclick = () => {
+          videoElement.play();
+        };
+        document.querySelector('.video-player-container').appendChild(bigPlayBtn);
+      }
+      bigPlayBtn.style.display = 'flex';
+    }
+
+    // Función para ocultar botón de play prominente
+    function hidePlayButton() {
+      const bigPlayBtn = document.getElementById('bigPlayButton');
+      if (bigPlayBtn) {
+        bigPlayBtn.style.display = 'none';
+      }
+    }
+
+    // Función para mostrar mensajes de error
+    function showErrorMessage(message) {
+      const errorEl = document.createElement('div');
+      errorEl.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(220, 53, 69, 0.9);
+        color: white;
+        padding: 20px;
+        border-radius: 10px;
+        font-size: 16px;
+        z-index: 5000;
+        text-align: center;
+        backdrop-filter: blur(12px);
+        max-width: 300px;
+      `;
+      errorEl.textContent = message;
+
+      document.body.appendChild(errorEl);
+
+      setTimeout(() => {
+        if (errorEl.parentNode) {
+          errorEl.parentNode.removeChild(errorEl);
+        }
+      }, 3000);
     }
 
     // Función para cerrar reproductor
