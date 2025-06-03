@@ -1489,7 +1489,11 @@
                     <span class="countdown-label">Seg</span>
                   </div>
                 </div>
-                <div class="countdown-premiere-time">2:30 AM Las Vegas</div>
+                <div class="countdown-premiere-time">
+                  <div>Houston: 2:40 AM</div>
+                  <div>Las Vegas: 12:40 AM</div>
+                  <div>Estreno simultáneo mundial</div>
+                </div>
               </div>
               <div id="notemuevas-live" class="premiere-live-overlay" style="display: none;">
                 <div class="live-title">¡ESTRENO EN VIVO!</div>
@@ -1497,7 +1501,7 @@
               </div>
               <div class="carousel-item-overlay">
                 <div class="carousel-item-title">NO TE MUEVAS</div>
-                <div class="carousel-item-info" id="notemuevas-info">Estreno 2:30 AM LV</div>
+                <div class="carousel-item-info" id="notemuevas-info">Estreno simultáneo mundial</div>
               </div>
             </div>
             <div class="carousel-item" onclick="showSeriesDetail('dontlookaway')">
@@ -1658,6 +1662,13 @@
   </nav>
 
   <script>
+    // Inicializar el sistema cuando se carga la página
+    document.addEventListener('DOMContentLoaded', function() {
+      initializePremiereSystem();
+    });
+  </script>
+
+  <script>
     // Base de datos de series y episodios
     const seriesDatabase = {
       
@@ -1668,12 +1679,12 @@
         genre: 'Terror, Thriller, Suspenso',
         rating: '18+',
         type: 'movie',
-        releaseDate: (() => {
-          const now = new Date();
-          const today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 2, 30, 0); // 2:30 AM hoy
-          return today.toISOString();
-        })(),
-        premiereTime: '02:30', // Hora de Las Vegas (2:30 AM)
+        releaseDate: null, // Se establecerá dinámicamente
+        premiereTime: {
+          houston: '02:40 AM', // Houston (UTC-6)
+          lasvegas: '12:40 AM', // Las Vegas (UTC-8)
+          utc: '08:40 AM' // Tiempo UTC universal
+        },
         isLocked: true, // Película bloqueada inicialmente
         isLive: false, // Se activará en el momento del estreno
         hasCountdown: true, // Activar cuenta regresiva
@@ -1760,6 +1771,25 @@
     let currentVideo = null;
     let progressUpdateInterval = null;
 
+    // Función para crear fecha de estreno (hoy a las 2:40 AM Houston)
+    function createReleaseDate() {
+      const now = new Date();
+      
+      // Crear fecha base para hoy
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      
+      // Crear fecha para las 2:40 AM hora local (simulando Houston)
+      const releaseDate = new Date(today);
+      releaseDate.setHours(2, 40, 0, 0); // 2:40 AM hora local
+      
+      // Si ya pasó el tiempo de hoy, programar para mañana
+      if (now >= releaseDate) {
+        releaseDate.setDate(releaseDate.getDate() + 1);
+      }
+      
+      return releaseDate;
+    }
+
     // Función para verificar si una película está disponible
     function isMovieAvailable(series) {
       if (!series.releaseDate) return true;
@@ -1769,7 +1799,7 @@
       return now >= releaseDate;
     }
 
-    // Función para verificar si una película está en vivo (momento exacto del estreno)
+    // Función para verificar si una película está en vivo
     function isMovieLive(series) {
       if (!series.releaseDate) return false;
       
@@ -1777,26 +1807,19 @@
       const releaseDate = new Date(series.releaseDate);
       const timeDiff = Math.abs(now.getTime() - releaseDate.getTime());
       
-      // Considerar "en vivo" durante los primeros 30 minutos después del estreno
-      return now >= releaseDate && timeDiff <= (30 * 60 * 1000);
+      // Considerar "en vivo" durante los primeros 60 minutos después del estreno
+      return now >= releaseDate && timeDiff <= (60 * 60 * 1000);
     }
 
-    // Función para actualizar cuenta regresiva
+    // Función principal de cuenta regresiva
     function updateCountdown() {
       const series = seriesDatabase.notemuevas;
       if (!series || !series.hasCountdown) return;
 
-      // Obtener hora actual en Las Vegas (UTC-8 o UTC-7 según DST)
       const now = new Date();
       const releaseDate = new Date(series.releaseDate);
-      
-      // Ajustar para zona horaria de Las Vegas
-      const vegasOffset = -8; // UTC-8 (ajustar según DST si es necesario)
-      const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
-      const vegasTime = new Date(utc + (vegasOffset * 3600000));
-      
       const timeDiff = releaseDate.getTime() - now.getTime();
-
+      
       const countdownElement = document.getElementById('notemuevas-countdown');
       const liveElement = document.getElementById('notemuevas-live');
       const badgeElement = document.getElementById('notemuevas-badge');
@@ -1815,9 +1838,6 @@
         // Actualizar estado en la base de datos
         series.isLocked = false;
         series.isLive = true;
-        
-        
-        
         return;
       }
 
@@ -1830,9 +1850,41 @@
       document.getElementById('countdown-hours').textContent = hours.toString().padStart(2, '0');
       document.getElementById('countdown-minutes').textContent = minutes.toString().padStart(2, '0');
       document.getElementById('countdown-seconds').textContent = seconds.toString().padStart(2, '0');
+
+      // Mostrar horarios de diferentes ciudades
+      const countdownPremiereTime = document.querySelector('.countdown-premiere-time');
+      if (countdownPremiereTime) {
+        const now = new Date();
+        const currentHour = now.getHours();
+        const currentMinute = now.getMinutes();
+        
+        countdownPremiereTime.innerHTML = `
+          <div>Hora actual: ${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}</div>
+          <div>Estreno: 2:40 AM</div>
+          <div>Estreno simultáneo mundial</div>
+        `;
+      }
+
+      // Actualizar info
+      if (infoElement) {
+        infoElement.textContent = 'Estreno simultáneo mundial';
+      }
     }
 
-    
+    // Inicializar sistema de estreno automático
+    function initializePremiereSystem() {
+      // Establecer fecha de estreno dinámicamente
+      seriesDatabase.notemuevas.releaseDate = createReleaseDate().toISOString();
+      
+      // Actualizar cuenta regresiva cada segundo
+      setInterval(updateCountdown, 1000);
+      
+      // Ejecutar actualización inicial
+      updateCountdown();
+      
+      console.log('Sistema de estreno inicializado');
+      console.log('Fecha de estreno:', new Date(seriesDatabase.notemuevas.releaseDate));
+    }
 
     // Función para manejar clics en películas
     function handleMovieClick(seriesId) {
@@ -2752,12 +2804,6 @@
     // Inicialización
     document.addEventListener('DOMContentLoaded', () => {
       console.log('Netflix-style app loaded');
-      
-      // Actualizar indicadores de estreno al cargar
-      updateReleaseIndicators();
-      
-      // Actualizar cuenta regresiva cada segundo
-      setInterval(updateReleaseIndicators, 1000);
       
       // Agregar estilo de animación para notificación de estreno
       const style = document.createElement('style');
