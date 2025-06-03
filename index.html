@@ -340,6 +340,131 @@
       margin-top: 4px;
     }
 
+    /* Cuenta regresiva moderna */
+    .countdown-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(29, 155, 240, 0.9), rgba(13, 110, 253, 0.9));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      border-radius: 12px;
+      z-index: 20;
+      backdrop-filter: blur(10px);
+    }
+
+    .countdown-title {
+      font-size: 14px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+
+    .countdown-timer {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 8px;
+    }
+
+    .countdown-segment {
+      background: rgba(255, 255, 255, 0.2);
+      border-radius: 8px;
+      padding: 8px 6px;
+      min-width: 35px;
+      text-align: center;
+      backdrop-filter: blur(5px);
+      border: 1px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .countdown-number {
+      font-size: 18px;
+      font-weight: 800;
+      line-height: 1;
+      display: block;
+    }
+
+    .countdown-label {
+      font-size: 8px;
+      text-transform: uppercase;
+      opacity: 0.8;
+      font-weight: 600;
+      margin-top: 2px;
+    }
+
+    .countdown-premiere-time {
+      font-size: 11px;
+      opacity: 0.9;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    /* Animación de pulso para cuenta regresiva */
+    @keyframes countdownPulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 20px rgba(29, 155, 240, 0.4);
+      }
+      50% {
+        transform: scale(1.02);
+        box-shadow: 0 0 30px rgba(29, 155, 240, 0.6);
+      }
+    }
+
+    .countdown-overlay {
+      animation: countdownPulse 3s ease-in-out infinite;
+    }
+
+    /* Animación de estreno en vivo */
+    .premiere-live-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, rgba(255, 0, 0, 0.9), rgba(255, 69, 0, 0.9));
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      border-radius: 12px;
+      z-index: 25;
+      animation: liveGlow 2s ease-in-out infinite;
+    }
+
+    .live-title {
+      font-size: 16px;
+      font-weight: 800;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      margin-bottom: 8px;
+      text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    }
+
+    .live-subtitle {
+      font-size: 12px;
+      font-weight: 600;
+      opacity: 0.9;
+    }
+
+    @keyframes liveGlow {
+      0%, 100% {
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
+        transform: scale(1);
+      }
+      50% {
+        box-shadow: 0 0 40px rgba(255, 0, 0, 0.8);
+        transform: scale(1.02);
+      }
+    }
+
     @keyframes moviePulse {
       0%, 100% {
         transform: scale(1);
@@ -1302,16 +1427,31 @@
               <img src="https://images.unsplash.com/photo-1509803874385-db7c23652552?w=400&h=600&fit=crop" alt="NO TE MUEVAS">
               <div class="movie-badge">Película</div>
               <div id="notemuevas-badge" class="premiere-badge">Estreno</div>
-              <div id="notemuevas-lock" class="locked-overlay">
-                <div class="locked-icon">
-                  <i class="fas fa-lock"></i>
+              <div id="notemuevas-countdown" class="countdown-overlay">
+                <div class="countdown-title">Estreno en:</div>
+                <div class="countdown-timer">
+                  <div class="countdown-segment">
+                    <span class="countdown-number" id="countdown-hours">00</span>
+                    <span class="countdown-label">Hrs</span>
+                  </div>
+                  <div class="countdown-segment">
+                    <span class="countdown-number" id="countdown-minutes">00</span>
+                    <span class="countdown-label">Min</span>
+                  </div>
+                  <div class="countdown-segment">
+                    <span class="countdown-number" id="countdown-seconds">00</span>
+                    <span class="countdown-label">Seg</span>
+                  </div>
                 </div>
-                <div class="locked-text">Próximo Estreno</div>
-                <div class="release-date">11 de Junio 2025</div>
+                <div class="countdown-premiere-time">2:16 PM Las Vegas</div>
+              </div>
+              <div id="notemuevas-live" class="premiere-live-overlay" style="display: none;">
+                <div class="live-title">¡ESTRENO EN VIVO!</div>
+                <div class="live-subtitle">Ya disponible</div>
               </div>
               <div class="carousel-item-overlay">
                 <div class="carousel-item-title">NO TE MUEVAS</div>
-                <div class="carousel-item-info">Estreno 11 Jun 2025</div>
+                <div class="carousel-item-info" id="notemuevas-info">Estreno 2:16 PM LV</div>
               </div>
             </div>
             <div class="carousel-item" onclick="showSeriesDetail('dontlookaway')">
@@ -1472,13 +1612,15 @@
       notemuevas: {
         id: 'notemuevas',
         title: "NO TE MUEVAS",
-        year: '2025',
+        year: '2024',
         genre: 'Terror, Thriller, Suspenso',
         rating: '18+',
         type: 'movie',
-        releaseDate: '2025-06-11', // Fecha de estreno
+        releaseDate: new Date(Date.now() + (2 * 60 * 1000)).toISOString(), // Estreno en 2 minutos para prueba
+        premiereTime: '14:16', // Hora de Las Vegas (2:16 PM)
         isLocked: true, // Película bloqueada inicialmente
-        isLive: false, // Se activará el día del estreno
+        isLive: false, // Se activará en el momento del estreno
+        hasCountdown: true, // Activar cuenta regresiva
         description: 'Una terrorífica película de suspense que te mantendrá inmóvil del terror. Cuando te dicen "no te muevas", más vale que obedezcas.',
         poster: 'https://images.unsplash.com/photo-1509803874385-db7c23652552?w=400&h=600&fit=crop',
         trailer: 'https://www.dropbox.com/scl/fi/dyvowvb39jbubhh9juvq5/copy_320034C2-A3E7-4671-9E09-FC22A2851156.mov?rlkey=fzv18hl7yaedqetjcbw6w03ji&st=luz6lh1q&dl=1',
@@ -1571,16 +1713,98 @@
       return now >= releaseDate;
     }
 
-    // Función para verificar si una película está en vivo (día del estreno)
+    // Función para verificar si una película está en vivo (momento exacto del estreno)
     function isMovieLive(series) {
       if (!series.releaseDate) return false;
       
       const now = new Date();
       const releaseDate = new Date(series.releaseDate);
-      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      const release = new Date(releaseDate.getFullYear(), releaseDate.getMonth(), releaseDate.getDate());
+      const timeDiff = Math.abs(now.getTime() - releaseDate.getTime());
       
-      return today.getTime() === release.getTime();
+      // Considerar "en vivo" durante los primeros 30 minutos después del estreno
+      return now >= releaseDate && timeDiff <= (30 * 60 * 1000);
+    }
+
+    // Función para actualizar cuenta regresiva
+    function updateCountdown() {
+      const series = seriesDatabase.notemuevas;
+      if (!series || !series.hasCountdown) return;
+
+      const now = new Date();
+      const releaseDate = new Date(series.releaseDate);
+      const timeDiff = releaseDate.getTime() - now.getTime();
+
+      const countdownElement = document.getElementById('notemuevas-countdown');
+      const liveElement = document.getElementById('notemuevas-live');
+      const badgeElement = document.getElementById('notemuevas-badge');
+      const infoElement = document.getElementById('notemuevas-info');
+
+      if (timeDiff <= 0) {
+        // ¡Película disponible!
+        if (countdownElement) countdownElement.style.display = 'none';
+        if (liveElement) liveElement.style.display = 'flex';
+        if (badgeElement) {
+          badgeElement.className = 'live-badge';
+          badgeElement.textContent = 'EN VIVO';
+        }
+        if (infoElement) infoElement.textContent = '¡Ya disponible!';
+        
+        // Actualizar estado en la base de datos
+        series.isLocked = false;
+        series.isLive = true;
+        
+        // Notificar al usuario
+        showPremiereNotification();
+        
+        return;
+      }
+
+      // Calcular tiempo restante
+      const hours = Math.floor(timeDiff / (1000 * 60 * 60));
+      const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+      // Actualizar elementos de cuenta regresiva
+      document.getElementById('countdown-hours').textContent = hours.toString().padStart(2, '0');
+      document.getElementById('countdown-minutes').textContent = minutes.toString().padStart(2, '0');
+      document.getElementById('countdown-seconds').textContent = seconds.toString().padStart(2, '0');
+    }
+
+    // Función para mostrar notificación de estreno
+    function showPremiereNotification() {
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: linear-gradient(135deg, #ff0000, #ff4444);
+        color: white;
+        padding: 24px;
+        border-radius: 16px;
+        font-size: 18px;
+        font-weight: 700;
+        z-index: 6000;
+        text-align: center;
+        box-shadow: 0 10px 40px rgba(255, 0, 0, 0.4);
+        backdrop-filter: blur(12px);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        animation: premiereNotification 4s ease-in-out;
+      `;
+      
+      notification.innerHTML = `
+        <div style="font-size: 24px; margin-bottom: 8px;">🎬</div>
+        <div>¡NO TE MUEVAS ya está disponible!</div>
+        <div style="font-size: 14px; opacity: 0.9; margin-top: 8px;">¡Disfruta del estreno!</div>
+      `;
+
+      document.body.appendChild(notification);
+
+      setTimeout(() => {
+        if (notification.parentNode) {
+          notification.parentNode.removeChild(notification);
+        }
+      }, 4000);
     }
 
     // Función para manejar clics en películas
@@ -1610,27 +1834,30 @@
       Object.values(seriesDatabase).forEach(series => {
         if (series.releaseDate) {
           const badgeElement = document.getElementById(`${series.id}-badge`);
-          const lockElement = document.getElementById(`${series.id}-lock`);
           
-          if (badgeElement && lockElement) {
-            if (isMovieAvailable(series)) {
-              // Película disponible - ocultar overlay de bloqueo
-              lockElement.style.display = 'none';
-              
-              if (isMovieLive(series)) {
-                // Es el día del estreno - mostrar "EN VIVO"
-                badgeElement.className = 'live-badge';
-                badgeElement.textContent = 'EN VIVO';
+          if (series.id === 'notemuevas') {
+            // Manejo especial para NO TE MUEVAS con cuenta regresiva
+            updateCountdown();
+          } else if (badgeElement) {
+            // Manejo estándar para otras películas
+            const lockElement = document.getElementById(`${series.id}-lock`);
+            
+            if (lockElement) {
+              if (isMovieAvailable(series)) {
+                lockElement.style.display = 'none';
+                
+                if (isMovieLive(series)) {
+                  badgeElement.className = 'live-badge';
+                  badgeElement.textContent = 'EN VIVO';
+                } else {
+                  badgeElement.className = 'movie-badge';
+                  badgeElement.textContent = 'Película';
+                }
               } else {
-                // Ya está disponible pero no es el día del estreno
-                badgeElement.className = 'movie-badge';
-                badgeElement.textContent = 'Película';
+                lockElement.style.display = 'flex';
+                badgeElement.className = 'premiere-badge';
+                badgeElement.textContent = 'Estreno';
               }
-            } else {
-              // Película aún bloqueada - mostrar overlay de bloqueo
-              lockElement.style.display = 'flex';
-              badgeElement.className = 'premiere-badge';
-              badgeElement.textContent = 'Estreno';
             }
           }
         }
@@ -2490,8 +2717,32 @@
       // Actualizar indicadores de estreno al cargar
       updateReleaseIndicators();
       
-      // Verificar cada minuto si hay cambios en los estrenos
-      setInterval(updateReleaseIndicators, 60000);
+      // Actualizar cuenta regresiva cada segundo
+      setInterval(updateReleaseIndicators, 1000);
+      
+      // Agregar estilo de animación para notificación de estreno
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes premiereNotification {
+          0% {
+            transform: translate(-50%, -50%) scale(0.8);
+            opacity: 0;
+          }
+          20% {
+            transform: translate(-50%, -50%) scale(1.1);
+            opacity: 1;
+          }
+          80% {
+            transform: translate(-50%, -50%) scale(1);
+            opacity: 1;
+          }
+          100% {
+            transform: translate(-50%, -50%) scale(0.9);
+            opacity: 0;
+          }
+        }
+      `;
+      document.head.appendChild(style);
     });
   </script>
 </body>
