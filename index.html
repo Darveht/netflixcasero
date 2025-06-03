@@ -271,6 +271,75 @@
       z-index: 10;
     }
 
+    /* Etiqueta de estreno */
+    .premiere-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: linear-gradient(45deg, #1d9bf0, #00c9ff);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      animation: premierePulse 2s ease-in-out infinite;
+      box-shadow: 0 2px 8px rgba(29, 155, 240, 0.4);
+      z-index: 10;
+    }
+
+    /* Etiqueta de en vivo */
+    .live-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: linear-gradient(45deg, #ff0000, #ff4444);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      animation: livePulse 1s ease-in-out infinite;
+      box-shadow: 0 2px 8px rgba(255, 0, 0, 0.6);
+      z-index: 10;
+    }
+
+    /* Overlay de bloqueo */
+    .locked-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.8);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      color: white;
+      border-radius: 12px;
+      z-index: 15;
+    }
+
+    .locked-icon {
+      font-size: 32px;
+      margin-bottom: 8px;
+      color: #ffd700;
+    }
+
+    .locked-text {
+      font-size: 12px;
+      text-align: center;
+      font-weight: 600;
+    }
+
+    .release-date {
+      font-size: 10px;
+      color: #71767b;
+      margin-top: 4px;
+    }
+
     @keyframes moviePulse {
       0%, 100% {
         transform: scale(1);
@@ -279,6 +348,28 @@
       50% {
         transform: scale(1.05);
         box-shadow: 0 4px 16px rgba(255, 107, 107, 0.6);
+      }
+    }
+
+    @keyframes premierePulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 2px 8px rgba(29, 155, 240, 0.4);
+      }
+      50% {
+        transform: scale(1.05);
+        box-shadow: 0 4px 16px rgba(29, 155, 240, 0.6);
+      }
+    }
+
+    @keyframes livePulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 2px 8px rgba(255, 0, 0, 0.6);
+      }
+      50% {
+        transform: scale(1.1);
+        box-shadow: 0 6px 20px rgba(255, 0, 0, 0.8);
       }
     }
 
@@ -1207,6 +1298,22 @@
         <h2 class="section-title">Terror</h2>
         <div class="carousel-container">
           <div class="carousel" id="terrorCarousel">
+            <div class="carousel-item" onclick="handleMovieClick('notemuevas')">
+              <img src="https://images.unsplash.com/photo-1509803874385-db7c23652552?w=400&h=600&fit=crop" alt="NO TE MUEVAS">
+              <div class="movie-badge">Película</div>
+              <div id="notemuevas-badge" class="premiere-badge">Estreno</div>
+              <div id="notemuevas-lock" class="locked-overlay">
+                <div class="locked-icon">
+                  <i class="fas fa-lock"></i>
+                </div>
+                <div class="locked-text">Próximo Estreno</div>
+                <div class="release-date">11 de Junio 2025</div>
+              </div>
+              <div class="carousel-item-overlay">
+                <div class="carousel-item-title">NO TE MUEVAS</div>
+                <div class="carousel-item-info">Estreno 11 Jun 2025</div>
+              </div>
+            </div>
             <div class="carousel-item" onclick="showSeriesDetail('dontlookaway')">
               <img src="https://i.ytimg.com/vi/4f3hG-5grlw/maxresdefault.jpg" alt="DON'T LOOK AWAY">
               <div class="movie-badge">Película</div>
@@ -1242,7 +1349,7 @@
     </div>
 
     <div class="series-actions">
-      <button class="series-btn primary" onclick="playEpisode(1, 1)">
+      <button class="series-btn primary" id="playButton" onclick="playEpisode(1, 1)">
         <i class="fas fa-play"></i>
         Reproducir
       </button>
@@ -1362,6 +1469,36 @@
     // Base de datos de series y episodios
     const seriesDatabase = {
       
+      notemuevas: {
+        id: 'notemuevas',
+        title: "NO TE MUEVAS",
+        year: '2025',
+        genre: 'Terror, Thriller, Suspenso',
+        rating: '18+',
+        type: 'movie',
+        releaseDate: '2025-06-11', // Fecha de estreno
+        isLocked: true, // Película bloqueada inicialmente
+        isLive: false, // Se activará el día del estreno
+        description: 'Una terrorífica película de suspense que te mantendrá inmóvil del terror. Cuando te dicen "no te muevas", más vale que obedezcas.',
+        poster: 'https://images.unsplash.com/photo-1509803874385-db7c23652552?w=400&h=600&fit=crop',
+        trailer: 'https://www.dropbox.com/scl/fi/dyvowvb39jbubhh9juvq5/copy_320034C2-A3E7-4671-9E09-FC22A2851156.mov?rlkey=fzv18hl7yaedqetjcbw6w03ji&st=luz6lh1q&dl=1',
+        youtubeReference: '#',
+        subtitles: {
+          spanish: 'subtitles/no-te-muevas-es.vtt',
+          english: 'subtitles/no-te-muevas-en.vtt'
+        },
+        episodes: [
+          {
+            id: 1,
+            title: "NO TE MUEVAS",
+            description: 'Una terrorífica película de suspense que te mantendrá inmóvil del terror.',
+            duration: null,
+            thumbnail: 'https://images.unsplash.com/photo-1509803874385-db7c23652552?w=400&h=600&fit=crop',
+            videoUrl: 'https://www.dropbox.com/scl/fi/dyvowvb39jbubhh9juvq5/copy_320034C2-A3E7-4671-9E09-FC22A2851156.mov?rlkey=fzv18hl7yaedqetjcbw6w03ji&st=luz6lh1q&dl=1'
+          }
+        ]
+      },
+      
       dontlookaway: {
         id: 'dontlookaway',
         title: "DON'T LOOK AWAY",
@@ -1425,6 +1562,81 @@
     let currentVideo = null;
     let progressUpdateInterval = null;
 
+    // Función para verificar si una película está disponible
+    function isMovieAvailable(series) {
+      if (!series.releaseDate) return true;
+      
+      const now = new Date();
+      const releaseDate = new Date(series.releaseDate);
+      return now >= releaseDate;
+    }
+
+    // Función para verificar si una película está en vivo (día del estreno)
+    function isMovieLive(series) {
+      if (!series.releaseDate) return false;
+      
+      const now = new Date();
+      const releaseDate = new Date(series.releaseDate);
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const release = new Date(releaseDate.getFullYear(), releaseDate.getMonth(), releaseDate.getDate());
+      
+      return today.getTime() === release.getTime();
+    }
+
+    // Función para manejar clics en películas
+    function handleMovieClick(seriesId) {
+      const series = seriesDatabase[seriesId];
+      if (!series) return;
+
+      // Permitir ver detalles pero bloquear reproducción
+      showSeriesDetail(seriesId);
+    }
+
+    // Función para mostrar mensaje de película bloqueada
+    function showLockedMessage(series) {
+      const releaseDate = new Date(series.releaseDate);
+      const formattedDate = releaseDate.toLocaleDateString('es-ES', {
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      });
+
+      const message = `Esta película se estrena el ${formattedDate}. ¡Mantente atento!`;
+      showErrorMessage(message);
+    }
+
+    // Función para actualizar indicadores de estreno
+    function updateReleaseIndicators() {
+      Object.values(seriesDatabase).forEach(series => {
+        if (series.releaseDate) {
+          const badgeElement = document.getElementById(`${series.id}-badge`);
+          const lockElement = document.getElementById(`${series.id}-lock`);
+          
+          if (badgeElement && lockElement) {
+            if (isMovieAvailable(series)) {
+              // Película disponible - ocultar overlay de bloqueo
+              lockElement.style.display = 'none';
+              
+              if (isMovieLive(series)) {
+                // Es el día del estreno - mostrar "EN VIVO"
+                badgeElement.className = 'live-badge';
+                badgeElement.textContent = 'EN VIVO';
+              } else {
+                // Ya está disponible pero no es el día del estreno
+                badgeElement.className = 'movie-badge';
+                badgeElement.textContent = 'Película';
+              }
+            } else {
+              // Película aún bloqueada - mostrar overlay de bloqueo
+              lockElement.style.display = 'flex';
+              badgeElement.className = 'premiere-badge';
+              badgeElement.textContent = 'Estreno';
+            }
+          }
+        }
+      });
+    }
+
     // Elementos del DOM
     const videoPlayer = document.getElementById('videoPlayer');
     const videoElement = document.getElementById('videoElement');
@@ -1471,8 +1683,31 @@
       // Cargar episodios o película
       loadContent(series);
 
+      // Actualizar botón de reproducir según disponibilidad
+      updatePlayButton(series);
+      
       // Mostrar vista detallada
       document.getElementById('seriesDetail').classList.add('active');
+    }
+
+    // Función para actualizar botón de reproducir
+    function updatePlayButton(series) {
+      const playButton = document.getElementById('playButton');
+      if (!playButton) return;
+
+      if (series.isLocked && !isMovieAvailable(series)) {
+        // Película bloqueada
+        playButton.innerHTML = '<i class="fas fa-lock"></i> Disponible 11 Jun 2025';
+        playButton.style.background = '#666';
+        playButton.style.cursor = 'not-allowed';
+        playButton.onclick = () => showLockedMessage(series);
+      } else {
+        // Película disponible
+        playButton.innerHTML = '<i class="fas fa-play"></i> Reproducir';
+        playButton.style.background = '#1d9bf0';
+        playButton.style.cursor = 'pointer';
+        playButton.onclick = () => playEpisode(1, 1);
+      }
     }
 
     // Función para cerrar detalles de serie
@@ -1527,6 +1762,12 @@
     // Función para reproducir episodio
     function playEpisode(season, episodeId) {
       if (!currentSeries) return;
+
+      // Verificar si la película está disponible para reproducción
+      if (currentSeries.isLocked && !isMovieAvailable(currentSeries)) {
+        showLockedMessage(currentSeries);
+        return;
+      }
 
       const episode = currentSeries.episodes.find(ep => ep.id === episodeId);
       if (!episode) return;
@@ -2245,6 +2486,12 @@
     // Inicialización
     document.addEventListener('DOMContentLoaded', () => {
       console.log('Netflix-style app loaded');
+      
+      // Actualizar indicadores de estreno al cargar
+      updateReleaseIndicators();
+      
+      // Verificar cada minuto si hay cambios en los estrenos
+      setInterval(updateReleaseIndicators, 60000);
     });
   </script>
 </body>
