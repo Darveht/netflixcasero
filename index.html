@@ -1489,7 +1489,7 @@
                     <span class="countdown-label">Seg</span>
                   </div>
                 </div>
-                <div class="countdown-premiere-time">2:25 PM Las Vegas</div>
+                <div class="countdown-premiere-time">2:30 AM Las Vegas</div>
               </div>
               <div id="notemuevas-live" class="premiere-live-overlay" style="display: none;">
                 <div class="live-title">¡ESTRENO EN VIVO!</div>
@@ -1497,7 +1497,7 @@
               </div>
               <div class="carousel-item-overlay">
                 <div class="carousel-item-title">NO TE MUEVAS</div>
-                <div class="carousel-item-info" id="notemuevas-info">Estreno 2:25 PM LV</div>
+                <div class="carousel-item-info" id="notemuevas-info">Estreno 2:30 AM LV</div>
               </div>
             </div>
             <div class="carousel-item" onclick="showSeriesDetail('dontlookaway')">
@@ -1670,14 +1670,10 @@
         type: 'movie',
         releaseDate: (() => {
           const now = new Date();
-          const today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 14, 25, 0); // 2:25 PM hoy
-          // Si ya pasó la hora de hoy, programar para mañana
-          if (now > today) {
-            today.setDate(today.getDate() + 1);
-          }
+          const today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 2, 30, 0); // 2:30 AM hoy
           return today.toISOString();
         })(),
-        premiereTime: '14:25', // Hora de Las Vegas (2:25 PM)
+        premiereTime: '02:30', // Hora de Las Vegas (2:30 AM)
         isLocked: true, // Película bloqueada inicialmente
         isLive: false, // Se activará en el momento del estreno
         hasCountdown: true, // Activar cuenta regresiva
@@ -1820,8 +1816,7 @@
         series.isLocked = false;
         series.isLive = true;
         
-        // Notificar al usuario
-        showPremiereNotification();
+        
         
         return;
       }
@@ -1837,41 +1832,7 @@
       document.getElementById('countdown-seconds').textContent = seconds.toString().padStart(2, '0');
     }
 
-    // Función para mostrar notificación de estreno
-    function showPremiereNotification() {
-      const notification = document.createElement('div');
-      notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: linear-gradient(135deg, #ff0000, #ff4444);
-        color: white;
-        padding: 16px;
-        border-radius: 12px;
-        font-size: 14px;
-        font-weight: 700;
-        z-index: 6000;
-        text-align: center;
-        box-shadow: 0 8px 24px rgba(255, 0, 0, 0.4);
-        backdrop-filter: blur(12px);
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        animation: slideInRight 3s ease-in-out;
-        max-width: 250px;
-      `;
-      
-      notification.innerHTML = `
-        <div style="font-size: 16px; margin-bottom: 4px;">🎬</div>
-        <div style="font-size: 13px;">¡NO TE MUEVAS disponible!</div>
-      `;
-
-      document.body.appendChild(notification);
-
-      setTimeout(() => {
-        if (notification.parentNode) {
-          notification.parentNode.removeChild(notification);
-        }
-      }, 3000);
-    }
+    
 
     // Función para manejar clics en películas
     function handleMovieClick(seriesId) {
@@ -2088,9 +2049,9 @@
         videoPlayerTitle.textContent = `${currentSeries.title} - ${episode.title}`;
       }
 
-      // Mostrar indicador EN VIVO si la película está en transmisión en vivo
+      // Mostrar indicador EN VIVO para NO TE MUEVAS
       const liveIndicator = document.getElementById('videoLiveIndicator');
-      if (currentSeries.isLive && isMovieLive(currentSeries)) {
+      if (currentSeries.id === 'notemuevas') {
         liveIndicator.style.display = 'flex';
       } else {
         liveIndicator.style.display = 'none';
