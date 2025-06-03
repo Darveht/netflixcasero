@@ -897,6 +897,52 @@
       opacity: 1;
     }
 
+    /* Indicador EN VIVO en el video */
+    .video-live-indicator {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(255, 0, 0, 0.9);
+      color: white;
+      padding: 4px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      animation: livePulseVideo 2s ease-in-out infinite;
+    }
+
+    .live-dot {
+      width: 8px;
+      height: 8px;
+      background: white;
+      border-radius: 50%;
+      animation: liveDotPulse 1s ease-in-out infinite;
+    }
+
+    @keyframes livePulseVideo {
+      0%, 100% {
+        background: rgba(255, 0, 0, 0.9);
+        box-shadow: 0 0 8px rgba(255, 0, 0, 0.4);
+      }
+      50% {
+        background: rgba(255, 0, 0, 1);
+        box-shadow: 0 0 16px rgba(255, 0, 0, 0.6);
+      }
+    }
+
+    @keyframes liveDotPulse {
+      0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+      }
+      50% {
+        opacity: 0.7;
+        transform: scale(1.2);
+      }
+    }
+
     /* Barra de navegación inferior */
     .bottom-nav {
       position: fixed;
@@ -1443,7 +1489,7 @@
                     <span class="countdown-label">Seg</span>
                   </div>
                 </div>
-                <div class="countdown-premiere-time">2:16 PM Las Vegas</div>
+                <div class="countdown-premiere-time">2:25 PM Las Vegas</div>
               </div>
               <div id="notemuevas-live" class="premiere-live-overlay" style="display: none;">
                 <div class="live-title">¡ESTRENO EN VIVO!</div>
@@ -1451,7 +1497,7 @@
               </div>
               <div class="carousel-item-overlay">
                 <div class="carousel-item-title">NO TE MUEVAS</div>
-                <div class="carousel-item-info" id="notemuevas-info">Estreno 2:16 PM LV</div>
+                <div class="carousel-item-info" id="notemuevas-info">Estreno 2:25 PM LV</div>
               </div>
             </div>
             <div class="carousel-item" onclick="showSeriesDetail('dontlookaway')">
@@ -1511,7 +1557,13 @@
   <div id="videoPlayer" class="video-player">
     <div class="video-player-container">
       <div class="video-player-header">
-        <div class="video-player-title" id="videoPlayerTitle">Reproduciendo...</div>
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <div class="video-player-title" id="videoPlayerTitle">Reproduciendo...</div>
+          <div id="videoLiveIndicator" class="video-live-indicator" style="display: none;">
+            <div class="live-dot"></div>
+            <span>EN VIVO</span>
+          </div>
+        </div>
         <button class="video-player-close" onclick="closeVideoPlayer()">
           <i class="fas fa-times"></i>
         </button>
@@ -1616,14 +1668,22 @@
         genre: 'Terror, Thriller, Suspenso',
         rating: '18+',
         type: 'movie',
-        releaseDate: new Date(Date.now() + (2 * 60 * 1000)).toISOString(), // Estreno en 2 minutos para prueba
-        premiereTime: '14:16', // Hora de Las Vegas (2:16 PM)
+        releaseDate: (() => {
+          const now = new Date();
+          const today = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 14, 25, 0); // 2:25 PM hoy
+          // Si ya pasó la hora de hoy, programar para mañana
+          if (now > today) {
+            today.setDate(today.getDate() + 1);
+          }
+          return today.toISOString();
+        })(),
+        premiereTime: '14:25', // Hora de Las Vegas (2:25 PM)
         isLocked: true, // Película bloqueada inicialmente
         isLive: false, // Se activará en el momento del estreno
         hasCountdown: true, // Activar cuenta regresiva
         description: 'Una terrorífica película de suspense que te mantendrá inmóvil del terror. Cuando te dicen "no te muevas", más vale que obedezcas.',
         poster: 'https://images.unsplash.com/photo-1509803874385-db7c23652552?w=400&h=600&fit=crop',
-        trailer: 'https://www.dropbox.com/scl/fi/dyvowvb39jbubhh9juvq5/copy_320034C2-A3E7-4671-9E09-FC22A2851156.mov?rlkey=fzv18hl7yaedqetjcbw6w03ji&st=luz6lh1q&dl=1',
+        trailer: 'https://dl.dropboxusercontent.com/scl/fi/dyvowvb39jbubhh9juvq5/copy_320034C2-A3E7-4671-9E09-FC22A2851156.mov?rlkey=fzv18hl7yaedqetjcbw6w03ji&st=luz6lh1q',
         youtubeReference: '#',
         subtitles: {
           spanish: 'subtitles/no-te-muevas-es.vtt',
@@ -1636,7 +1696,7 @@
             description: 'Una terrorífica película de suspense que te mantendrá inmóvil del terror.',
             duration: null,
             thumbnail: 'https://images.unsplash.com/photo-1509803874385-db7c23652552?w=400&h=600&fit=crop',
-            videoUrl: 'https://www.dropbox.com/scl/fi/dyvowvb39jbubhh9juvq5/copy_320034C2-A3E7-4671-9E09-FC22A2851156.mov?rlkey=fzv18hl7yaedqetjcbw6w03ji&st=luz6lh1q&dl=1'
+            videoUrl: 'https://dl.dropboxusercontent.com/scl/fi/dyvowvb39jbubhh9juvq5/copy_320034C2-A3E7-4671-9E09-FC22A2851156.mov?rlkey=fzv18hl7yaedqetjcbw6w03ji&st=luz6lh1q'
           }
         ]
       },
@@ -1730,8 +1790,15 @@
       const series = seriesDatabase.notemuevas;
       if (!series || !series.hasCountdown) return;
 
+      // Obtener hora actual en Las Vegas (UTC-8 o UTC-7 según DST)
       const now = new Date();
       const releaseDate = new Date(series.releaseDate);
+      
+      // Ajustar para zona horaria de Las Vegas
+      const vegasOffset = -8; // UTC-8 (ajustar según DST si es necesario)
+      const utc = now.getTime() + (now.getTimezoneOffset() * 60000);
+      const vegasTime = new Date(utc + (vegasOffset * 3600000));
+      
       const timeDiff = releaseDate.getTime() - now.getTime();
 
       const countdownElement = document.getElementById('notemuevas-countdown');
@@ -1775,27 +1842,26 @@
       const notification = document.createElement('div');
       notification.style.cssText = `
         position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
+        top: 20px;
+        right: 20px;
         background: linear-gradient(135deg, #ff0000, #ff4444);
         color: white;
-        padding: 24px;
-        border-radius: 16px;
-        font-size: 18px;
+        padding: 16px;
+        border-radius: 12px;
+        font-size: 14px;
         font-weight: 700;
         z-index: 6000;
         text-align: center;
-        box-shadow: 0 10px 40px rgba(255, 0, 0, 0.4);
+        box-shadow: 0 8px 24px rgba(255, 0, 0, 0.4);
         backdrop-filter: blur(12px);
         border: 2px solid rgba(255, 255, 255, 0.3);
-        animation: premiereNotification 4s ease-in-out;
+        animation: slideInRight 3s ease-in-out;
+        max-width: 250px;
       `;
       
       notification.innerHTML = `
-        <div style="font-size: 24px; margin-bottom: 8px;">🎬</div>
-        <div>¡NO TE MUEVAS ya está disponible!</div>
-        <div style="font-size: 14px; opacity: 0.9; margin-top: 8px;">¡Disfruta del estreno!</div>
+        <div style="font-size: 16px; margin-bottom: 4px;">🎬</div>
+        <div style="font-size: 13px;">¡NO TE MUEVAS disponible!</div>
       `;
 
       document.body.appendChild(notification);
@@ -1804,7 +1870,7 @@
         if (notification.parentNode) {
           notification.parentNode.removeChild(notification);
         }
-      }, 4000);
+      }, 3000);
     }
 
     // Función para manejar clics en películas
@@ -2022,6 +2088,14 @@
         videoPlayerTitle.textContent = `${currentSeries.title} - ${episode.title}`;
       }
 
+      // Mostrar indicador EN VIVO si la película está en transmisión en vivo
+      const liveIndicator = document.getElementById('videoLiveIndicator');
+      if (currentSeries.isLive && isMovieLive(currentSeries)) {
+        liveIndicator.style.display = 'flex';
+      } else {
+        liveIndicator.style.display = 'none';
+      }
+
       // Configurar subtítulos si están disponibles
       configureSubtitles();
 
@@ -2031,22 +2105,18 @@
       // Mostrar reproductor
       videoPlayer.classList.add('active');
 
-      // Configurar fuente de video
-      videoElement.src = episode.videoUrl;
+      // Configurar fuente de video con mejor compatibilidad
+      const source = document.createElement('source');
+      source.src = episode.videoUrl;
+      source.type = 'video/mp4';
+      videoElement.appendChild(source);
 
       // Event listeners del video
       const onLoadedMetadata = () => {
         updateDuration();
         updateRealTimeDuration(episodeId);
-        // Intentar reproducir automáticamente
-        const playPromise = videoElement.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(e => {
-            console.log('Autoplay prevented, user interaction required:', e);
-            // Mostrar botón de play prominente
-            showPlayButton();
-          });
-        }
+        // Mostrar botón de play para interacción del usuario
+        showPlayButton();
       };
 
       const onPlay = () => {
@@ -2114,6 +2184,10 @@
       videoElement.crossOrigin = 'anonymous';
 
       videoPlayerTitle.textContent = `${currentSeries.title} - ${trailerVideo.title}`;
+
+      // Ocultar indicador EN VIVO para trailers
+      const liveIndicator = document.getElementById('videoLiveIndicator');
+      liveIndicator.style.display = 'none';
 
       // Agregar clase al body para controlar overflow
       document.body.classList.add('video-playing');
@@ -2235,12 +2309,16 @@
     function closeVideoPlayer() {
       videoPlayer.classList.remove('active');
       videoElement.pause();
-      videoElement.src = '';
+      videoElement.innerHTML = ''; // Limpiar todas las fuentes
+      videoElement.load(); // Recargar elemento
       clearInterval(progressUpdateInterval);
       currentVideo = null;
       
       // Remover clase del body
       document.body.classList.remove('video-playing');
+      
+      // Ocultar botón de play grande si existe
+      hidePlayButton();
     }
 
     // Controles del reproductor
@@ -2738,6 +2816,24 @@
           }
           100% {
             transform: translate(-50%, -50%) scale(0.9);
+            opacity: 0;
+          }
+        }
+        
+        @keyframes slideInRight {
+          0% {
+            transform: translateX(100%);
+            opacity: 0;
+          }
+          20% {
+            transform: translateX(0);
+            opacity: 1;
+          }
+          80% {
+            opacity: 1;
+          }
+          100% {
+            transform: translateX(100%);
             opacity: 0;
           }
         }
