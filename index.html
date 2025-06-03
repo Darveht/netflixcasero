@@ -1416,7 +1416,7 @@
         <h2 class="section-title">Series Destacadas</h2>
         <div class="carousel-container">
           <div class="carousel" id="featuredCarousel">
-           
+
             <div class="carousel-item" onclick="showSeriesDetail('sampleSeries')">
               <img src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400" alt="Serie Ejemplo">
               <div class="carousel-item-overlay">
@@ -1429,7 +1429,7 @@
               <div class="movie-badge">Película</div>
               <div class="carousel-item-overlay">
                 <div class="carousel-item-title">DON'T LOOK AWAY</div>
-                <div class="carousel-item-info">2024 • Terror • Thriller</div>
+                <div class="carousel-item-info">2025 • Terror • Thriller</div>
               </div>
             </div>
           </div>
@@ -1441,13 +1441,13 @@
         <h2 class="section-title">Tendencias</h2>
         <div class="carousel-container">
           <div class="carousel" id="trendingCarousel">
-           
+
             <div class="carousel-item" onclick="showSeriesDetail('dontlookaway')">
               <img src="https://i.ytimg.com/vi/4f3hG-5grlw/maxresdefault.jpg" alt="DON'T LOOK AWAY">
               <div class="movie-badge">Película</div>
               <div class="carousel-item-overlay">
                 <div class="carousel-item-title">DON'T LOOK AWAY</div>
-                <div class="carousel-item-info">2024 • Terror</div>
+                <div class="carousel-item-info">2025 • Terror</div>
               </div>
             </div>
           </div>
@@ -1459,7 +1459,7 @@
         <h2 class="section-title">Anime</h2>
         <div class="carousel-container">
           <div class="carousel" id="animeCarousel">
-           
+
           </div>
         </div>
       </div>
@@ -1475,7 +1475,7 @@
               <div id="notemuevas-badge" class="premiere-badge">Estreno</div>
               <div class="carousel-item-overlay">
                 <div class="carousel-item-title">NO TE MUEVAS</div>
-                <div class="carousel-item-info">2024 • Terror</div>
+                <div class="carousel-item-info">2025 • Terror</div>
               </div>
             </div>
             <div class="carousel-item" onclick="showSeriesDetail('dontlookaway')">
@@ -1501,7 +1501,7 @@
       <div class="series-detail-content">
         <h1 class="series-detail-title" id="seriesDetailTitle">DON'T LOOK AWAY</h1>
         <div class="series-detail-meta">
-          <span>2024</span>
+          <span>2025</span>
           <span>Película</span>
           <span>Terror</span>
           <span>18+</span>
@@ -1645,11 +1645,11 @@
   <script>
     // Base de datos de series y episodios
     const seriesDatabase = {
-      
+
       notemuevas: {
         id: 'notemuevas',
         title: "NO TE MUEVAS",
-        year: '2024',
+        year: '2025',
         genre: 'Terror, Thriller, Suspenso',
         rating: '18+',
         type: 'movie',
@@ -1681,11 +1681,11 @@
           }
         ]
       },
-      
+
       dontlookaway: {
         id: 'dontlookaway',
         title: "DON'T LOOK AWAY",
-        year: '2024',
+        year: '2025',
         genre: 'Terror, Thriller, Suspenso',
         rating: '18+',
         type: 'movie', // Detector de tipo
@@ -1708,7 +1708,7 @@
           }
         ]
       },
-      
+
       sampleSeries: {
         id: 'sampleSeries',
         title: "Aventura Épica",
@@ -1749,18 +1749,18 @@
     function createJuneReleaseDate() {
       const now = new Date();
       const currentYear = now.getFullYear();
-      
+
       // Crear fecha para el 11 de junio del año actual a las 2:40 AM Houston (UTC-6)
       // 2:40 AM Houston = 8:40 AM UTC
       const releaseDate = new Date();
       releaseDate.setUTCFullYear(currentYear, 5, 11); // Junio = mes 5 (0-indexado)
       releaseDate.setUTCHours(8, 40, 0, 0); // 8:40 UTC = 2:40 AM Houston
-      
+
       // Si ya pasó el 11 de junio de este año, programar para el próximo año
       if (now > releaseDate) {
         releaseDate.setUTCFullYear(currentYear + 1);
       }
-      
+
       return releaseDate;
     }
 
@@ -1782,10 +1782,10 @@
         const releaseDate = createJuneReleaseDate();
         return now >= releaseDate && !hasMovieBeenWatched(series.id);
       }
-      
+
       // Otras películas funcionan normalmente
       if (!series.releaseDate) return true;
-      
+
       const now = new Date();
       const releaseDate = new Date(series.releaseDate);
       return now >= releaseDate;
@@ -1794,11 +1794,11 @@
     // Función para verificar si una película está en vivo
     function isMovieLive(series) {
       if (!series.releaseDate) return false;
-      
+
       const now = new Date();
       const releaseDate = new Date(series.releaseDate);
       const timeDiff = Math.abs(now.getTime() - releaseDate.getTime());
-      
+
       // Considerar "en vivo" durante los primeros 60 minutos después del estreno
       return now >= releaseDate && timeDiff <= (60 * 60 * 1000);
     }
@@ -1810,7 +1810,7 @@
       const timeDiff = releaseDate.getTime() - now.getTime();
 
       const badgeElement = document.getElementById('notemuevas-badge');
-      
+
       const hasBeenWatched = hasMovieBeenWatched('notemuevas');
 
       if (hasBeenWatched) {
@@ -1840,7 +1840,7 @@
       // Configurar fecha de estreno para NO TE MUEVAS
       const releaseDate = createJuneReleaseDate();
       seriesDatabase.notemuevas.releaseDate = releaseDate;
-      
+
       // Configurar estado inicial
       const now = new Date();
       if (now >= releaseDate) {
@@ -1850,13 +1850,13 @@
         seriesDatabase.notemuevas.isLocked = true;
         seriesDatabase.notemuevas.isLive = false;
       }
-      
+
       // Actualizar cuenta regresiva cada segundo
       setInterval(updateCountdownToJune, 1000);
-      
+
       // Ejecutar actualización inicial
       updateCountdownToJune();
-      
+
       console.log('Sistema de estreno para el 11 de junio inicializado');
       console.log('Fecha de estreno:', releaseDate.toLocaleString('es-ES'));
       console.log('Estado actual:', now >= releaseDate ? 'Disponible' : 'Bloqueada');
@@ -1895,18 +1895,18 @@
       Object.values(seriesDatabase).forEach(series => {
         if (series.releaseDate) {
           const badgeElement = document.getElementById(`${series.id}-badge`);
-          
+
           if (series.id === 'notemuevas') {
             // Manejo especial para NO TE MUEVAS con cuenta regresiva
             updateCountdown();
           } else if (badgeElement) {
             // Manejo estándar para otras películas
             const lockElement = document.getElementById(`${series.id}-lock`);
-            
+
             if (lockElement) {
               if (isMovieAvailable(series)) {
                 lockElement.style.display = 'none';
-                
+
                 if (isMovieLive(series)) {
                   badgeElement.className = 'live-badge';
                   badgeElement.textContent = 'EN VIVO';
@@ -1973,10 +1973,10 @@
 
       // Actualizar botón de reproducir según disponibilidad
       updatePlayButton(series);
-      
+
       // Mostrar cuenta regresiva en detalles si es necesario
       showCountdownInDetails(series);
-      
+
       // Mostrar vista detallada
       document.getElementById('seriesDetail').classList.add('active');
     }
@@ -1989,7 +1989,7 @@
       if (series.id === 'notemuevas') {
         const hasBeenWatched = hasMovieBeenWatched('notemuevas');
         const isAvailable = isMovieAvailable(series);
-        
+
         if (hasBeenWatched) {
           // Película ya vista
           playButton.innerHTML = '<i class="fas fa-eye-slash"></i> Transmisión Finalizada';
@@ -2035,9 +2035,9 @@
         month: 'long',
         year: 'numeric'
       });
-      
+
       const formattedTime = '2:40 AM (Houston) / 12:40 AM (Las Vegas)';
-      
+
       const message = `ESTRENO MUNDIAL: ${formattedDate} a las ${formattedTime}.\n\nUna transmisión única que no te puedes perder.`;
       showErrorMessage(message);
     }
@@ -2052,10 +2052,10 @@
 
       // Solo mostrar para NO TE MUEVAS si está bloqueada
       if (series.id !== 'notemuevas') return;
-      
+
       const hasBeenWatched = hasMovieBeenWatched('notemuevas');
       const isAvailable = isMovieAvailable(series);
-      
+
       // No mostrar si ya fue vista o está disponible
       if (hasBeenWatched || isAvailable) return;
 
@@ -2263,12 +2263,12 @@
         playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
         pauseIndicator.classList.remove('visible');
         hidePlayButton();
-        
+
         // Marcar NO TE MUEVAS como vista cuando comienza la reproducción
         if (currentSeries.id === 'notemuevas') {
           markMovieAsWatched('notemuevas');
           updateCountdownToJune(); // Actualizar estado inmediatamente
-          
+
           // Mostrar notificación de que es la única vez
           setTimeout(() => {
             showLiveNotification('ATENCIÓN: Esta es tu única oportunidad de ver esta transmisión. Una vez que termine, no podrás verla nuevamente.');
@@ -2498,10 +2498,10 @@
       videoElement.load(); // Recargar elemento
       clearInterval(progressUpdateInterval);
       currentVideo = null;
-      
+
       // Remover clase del body
       document.body.classList.remove('video-playing');
-      
+
       // Ocultar botón de play grande si existe
       hidePlayButton();
     }
@@ -2976,7 +2976,7 @@
     // Inicialización
     document.addEventListener('DOMContentLoaded', () => {
       console.log('Netflix-style app loaded');
-      
+
       // Agregar estilo de animación para notificación de estreno
       const style = document.createElement('style');
       style.textContent = `
@@ -2998,7 +2998,7 @@
             opacity: 0;
           }
         }
-        
+
         @keyframes slideInRight {
           0% {
             transform: translateX(100%);
@@ -3016,7 +3016,7 @@
             opacity: 0;
           }
         }
-        
+
         @keyframes liveNotificationPulse {
           0% {
             transform: translateX(-50%) scale(0.9);
@@ -3038,6 +3038,184 @@
       `;
       document.head.appendChild(style);
     });
+
+    // Función para quitar emojis y fechas de la description
+    function cleanDescription(description) {
+        // Eliminar emojis (esta expresión regular puede no ser exhaustiva)
+        description = description.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '');
+
+        // Eliminar menciones de fechas y horarios
+        description = description.replace(/ESTRENO MUNDIAL:.*?Transmisión simultánea mundial - Una sola vez/g, '');
+
+        return description.trim();
+    }
+
+    // Modificar la función showSeriesDetail para limpiar la descripción
+    const originalShowSeriesDetail = showSeriesDetail;
+    showSeriesDetail = function(seriesId) {
+        const series = seriesDatabase[seriesId];
+        if (series) {
+            series.description = cleanDescription(series.description);
+            seriesDatabase[seriesId].description = series.description; // Actualizar en la base de datos
+        }
+        originalShowSeriesDetail.call(this, seriesId);
+    };
+
+    //Modificar la función intializePremireSystem, una vez que la pelicula se estrene, no estará más bloqueada, sino que estará disponible para ver cuando se desee.
+      function initializePremiereSystem() {
+      // Configurar fecha de estreno para NO TE MUEVAS
+      const releaseDate = createJuneReleaseDate();
+      seriesDatabase.notemuevas.releaseDate = releaseDate;
+
+      // Configurar estado inicial
+      const now = new Date();
+      if (now >= releaseDate) {
+        seriesDatabase.notemuevas.isLocked = false;
+        seriesDatabase.notemuevas.isLive = false; //La pelicula ya no estará como en vivo
+      } else {
+        seriesDatabase.notemuevas.isLocked = true;
+        seriesDatabase.notemuevas.isLive = false;
+      }
+
+      // Actualizar cuenta regresiva cada segundo
+      setInterval(updateCountdownToJune, 1000);
+
+      // Ejecutar actualización inicial
+      updateCountdownToJune();
+
+      console.log('Sistema de estreno para el 11 de junio inicializado');
+      console.log('Fecha de estreno:', releaseDate.toLocaleString('es-ES'));
+      console.log('Estado actual:', now >= releaseDate ? 'Disponible' : 'Bloqueada');
+    }
+      //Modifico la funcion updatePlayButton para que una vez vista la pelicula, no pueda ser reproducida de nuevo.
+      function updatePlayButton(series) {
+      const playButton = document.getElementById('playButton');
+      if (!playButton) return;
+
+      if (series.id === 'notemuevas') {
+        const hasBeenWatched = hasMovieBeenWatched('notemuevas');
+        const isAvailable = isMovieAvailable(series);
+
+        if (hasBeenWatched) {
+          // Película ya vista
+          playButton.innerHTML = '<i class="fas fa-eye-slash"></i> Transmisión Finalizada';
+          playButton.style.background = '#6c757d';
+          playButton.style.cursor = 'not-allowed';
+          playButton.onclick = () => showWatchedMessage();
+        } else if (!isAvailable) {
+          // Película bloqueada hasta el 11 de junio
+          const releaseDate = createJuneReleaseDate();
+          playButton.innerHTML = '<i class="fas fa-calendar-alt"></i> Estreno: 11 de Junio';
+          playButton.style.background = '#ffd700';
+          playButton.style.color = '#000';
+          playButton.style.cursor = 'not-allowed';
+          playButton.onclick = () => showJuneReleaseMessage(releaseDate);
+        } else {
+          // Película disponible
+          playButton.innerHTML = '<i class="fas fa-play"></i> Reproducir';
+          playButton.style.background = '#1d9bf0';
+          playButton.style.color = '#fff';
+          playButton.style.cursor = 'pointer';
+          playButton.onclick = () => playEpisode(1, 1);
+        }
+      } else if (series.isLocked && !isMovieAvailable(series)) {
+        // Otras películas bloqueadas
+        playButton.innerHTML = '<i class="fas fa-lock"></i> Próximamente';
+        playButton.style.background = '#666';
+        playButton.style.cursor = 'not-allowed';
+        playButton.onclick = () => showLockedMessage(series);
+      } else {
+        // Otras películas disponibles
+        playButton.innerHTML = '<i class="fas fa-play"></i> Reproducir';
+        playButton.style.background = '#1d9bf0';
+        playButton.style.cursor = 'pointer';
+        playButton.onclick = () => playEpisode(1, 1);
+      }
+    }
+
+      // Bloquear el trailer de NO TE MUEVAS
+      function playTrailer() {
+        if (currentSeries && currentSeries.id === 'notemuevas') {
+            showErrorMessage('El trailer no está disponible.');
+            return;
+        }
+
+        if (!currentSeries || !currentSeries.trailer) {
+            showErrorMessage('Trailer no disponible');
+            return;
+        }
+
+        // Crear objeto de trailer para reproducir
+        const trailerVideo = {
+            id: 'trailer',
+            title: 'Trailer Oficial',
+            description: 'Trailer oficial',
+            duration: '2:30',
+            thumbnail: currentSeries.poster,
+            videoUrl: currentSeries.trailer
+        };
+
+        currentVideo = trailerVideo;
+
+        // Limpiar video anterior
+        videoElement.removeAttribute('src');
+        videoElement.load();
+
+        // Configurar video para máxima compatibilidad móvil
+        videoElement.setAttribute('playsinline', 'true');
+        videoElement.setAttribute('webkit-playsinline', 'true');
+        videoElement.setAttribute('x5-playsinline', 'true');
+        videoElement.setAttribute('x5-video-player-type', 'h5');
+        videoElement.controls = false;
+        videoElement.preload = 'metadata';
+        videoElement.crossOrigin = 'anonymous';
+
+        videoPlayerTitle.textContent = `${currentSeries.title} - ${trailerVideo.title}`;
+
+        // Ocultar indicador EN VIVO para trailers
+        const liveIndicator = document.getElementById('videoLiveIndicator');
+        liveIndicator.style.display = 'none';
+
+        // Agregar clase al body para controlar overflow
+        document.body.classList.add('video-playing');
+
+        // Mostrar reproductor
+        videoPlayer.classList.add('active');
+
+        // Configurar fuente
+        videoElement.src = trailerVideo.videoUrl;
+
+        // Event listeners
+        const onLoadedMetadata = () => {
+            updateDuration();
+            // Mostrar botón de play en lugar de reproducir automáticamente
+            showPlayButton();
+        };
+
+        const onPlay = () => {
+            playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            pauseIndicator.classList.remove('visible');
+            hidePlayButton();
+        };
+
+        const onPause = () => {
+            playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+            pauseIndicator.classList.add('visible');
+        };
+
+        const onError = (e) => {
+            console.error('Trailer error:', e);
+            showErrorMessage('Error al cargar el trailer');
+        };
+
+        videoElement.addEventListener('loadedmetadata', onLoadedMetadata);
+        videoElement.addEventListener('play', onPlay);
+        videoElement.addEventListener('pause', onPause);
+        videoElement.addEventListener('error', onError);
+
+        startProgressUpdate();
+    }
+
   </script>
 </body>
 </html>
