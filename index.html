@@ -1672,7 +1672,7 @@
         hasCountdown: true, // Activar cuenta regresiva
         description: 'Una terrorífica película de suspense que te mantendrá inmóvil del terror. Cuando te dicen "no te muevas", más vale que obedezcas.',
         poster: 'https://i.ibb.co/DDh79krZ/image.png',
-        trailer: 'https://dl.dropboxusercontent.com/scl/fi/w028mor4bksl2jc6ii4do/copy_8AAD6CC4-CEE6-4167-A131-E21CB14955CA.mov?rlkey=oef4oc2m3spkafc9h6sqgpn66&st=35hmqmld',
+        trailer: 'video_BAACAgEAAxkBAAIBimg_Hd9a9bpAMm37Sz-eBpNb-0gZAAKnBgAC_aH4RQ4rFHrAoNZHNgQ.mp4',
         youtubeReference: '#',
         subtitles: {
           spanish: 'subtitles/no-te-muevas-es.vtt',
@@ -3171,13 +3171,8 @@
       }
     }
 
-      // Bloquear el trailer de NO TE MUEVAS
+      // Función para reproducir trailer
       function playTrailer() {
-        if (currentSeries && currentSeries.id === 'notemuevas') {
-            showErrorMessage('El trailer no está disponible.');
-            return;
-        }
-
         if (!currentSeries || !currentSeries.trailer) {
             showErrorMessage('Trailer no disponible');
             return;
