@@ -1771,27 +1771,24 @@
     let currentVideo = null;
     let progressUpdateInterval = null;
 
-    // Función para crear fecha de estreno (hoy a las 2:40 AM Houston)
-    function createReleaseDate() {
-      const now = new Date();
-      
-      // Crear fecha base para hoy
-      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-      
-      // Crear fecha para las 2:40 AM hora local (simulando Houston)
-      const releaseDate = new Date(today);
-      releaseDate.setHours(2, 40, 0, 0); // 2:40 AM hora local
-      
-      // Si ya pasó el tiempo de hoy, programar para mañana
-      if (now >= releaseDate) {
-        releaseDate.setDate(releaseDate.getDate() + 1);
-      }
-      
-      return releaseDate;
+    // Función para verificar si una película ha sido vista
+    function hasMovieBeenWatched(movieId) {
+      return localStorage.getItem(`watched_${movieId}`) === 'true';
+    }
+
+    // Función para marcar película como vista
+    function markMovieAsWatched(movieId) {
+      localStorage.setItem(`watched_${movieId}`, 'true');
     }
 
     // Función para verificar si una película está disponible
     function isMovieAvailable(series) {
+      // NO TE MUEVAS siempre está disponible pero solo se puede ver una vez
+      if (series.id === 'notemuevas') {
+        return !hasMovieBeenWatched(series.id);
+      }
+      
+      // Otras películas funcionan normalmente
       if (!series.releaseDate) return true;
       
       const now = new Date();
@@ -1811,79 +1808,72 @@
       return now >= releaseDate && timeDiff <= (60 * 60 * 1000);
     }
 
-    // Función principal de cuenta regresiva
-    function updateCountdown() {
+    // Función principal para mostrar estado EN VIVO
+    function updateMovieStatus() {
       const series = seriesDatabase.notemuevas;
-      if (!series || !series.hasCountdown) return;
+      if (!series) return;
 
-      const now = new Date();
-      const releaseDate = new Date(series.releaseDate);
-      const timeDiff = releaseDate.getTime() - now.getTime();
-      
       const countdownElement = document.getElementById('notemuevas-countdown');
       const liveElement = document.getElementById('notemuevas-live');
       const badgeElement = document.getElementById('notemuevas-badge');
       const infoElement = document.getElementById('notemuevas-info');
+      
+      const hasBeenWatched = hasMovieBeenWatched('notemuevas');
 
-      if (timeDiff <= 0) {
-        // ¡Película disponible!
+      if (hasBeenWatched) {
+        // Película ya vista - mostrar como agotada
         if (countdownElement) countdownElement.style.display = 'none';
-        if (liveElement) liveElement.style.display = 'flex';
+        if (liveElement) {
+          liveElement.style.display = 'flex';
+          liveElement.style.background = 'linear-gradient(135deg, rgba(108, 117, 125, 0.9), rgba(73, 80, 87, 0.9))';
+          liveElement.innerHTML = `
+            <div class="live-title">TRANSMISIÓN FINALIZADA</div>
+            <div class="live-subtitle">Ya no disponible</div>
+          `;
+        }
+        if (badgeElement) {
+          badgeElement.className = 'movie-badge';
+          badgeElement.style.background = 'linear-gradient(45deg, #6c757d, #495057)';
+          badgeElement.textContent = 'VISTO';
+        }
+        if (infoElement) infoElement.textContent = 'Transmisión única finalizada';
+      } else {
+        // Película disponible EN VIVO
+        if (countdownElement) countdownElement.style.display = 'none';
+        if (liveElement) {
+          liveElement.style.display = 'flex';
+          liveElement.style.background = 'linear-gradient(135deg, rgba(255, 0, 0, 0.9), rgba(255, 69, 0, 0.9))';
+          liveElement.innerHTML = `
+            <div class="live-title">¡ESTRENO EN VIVO!</div>
+            <div class="live-subtitle">Disponible ahora - Una sola vez</div>
+          `;
+        }
         if (badgeElement) {
           badgeElement.className = 'live-badge';
           badgeElement.textContent = 'EN VIVO';
         }
-        if (infoElement) infoElement.textContent = '¡Ya disponible!';
+        if (infoElement) infoElement.textContent = '¡Transmisión única en vivo!';
         
         // Actualizar estado en la base de datos
         series.isLocked = false;
         series.isLive = true;
-        return;
-      }
-
-      // Calcular tiempo restante
-      const hours = Math.floor(timeDiff / (1000 * 60 * 60));
-      const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
-
-      // Actualizar elementos de cuenta regresiva
-      document.getElementById('countdown-hours').textContent = hours.toString().padStart(2, '0');
-      document.getElementById('countdown-minutes').textContent = minutes.toString().padStart(2, '0');
-      document.getElementById('countdown-seconds').textContent = seconds.toString().padStart(2, '0');
-
-      // Mostrar horarios de diferentes ciudades
-      const countdownPremiereTime = document.querySelector('.countdown-premiere-time');
-      if (countdownPremiereTime) {
-        const now = new Date();
-        const currentHour = now.getHours();
-        const currentMinute = now.getMinutes();
-        
-        countdownPremiereTime.innerHTML = `
-          <div>Hora actual: ${currentHour.toString().padStart(2, '0')}:${currentMinute.toString().padStart(2, '0')}</div>
-          <div>Estreno: 2:40 AM</div>
-          <div>Estreno simultáneo mundial</div>
-        `;
-      }
-
-      // Actualizar info
-      if (infoElement) {
-        infoElement.textContent = 'Estreno simultáneo mundial';
       }
     }
 
-    // Inicializar sistema de estreno automático
+    // Inicializar sistema de película única
     function initializePremiereSystem() {
-      // Establecer fecha de estreno dinámicamente
-      seriesDatabase.notemuevas.releaseDate = createReleaseDate().toISOString();
+      // NO TE MUEVAS está siempre disponible pero solo se puede ver una vez
+      seriesDatabase.notemuevas.isLocked = false;
+      seriesDatabase.notemuevas.isLive = true;
       
-      // Actualizar cuenta regresiva cada segundo
-      setInterval(updateCountdown, 1000);
+      // Actualizar estado cada segundo para mantener animación EN VIVO
+      setInterval(updateMovieStatus, 1000);
       
       // Ejecutar actualización inicial
-      updateCountdown();
+      updateMovieStatus();
       
-      console.log('Sistema de estreno inicializado');
-      console.log('Fecha de estreno:', new Date(seriesDatabase.notemuevas.releaseDate));
+      console.log('Sistema de película única inicializado');
+      console.log('NO TE MUEVAS:', hasMovieBeenWatched('notemuevas') ? 'Ya vista' : 'Disponible');
     }
 
     // Función para manejar clics en películas
@@ -1905,6 +1895,12 @@
       });
 
       const message = `Esta película se estrena el ${formattedDate}. ¡Mantente atento!`;
+      showErrorMessage(message);
+    }
+
+    // Función para mostrar mensaje de película ya vista
+    function showWatchedMessage() {
+      const message = 'Esta transmisión EN VIVO ya fue vista y no puede reproducirse nuevamente. Era una experiencia única e irrepetible.';
       showErrorMessage(message);
     }
 
@@ -2001,14 +1997,30 @@
       const playButton = document.getElementById('playButton');
       if (!playButton) return;
 
-      if (series.isLocked && !isMovieAvailable(series)) {
-        // Película bloqueada
-        playButton.innerHTML = '<i class="fas fa-lock"></i> Disponible 11 Jun 2025';
+      if (series.id === 'notemuevas') {
+        const hasBeenWatched = hasMovieBeenWatched('notemuevas');
+        
+        if (hasBeenWatched) {
+          // Película ya vista
+          playButton.innerHTML = '<i class="fas fa-eye-slash"></i> Transmisión Finalizada';
+          playButton.style.background = '#6c757d';
+          playButton.style.cursor = 'not-allowed';
+          playButton.onclick = () => showWatchedMessage();
+        } else {
+          // Película disponible EN VIVO
+          playButton.innerHTML = '<i class="fas fa-broadcast-tower"></i> Ver Transmisión EN VIVO';
+          playButton.style.background = 'linear-gradient(45deg, #ff0000, #ff4444)';
+          playButton.style.cursor = 'pointer';
+          playButton.onclick = () => playEpisode(1, 1);
+        }
+      } else if (series.isLocked && !isMovieAvailable(series)) {
+        // Otras películas bloqueadas
+        playButton.innerHTML = '<i class="fas fa-lock"></i> Próximamente';
         playButton.style.background = '#666';
         playButton.style.cursor = 'not-allowed';
         playButton.onclick = () => showLockedMessage(series);
       } else {
-        // Película disponible
+        // Otras películas disponibles
         playButton.innerHTML = '<i class="fas fa-play"></i> Reproducir';
         playButton.style.background = '#1d9bf0';
         playButton.style.cursor = 'pointer';
@@ -2075,6 +2087,12 @@
         return;
       }
 
+      // Para NO TE MUEVAS, verificar si ya fue vista
+      if (currentSeries.id === 'notemuevas' && hasMovieBeenWatched('notemuevas')) {
+        showWatchedMessage();
+        return;
+      }
+
       const episode = currentSeries.episodes.find(ep => ep.id === episodeId);
       if (!episode) return;
 
@@ -2136,6 +2154,17 @@
         playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
         pauseIndicator.classList.remove('visible');
         hidePlayButton();
+        
+        // Marcar NO TE MUEVAS como vista cuando comienza la reproducción
+        if (currentSeries.id === 'notemuevas') {
+          markMovieAsWatched('notemuevas');
+          updateMovieStatus(); // Actualizar estado inmediatamente
+          
+          // Mostrar notificación de que es la única vez
+          setTimeout(() => {
+            showLiveNotification('¡ATENCIÓN! Esta es tu única oportunidad de ver esta transmisión. Una vez que termine, no podrás verla nuevamente.');
+          }, 3000);
+        }
       };
 
       const onPause = () => {
@@ -2316,6 +2345,45 @@
           errorEl.parentNode.removeChild(errorEl);
         }
       }, 3000);
+    }
+
+    // Función para mostrar notificación especial de transmisión EN VIVO
+    function showLiveNotification(message) {
+      const notificationEl = document.createElement('div');
+      notificationEl.style.cssText = `
+        position: fixed;
+        top: 20%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(45deg, #ff0000, #ff4444);
+        color: white;
+        padding: 15px 20px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 600;
+        z-index: 5000;
+        text-align: center;
+        backdrop-filter: blur(12px);
+        max-width: 350px;
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 8px 32px rgba(255, 0, 0, 0.4);
+        animation: liveNotificationPulse 6s ease-in-out;
+      `;
+      notificationEl.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
+          <div style="width: 8px; height: 8px; background: white; border-radius: 50%; animation: liveDotPulse 1s ease-in-out infinite;"></div>
+          <span style="font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">TRANSMISIÓN EN VIVO</span>
+        </div>
+        <div style="font-size: 12px; opacity: 0.9;">${message}</div>
+      `;
+
+      document.body.appendChild(notificationEl);
+
+      setTimeout(() => {
+        if (notificationEl.parentNode) {
+          notificationEl.parentNode.removeChild(notificationEl);
+        }
+      }, 6000);
     }
 
     // Función para cerrar reproductor
@@ -2841,6 +2909,25 @@
           }
           100% {
             transform: translateX(100%);
+            opacity: 0;
+          }
+        }
+        
+        @keyframes liveNotificationPulse {
+          0% {
+            transform: translateX(-50%) scale(0.9);
+            opacity: 0;
+          }
+          10% {
+            transform: translateX(-50%) scale(1.05);
+            opacity: 1;
+          }
+          90% {
+            transform: translateX(-50%) scale(1);
+            opacity: 1;
+          }
+          100% {
+            transform: translateX(-50%) scale(0.95);
             opacity: 0;
           }
         }
