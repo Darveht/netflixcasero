@@ -1473,35 +1473,9 @@
               <img src="https://images.unsplash.com/photo-1509803874385-db7c23652552?w=400&h=600&fit=crop" alt="NO TE MUEVAS">
               <div class="movie-badge">Película</div>
               <div id="notemuevas-badge" class="premiere-badge">Estreno</div>
-              <div id="notemuevas-countdown" class="countdown-overlay">
-                <div class="countdown-title">Estreno en:</div>
-                <div class="countdown-timer">
-                  <div class="countdown-segment">
-                    <span class="countdown-number" id="countdown-hours">00</span>
-                    <span class="countdown-label">Hrs</span>
-                  </div>
-                  <div class="countdown-segment">
-                    <span class="countdown-number" id="countdown-minutes">00</span>
-                    <span class="countdown-label">Min</span>
-                  </div>
-                  <div class="countdown-segment">
-                    <span class="countdown-number" id="countdown-seconds">00</span>
-                    <span class="countdown-label">Seg</span>
-                  </div>
-                </div>
-                <div class="countdown-premiere-time">
-                  <div>Houston: 2:40 AM</div>
-                  <div>Las Vegas: 12:40 AM</div>
-                  <div>Estreno simultáneo mundial</div>
-                </div>
-              </div>
-              <div id="notemuevas-live" class="premiere-live-overlay" style="display: none;">
-                <div class="live-title">¡ESTRENO EN VIVO!</div>
-                <div class="live-subtitle">Ya disponible</div>
-              </div>
               <div class="carousel-item-overlay">
                 <div class="carousel-item-title">NO TE MUEVAS</div>
-                <div class="carousel-item-info" id="notemuevas-info">Estreno simultáneo mundial</div>
+                <div class="carousel-item-info">2024 • Terror</div>
               </div>
             </div>
             <div class="carousel-item" onclick="showSeriesDetail('dontlookaway')">
@@ -1527,7 +1501,7 @@
       <div class="series-detail-content">
         <h1 class="series-detail-title" id="seriesDetailTitle">DON'T LOOK AWAY</h1>
         <div class="series-detail-meta">
-          <span>2025</span>
+          <span>2024</span>
           <span>Película</span>
           <span>Terror</span>
           <span>18+</span>
@@ -1675,7 +1649,7 @@
       notemuevas: {
         id: 'notemuevas',
         title: "NO TE MUEVAS",
-        year: '2025',
+        year: '2024',
         genre: 'Terror, Thriller, Suspenso',
         rating: '18+',
         type: 'movie',
@@ -1688,7 +1662,7 @@
         isLocked: true, // Película bloqueada inicialmente
         isLive: false, // Se activará en el momento del estreno
         hasCountdown: true, // Activar cuenta regresiva
-        description: 'Una terrorífica película de suspense que te mantendrá inmóvil del terror. Cuando te dicen "no te muevas", más vale que obedezcas.',
+        description: 'Una terrorífica película de suspense que te mantendrá inmóvil del terror. Cuando te dicen "no te muevas", más vale que obedezcas.\n\nESTRENO MUNDIAL: 11 de Junio\nHouston: 2:40 AM | Las Vegas: 12:40 AM\nTransmisión simultánea mundial - Una sola vez',
         poster: 'https://images.unsplash.com/photo-1509803874385-db7c23652552?w=400&h=600&fit=crop',
         trailer: 'https://dl.dropboxusercontent.com/scl/fi/dyvowvb39jbubhh9juvq5/copy_320034C2-A3E7-4671-9E09-FC22A2851156.mov?rlkey=fzv18hl7yaedqetjcbw6w03ji&st=luz6lh1q',
         youtubeReference: '#',
@@ -1771,6 +1745,25 @@
     let currentVideo = null;
     let progressUpdateInterval = null;
 
+    // Función para crear fecha de estreno para el 11 de junio a las 2:40 AM Houston
+    function createJuneReleaseDate() {
+      const now = new Date();
+      const currentYear = now.getFullYear();
+      
+      // Crear fecha para el 11 de junio del año actual a las 2:40 AM Houston (UTC-6)
+      // 2:40 AM Houston = 8:40 AM UTC
+      const releaseDate = new Date();
+      releaseDate.setUTCFullYear(currentYear, 5, 11); // Junio = mes 5 (0-indexado)
+      releaseDate.setUTCHours(8, 40, 0, 0); // 8:40 UTC = 2:40 AM Houston
+      
+      // Si ya pasó el 11 de junio de este año, programar para el próximo año
+      if (now > releaseDate) {
+        releaseDate.setUTCFullYear(currentYear + 1);
+      }
+      
+      return releaseDate;
+    }
+
     // Función para verificar si una película ha sido vista
     function hasMovieBeenWatched(movieId) {
       return localStorage.getItem(`watched_${movieId}`) === 'true';
@@ -1783,9 +1776,11 @@
 
     // Función para verificar si una película está disponible
     function isMovieAvailable(series) {
-      // NO TE MUEVAS siempre está disponible pero solo se puede ver una vez
+      // NO TE MUEVAS se desbloquea el 11 de junio
       if (series.id === 'notemuevas') {
-        return !hasMovieBeenWatched(series.id);
+        const now = new Date();
+        const releaseDate = createJuneReleaseDate();
+        return now >= releaseDate && !hasMovieBeenWatched(series.id);
       }
       
       // Otras películas funcionan normalmente
@@ -1808,72 +1803,63 @@
       return now >= releaseDate && timeDiff <= (60 * 60 * 1000);
     }
 
-    // Función principal para mostrar estado EN VIVO
-    function updateMovieStatus() {
-      const series = seriesDatabase.notemuevas;
-      if (!series) return;
+    // Función principal para actualizar estado de NO TE MUEVAS
+    function updateCountdownToJune() {
+      const now = new Date();
+      const releaseDate = createJuneReleaseDate();
+      const timeDiff = releaseDate.getTime() - now.getTime();
 
-      const countdownElement = document.getElementById('notemuevas-countdown');
-      const liveElement = document.getElementById('notemuevas-live');
       const badgeElement = document.getElementById('notemuevas-badge');
-      const infoElement = document.getElementById('notemuevas-info');
       
       const hasBeenWatched = hasMovieBeenWatched('notemuevas');
 
       if (hasBeenWatched) {
-        // Película ya vista - mostrar como agotada
-        if (countdownElement) countdownElement.style.display = 'none';
-        if (liveElement) {
-          liveElement.style.display = 'flex';
-          liveElement.style.background = 'linear-gradient(135deg, rgba(108, 117, 125, 0.9), rgba(73, 80, 87, 0.9))';
-          liveElement.innerHTML = `
-            <div class="live-title">TRANSMISIÓN FINALIZADA</div>
-            <div class="live-subtitle">Ya no disponible</div>
-          `;
-        }
+        // Película ya vista
         if (badgeElement) {
           badgeElement.className = 'movie-badge';
           badgeElement.style.background = 'linear-gradient(45deg, #6c757d, #495057)';
           badgeElement.textContent = 'VISTO';
         }
-        if (infoElement) infoElement.textContent = 'Transmisión única finalizada';
+      } else if (timeDiff > 0) {
+        // Antes del estreno
+        if (badgeElement) {
+          badgeElement.className = 'premiere-badge';
+          badgeElement.textContent = 'ESTRENO';
+        }
       } else {
         // Película disponible EN VIVO
-        if (countdownElement) countdownElement.style.display = 'none';
-        if (liveElement) {
-          liveElement.style.display = 'flex';
-          liveElement.style.background = 'linear-gradient(135deg, rgba(255, 0, 0, 0.9), rgba(255, 69, 0, 0.9))';
-          liveElement.innerHTML = `
-            <div class="live-title">¡ESTRENO EN VIVO!</div>
-            <div class="live-subtitle">Disponible ahora - Una sola vez</div>
-          `;
-        }
         if (badgeElement) {
           badgeElement.className = 'live-badge';
           badgeElement.textContent = 'EN VIVO';
         }
-        if (infoElement) infoElement.textContent = '¡Transmisión única en vivo!';
-        
-        // Actualizar estado en la base de datos
-        series.isLocked = false;
-        series.isLive = true;
       }
     }
 
-    // Inicializar sistema de película única
+    // Inicializar sistema de estreno para el 11 de junio
     function initializePremiereSystem() {
-      // NO TE MUEVAS está siempre disponible pero solo se puede ver una vez
-      seriesDatabase.notemuevas.isLocked = false;
-      seriesDatabase.notemuevas.isLive = true;
+      // Configurar fecha de estreno para NO TE MUEVAS
+      const releaseDate = createJuneReleaseDate();
+      seriesDatabase.notemuevas.releaseDate = releaseDate;
       
-      // Actualizar estado cada segundo para mantener animación EN VIVO
-      setInterval(updateMovieStatus, 1000);
+      // Configurar estado inicial
+      const now = new Date();
+      if (now >= releaseDate) {
+        seriesDatabase.notemuevas.isLocked = false;
+        seriesDatabase.notemuevas.isLive = true;
+      } else {
+        seriesDatabase.notemuevas.isLocked = true;
+        seriesDatabase.notemuevas.isLive = false;
+      }
+      
+      // Actualizar cuenta regresiva cada segundo
+      setInterval(updateCountdownToJune, 1000);
       
       // Ejecutar actualización inicial
-      updateMovieStatus();
+      updateCountdownToJune();
       
-      console.log('Sistema de película única inicializado');
-      console.log('NO TE MUEVAS:', hasMovieBeenWatched('notemuevas') ? 'Ya vista' : 'Disponible');
+      console.log('Sistema de estreno para el 11 de junio inicializado');
+      console.log('Fecha de estreno:', releaseDate.toLocaleString('es-ES'));
+      console.log('Estado actual:', now >= releaseDate ? 'Disponible' : 'Bloqueada');
     }
 
     // Función para manejar clics en películas
@@ -1988,6 +1974,9 @@
       // Actualizar botón de reproducir según disponibilidad
       updatePlayButton(series);
       
+      // Mostrar cuenta regresiva en detalles si es necesario
+      showCountdownInDetails(series);
+      
       // Mostrar vista detallada
       document.getElementById('seriesDetail').classList.add('active');
     }
@@ -1999,6 +1988,7 @@
 
       if (series.id === 'notemuevas') {
         const hasBeenWatched = hasMovieBeenWatched('notemuevas');
+        const isAvailable = isMovieAvailable(series);
         
         if (hasBeenWatched) {
           // Película ya vista
@@ -2006,10 +1996,19 @@
           playButton.style.background = '#6c757d';
           playButton.style.cursor = 'not-allowed';
           playButton.onclick = () => showWatchedMessage();
+        } else if (!isAvailable) {
+          // Película bloqueada hasta el 11 de junio
+          const releaseDate = createJuneReleaseDate();
+          playButton.innerHTML = '<i class="fas fa-calendar-alt"></i> Estreno: 11 de Junio';
+          playButton.style.background = '#ffd700';
+          playButton.style.color = '#000';
+          playButton.style.cursor = 'not-allowed';
+          playButton.onclick = () => showJuneReleaseMessage(releaseDate);
         } else {
           // Película disponible EN VIVO
           playButton.innerHTML = '<i class="fas fa-broadcast-tower"></i> Ver Transmisión EN VIVO';
           playButton.style.background = 'linear-gradient(45deg, #ff0000, #ff4444)';
+          playButton.style.color = '#fff';
           playButton.style.cursor = 'pointer';
           playButton.onclick = () => playEpisode(1, 1);
         }
@@ -2026,6 +2025,116 @@
         playButton.style.cursor = 'pointer';
         playButton.onclick = () => playEpisode(1, 1);
       }
+    }
+
+    // Función para mostrar mensaje de estreno del 11 de junio
+    function showJuneReleaseMessage(releaseDate) {
+      const formattedDate = releaseDate.toLocaleDateString('es-ES', {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      });
+      
+      const formattedTime = '2:40 AM (Houston) / 12:40 AM (Las Vegas)';
+      
+      const message = `ESTRENO MUNDIAL: ${formattedDate} a las ${formattedTime}.\n\nUna transmisión única que no te puedes perder.`;
+      showErrorMessage(message);
+    }
+
+    // Función para mostrar cuenta regresiva en los detalles
+    function showCountdownInDetails(series) {
+      // Remover cuenta regresiva existente
+      const existingCountdown = document.getElementById('detailsCountdown');
+      if (existingCountdown) {
+        existingCountdown.remove();
+      }
+
+      // Solo mostrar para NO TE MUEVAS si está bloqueada
+      if (series.id !== 'notemuevas') return;
+      
+      const hasBeenWatched = hasMovieBeenWatched('notemuevas');
+      const isAvailable = isMovieAvailable(series);
+      
+      // No mostrar si ya fue vista o está disponible
+      if (hasBeenWatched || isAvailable) return;
+
+      // Crear elemento de cuenta regresiva
+      const countdownEl = document.createElement('div');
+      countdownEl.id = 'detailsCountdown';
+      countdownEl.style.cssText = `
+        background: linear-gradient(135deg, rgba(29, 155, 240, 0.1), rgba(13, 110, 253, 0.1));
+        border: 2px solid rgba(29, 155, 240, 0.3);
+        border-radius: 12px;
+        padding: 20px;
+        margin: 20px 16px;
+        text-align: center;
+        backdrop-filter: blur(10px);
+      `;
+
+      // Insertar después de las acciones
+      const seriesActions = document.querySelector('.series-actions');
+      seriesActions.insertAdjacentElement('afterend', countdownEl);
+
+      // Función para actualizar cuenta regresiva
+      function updateDetailsCountdown() {
+        const now = new Date();
+        const releaseDate = createJuneReleaseDate();
+        const timeDiff = releaseDate.getTime() - now.getTime();
+
+        if (timeDiff <= 0) {
+          // Estreno llegó, remover cuenta regresiva y actualizar botón
+          countdownEl.remove();
+          updatePlayButton(series);
+          return;
+        }
+
+        const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+        countdownEl.innerHTML = `
+          <div style="color: #1d9bf0; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">
+            🎬 ESTRENO MUNDIAL
+          </div>
+          <div style="display: flex; justify-content: center; gap: 12px; margin-bottom: 12px;">
+            <div style="background: rgba(29, 155, 240, 0.2); border-radius: 8px; padding: 8px; min-width: 45px; border: 1px solid rgba(29, 155, 240, 0.3);">
+              <div style="font-size: 18px; font-weight: 800; color: #ffffff;">${days}</div>
+              <div style="font-size: 10px; color: #71767b; font-weight: 600;">DÍAS</div>
+            </div>
+            <div style="background: rgba(29, 155, 240, 0.2); border-radius: 8px; padding: 8px; min-width: 45px; border: 1px solid rgba(29, 155, 240, 0.3);">
+              <div style="font-size: 18px; font-weight: 800; color: #ffffff;">${hours}</div>
+              <div style="font-size: 10px; color: #71767b; font-weight: 600;">HRS</div>
+            </div>
+            <div style="background: rgba(29, 155, 240, 0.2); border-radius: 8px; padding: 8px; min-width: 45px; border: 1px solid rgba(29, 155, 240, 0.3);">
+              <div style="font-size: 18px; font-weight: 800; color: #ffffff;">${minutes}</div>
+              <div style="font-size: 10px; color: #71767b; font-weight: 600;">MIN</div>
+            </div>
+            <div style="background: rgba(29, 155, 240, 0.2); border-radius: 8px; padding: 8px; min-width: 45px; border: 1px solid rgba(29, 155, 240, 0.3);">
+              <div style="font-size: 18px; font-weight: 800; color: #ffffff;">${seconds}</div>
+              <div style="font-size: 10px; color: #71767b; font-weight: 600;">SEG</div>
+            </div>
+          </div>
+          <div style="color: #71767b; font-size: 12px; font-weight: 600; margin-bottom: 8px;">
+            11 de Junio - 2:40 AM Houston | 12:40 AM Las Vegas
+          </div>
+          <div style="color: #1d9bf0; font-size: 11px; font-weight: 600;">
+            Transmisión simultánea mundial - Una sola vez
+          </div>
+        `;
+      }
+
+      // Actualizar cada segundo
+      updateDetailsCountdown();
+      const interval = setInterval(updateDetailsCountdown, 1000);
+
+      // Limpiar intervalo cuando se cierre los detalles
+      const originalClose = closeSeriesDetail;
+      closeSeriesDetail = function() {
+        clearInterval(interval);
+        originalClose();
+      };
     }
 
     // Función para cerrar detalles de serie
@@ -2158,11 +2267,11 @@
         // Marcar NO TE MUEVAS como vista cuando comienza la reproducción
         if (currentSeries.id === 'notemuevas') {
           markMovieAsWatched('notemuevas');
-          updateMovieStatus(); // Actualizar estado inmediatamente
+          updateCountdownToJune(); // Actualizar estado inmediatamente
           
           // Mostrar notificación de que es la única vez
           setTimeout(() => {
-            showLiveNotification('¡ATENCIÓN! Esta es tu única oportunidad de ver esta transmisión. Una vez que termine, no podrás verla nuevamente.');
+            showLiveNotification('ATENCIÓN: Esta es tu única oportunidad de ver esta transmisión. Una vez que termine, no podrás verla nuevamente.');
           }, 3000);
         }
       };
@@ -2243,13 +2352,8 @@
       // Event listeners
       const onLoadedMetadata = () => {
         updateDuration();
-        const playPromise = videoElement.play();
-        if (playPromise !== undefined) {
-          playPromise.catch(e => {
-            console.log('Autoplay prevented:', e);
-            showPlayButton();
-          });
-        }
+        // Mostrar botón de play en lugar de reproducir automáticamente
+        showPlayButton();
       };
 
       const onPlay = () => {
@@ -2398,7 +2502,7 @@
       // Remover clase del body
       document.body.classList.remove('video-playing');
       
-      //Ocultar botón de play grande si existe
+      // Ocultar botón de play grande si existe
       hidePlayButton();
     }
 
