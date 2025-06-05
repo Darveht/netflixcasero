@@ -8,6 +8,7 @@
   <meta name="format-detection" content="telephone=no">
   <title>IBTV</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   <style>
     /* Reinicio básico */
     * {
@@ -305,14 +306,14 @@
       z-index: 10;
     }
 
-    /* Overlay de bloqueo */
+    /* Overlay de bloqueo mejorado estilo Netflix */
     .locked-overlay {
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: rgba(0, 0, 0, 0.8);
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.95), rgba(20, 20, 20, 0.95));
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -320,24 +321,43 @@
       color: white;
       border-radius: 12px;
       z-index: 15;
+      backdrop-filter: blur(8px);
+      border: 2px solid rgba(255, 215, 0, 0.3);
     }
 
     .locked-icon {
-      font-size: 32px;
-      margin-bottom: 8px;
+      font-size: 40px;
+      margin-bottom: 12px;
       color: #ffd700;
+      text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+      animation: lockPulse 2s ease-in-out infinite;
     }
 
     .locked-text {
-      font-size: 12px;
+      font-size: 14px;
       text-align: center;
-      font-weight: 600;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 4px;
     }
 
     .release-date {
-      font-size: 10px;
+      font-size: 11px;
       color: #71767b;
       margin-top: 4px;
+      font-weight: 600;
+    }
+
+    @keyframes lockPulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.8;
+      }
+      50% {
+        transform: scale(1.1);
+        opacity: 1;
+      }
     }
 
     /* Cuenta regresiva moderna */
@@ -987,7 +1007,7 @@
 
     /* Orientación horizontal para móviles */
     @media screen and (orientation: landscape) and (max-height: 500px) {
-      .video-player {
+      .video-player.active {
         position: fixed;
         top: 0;
         left: 0;
@@ -998,7 +1018,7 @@
         z-index: 4000;
       }
 
-      .video-player-container {
+      .video-player.active .video-player-container {
         position: absolute;
         top: 0;
         left: 0;
@@ -1011,7 +1031,7 @@
         justify-content: center;
       }
 
-      .video-player video {
+      .video-player.active video {
         width: 100%;
         height: 100%;
         object-fit: contain;
@@ -1020,7 +1040,7 @@
         left: 0;
       }
 
-      .video-player-header {
+      .video-player.active .video-player-header {
         position: absolute;
         top: 0;
         left: 0;
@@ -1034,13 +1054,13 @@
         height: auto;
       }
 
-      .video-player-title {
+      .video-player.active .video-player-title {
         color: #ffffff;
         font-size: 16px;
         font-weight: 700;
       }
 
-      .video-player-close {
+      .video-player.active .video-player-close {
         background: rgba(255,255,255,0.2);
         border: none;
         color: #ffffff;
@@ -1055,7 +1075,7 @@
         backdrop-filter: blur(12px);
       }
 
-      .video-player-controls {
+      .video-player.active .video-player-controls {
         position: absolute;
         bottom: 0;
         left: 0;
@@ -1065,17 +1085,17 @@
         z-index: 100;
       }
 
-      .video-progress-container {
+      .video-player.active .video-progress-container {
         margin-bottom: 10px;
       }
 
-      .video-controls-row {
+      .video-player.active .video-controls-row {
         display: flex;
         align-items: center;
         justify-content: space-between;
       }
 
-      .video-control-btn {
+      .video-player.active .video-control-btn {
         background: transparent;
         border: none;
         color: #ffffff;
@@ -1091,11 +1111,11 @@
         justify-content: center;
       }
 
-      .video-control-btn.play-pause {
+      .video-player.active .video-control-btn.play-pause {
         font-size: 20px;
       }
 
-      .pause-indicator {
+      .video-player.active .pause-indicator {
         position: absolute;
         top: 50%;
         left: 50%;
@@ -1115,18 +1135,18 @@
         z-index: 50;
       }
 
-      .pause-indicator.visible {
+      .video-player.active .pause-indicator.visible {
         transform: translate(-50%, -50%) scale(1);
         opacity: 1;
       }
 
-      /* Ocultar barra de navegación inferior en landscape */
-      .bottom-nav {
+      /* Solo ocultar barra de navegación cuando el video esté activo en landscape */
+      .video-player.active ~ .bottom-nav {
         display: none;
       }
 
-      /* Asegurar que el big play button esté centrado */
-      #bigPlayButton {
+      /* Asegurar que el big play button esté centrado solo cuando el video esté activo */
+      .video-player.active #bigPlayButton {
         position: absolute !important;
         top: 50% !important;
         left: 50% !important;
@@ -1367,6 +1387,249 @@
         height: 160px;
       }
     }
+
+    /* Sección de ajustes estilo Netflix */
+    .settings-section {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #000000;
+      z-index: 2000;
+      display: none;
+      overflow-y: auto;
+      padding-top: 80px;
+    }
+
+    .settings-section.active {
+      display: block;
+    }
+
+    .settings-close-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(0,0,0,0.75);
+      border: none;
+      color: #ffffff;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(12px);
+      z-index: 10;
+    }
+
+    .settings-close-btn:hover {
+      background: rgba(255,255,255,0.2);
+      transform: scale(1.1);
+    }
+
+    .settings-header {
+      padding: 20px 16px 30px 16px;
+      border-bottom: 1px solid #333639;
+    }
+
+    .settings-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 8px;
+    }
+
+    .settings-subtitle {
+      font-size: 16px;
+      color: #71767b;
+    }
+
+    .settings-content {
+      padding: 20px 16px;
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .settings-group {
+      margin-bottom: 32px;
+      background: rgba(32, 35, 39, 0.5);
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid #333639;
+    }
+
+    .settings-group-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .settings-group-title i {
+      color: #1d9bf0;
+    }
+
+    .setting-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(51, 54, 57, 0.5);
+    }
+
+    .setting-item:last-child {
+      border-bottom: none;
+    }
+
+    .setting-info {
+      flex: 1;
+    }
+
+    .setting-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    .setting-description {
+      font-size: 14px;
+      color: #71767b;
+      line-height: 1.4;
+    }
+
+    .setting-select {
+      background: #202327;
+      border: 1px solid #333639;
+      color: #ffffff;
+      padding: 8px 12px;
+      border-radius: 6px;
+      font-size: 14px;
+      min-width: 120px;
+      cursor: pointer;
+    }
+
+    .setting-select:focus {
+      outline: none;
+      border-color: #1d9bf0;
+      box-shadow: 0 0 0 2px rgba(29, 155, 240, 0.2);
+    }
+
+    /* Toggle switch */
+    .toggle-switch {
+      position: relative;
+      display: inline-block;
+      width: 50px;
+      height: 24px;
+    }
+
+    .toggle-switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+
+    .toggle-slider {
+      position: absolute;
+      cursor: pointer;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-color: #333639;
+      transition: 0.3s;
+      border-radius: 24px;
+    }
+
+    .toggle-slider:before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 3px;
+      bottom: 3px;
+      background-color: white;
+      transition: 0.3s;
+      border-radius: 50%;
+    }
+
+    input:checked + .toggle-slider {
+      background-color: #1d9bf0;
+    }
+
+    input:checked + .toggle-slider:before {
+      transform: translateX(26px);
+    }
+
+    .settings-actions {
+      display: flex;
+      gap: 12px;
+      justify-content: flex-end;
+      margin-top: 32px;
+      padding-top: 20px;
+      border-top: 1px solid #333639;
+    }
+
+    .settings-btn {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .settings-btn.primary {
+      background: #1d9bf0;
+      color: #ffffff;
+    }
+
+    .settings-btn.primary:hover {
+      background: #1a8cd8;
+    }
+
+    .settings-btn.secondary {
+      background: transparent;
+      color: #71767b;
+      border: 1px solid #333639;
+    }
+
+    .settings-btn.secondary:hover {
+      background: rgba(113, 118, 123, 0.1);
+      color: #ffffff;
+    }
+
+    @media (max-width: 768px) {
+      .settings-content {
+        padding: 20px 16px;
+      }
+
+      .setting-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 12px;
+      }
+
+      .settings-actions {
+        flex-direction: column;
+      }
+
+      .settings-btn {
+        width: 100%;
+        justify-content: center;
+      }
+    }
   </style>
 </head>
 <body>
@@ -1397,8 +1660,12 @@
         <p class="hero-description">Una aterradora experiencia cinematográfica que desafía los límites del horror psicológico.</p>
 
         <div class="hero-buttons">
-          <button class="hero-btn primary" onclick="playTrailer()">
+          <button class="hero-btn primary" onclick="playEpisode(1, 1)" id="heroBannerPlay">
             <i class="fas fa-play"></i>
+            Reproducir
+          </button>
+          <button class="hero-btn secondary" onclick="playTrailer()">
+            <i class="fas fa-film"></i>
             Ver Trailer
           </button>
           <button class="hero-btn secondary" onclick="showSeriesDetail('dontlookaway')">
@@ -1411,25 +1678,34 @@
 
     <!-- Secciones de contenido -->
     <div class="content-sections">
-      <!-- Series destacadas -->
+      <!-- Películas -->
       <div class="section">
-        <h2 class="section-title">Series Destacadas</h2>
+        <h2 class="section-title">Películas</h2>
         <div class="carousel-container">
-          <div class="carousel" id="featuredCarousel">
-
-            <div class="carousel-item" onclick="showSeriesDetail('sampleSeries')">
-              <img src="https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400" alt="Serie Ejemplo">
-              <div class="carousel-item-overlay">
-                <div class="carousel-item-title">Aventura Épica</div>
-                <div class="carousel-item-info">2023 • Acción • Drama</div>
-              </div>
-            </div>
+          <div class="carousel" id="moviesCarousel">
             <div class="carousel-item" onclick="showSeriesDetail('dontlookaway')">
               <img src="https://i.ytimg.com/vi/4f3hG-5grlw/maxresdefault.jpg" alt="DON'T LOOK AWAY">
               <div class="movie-badge">Película</div>
               <div class="carousel-item-overlay">
                 <div class="carousel-item-title">DON'T LOOK AWAY</div>
                 <div class="carousel-item-info">2025 • Terror • Thriller</div>
+              </div>
+            </div>
+            <div class="carousel-item" onclick="handleMovieClick('notemuevas')">
+              <img src="https://i.ibb.co/DDh79krZ/image.png" alt="NO TE MUEVAS">
+              <div class="movie-badge">Película</div>
+              <div id="notemuevas-badge" class="premiere-badge">Estreno</div>
+              <div class="carousel-item-overlay">
+                <div class="carousel-item-title">NO TE MUEVAS</div>
+                <div class="carousel-item-info">2025 • Terror</div>
+              </div>
+            </div>
+            <div class="carousel-item" onclick="showSeriesDetail('doublevision')">
+              <img src="https://m.media-amazon.com/images/M/MV5BODZiOGIxZTQtZjA2My00NzY3LTlkZTktZmFlZjJkOThhN2NjXkEyXkFqcGc@._V1_QL75_UX190_CR0,2,190,281_.jpg" alt="DOUBLE VISION">
+              <div class="movie-badge">Película</div>
+              <div class="carousel-item-overlay">
+                <div class="carousel-item-title">DOUBLE VISION</div>
+                <div class="carousel-item-info">2025 • Terror</div>
               </div>
             </div>
           </div>
@@ -1441,7 +1717,6 @@
         <h2 class="section-title">Tendencias</h2>
         <div class="carousel-container">
           <div class="carousel" id="trendingCarousel">
-
             <div class="carousel-item" onclick="showSeriesDetail('dontlookaway')">
               <img src="https://i0.wp.com/lugarnenhum.net/wp-content/uploads/2019/02/dont-look-away-e1549769239207-1024x512.png?resize=1024%2C512&ssl=1" alt="DON'T LOOK AWAY">
               <div class="movie-badge">Película</div>
@@ -1588,6 +1863,9 @@
             </div>
           </div>
           <div class="video-controls-right">
+            <button class="video-control-btn" id="audioLanguageBtn" onclick="toggleAudioLanguage()">
+              <i class="fas fa-language"></i>
+            </button>
             <button class="video-control-btn" id="volumeBtn" onclick="toggleMute()">
               <i class="fas fa-volume-up"></i>
             </button>
@@ -1627,6 +1905,144 @@
     </div>
   </div>
 
+  <!-- Sección de Ajustes -->
+  <div id="settingsSection" class="settings-section">
+    <button class="settings-close-btn" onclick="closeSettingsSection()">
+      <i class="fas fa-times"></i>
+    </button>
+
+    <div class="settings-header">
+      <h2 class="settings-title">Configuración</h2>
+      <p class="settings-subtitle">Personaliza tu experiencia de visualización</p>
+    </div>
+
+    <div class="settings-content">
+      <div class="settings-group">
+        <h3 class="settings-group-title">
+          <i class="fas fa-video"></i>
+          Reproducción
+        </h3>
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-name">Reproducción automática</div>
+            <div class="setting-description">Reproducir automáticamente el siguiente episodio</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="autoplayToggle" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-name">Calidad de video</div>
+            <div class="setting-description">Seleccionar calidad predeterminada</div>
+          </div>
+          <select class="setting-select" id="videoQuality">
+            <option value="auto">Automática</option>
+            <option value="1080p">1080p HD</option>
+            <option value="720p">720p HD</option>
+            <option value="480p">480p</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <h3 class="settings-group-title">
+          <i class="fas fa-language"></i>
+          Idioma y Audio
+        </h3>
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-name">Idioma de la interfaz</div>
+            <div class="setting-description">Cambiar idioma de la aplicación</div>
+          </div>
+          <select class="setting-select" id="interfaceLanguage" onchange="handleLanguageChange(this.value)">
+            <option value="es">Español</option>
+            <option value="en">English</option>
+            <option value="pt">Português</option>
+          </select>
+        </div>
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-name">Audio preferido</div>
+            <div class="setting-description">Idioma de audio predeterminado</div>
+          </div>
+          <select class="setting-select" id="preferredAudio">
+            <option value="original">Audio original</option>
+            <option value="es">Español</option>
+            <option value="en">English</option>
+          </select>
+        </div>
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-name">Subtítulos</div>
+            <div class="setting-description">Mostrar subtítulos por defecto</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="defaultSubtitles">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <h3 class="settings-group-title">
+          <i class="fas fa-bell"></i>
+          Notificaciones
+        </h3>
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-name">Nuevos estrenos</div>
+            <div class="setting-description">Notificar sobre nuevas películas y series</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="releaseNotifications" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-name">Recordatorios</div>
+            <div class="setting-description">Recordar contenido pausado</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="reminderNotifications" checked>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <h3 class="settings-group-title">
+          <i class="fas fa-shield-alt"></i>
+          Control Parental
+        </h3>
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-name">Contenido para menores</div>
+            <div class="setting-description">Filtrar contenido por clasificación</div>
+          </div>
+          <select class="setting-select" id="parentalControl">
+            <option value="all">Todo el contenido</option>
+            <option value="13+">13+ y menor</option>
+            <option value="pg">Solo contenido familiar</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="settings-actions">
+        <button class="settings-btn secondary" onclick="resetSettings()">
+          <i class="fas fa-undo"></i>
+          Restablecer
+        </button>
+        <button class="settings-btn primary" onclick="saveSettings()">
+          <i class="fas fa-save"></i>
+          Guardar Cambios
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Navegación inferior -->
   <nav class="bottom-nav">
     <button id="navHome" class="active">
@@ -1636,6 +2052,10 @@
     <button id="navSearch">
       <i class="fas fa-search"></i>
       <span>Buscar</span>
+    </button>
+    <button id="navSettings">
+      <i class="fas fa-cog"></i>
+      <span>Ajustes</span>
     </button>
   </nav>
 
@@ -1647,6 +2067,113 @@
   </script>
 
   <script>
+    // Sistema de traducción
+    let currentLanguage = localStorage.getItem('ibtv_language') || 'es';
+    let translations = {};
+    let isTranslating = false;
+
+    // Textos de la interfaz para traducir
+    const interfaceTexts = {
+      // Navegación
+      'Inicio': 'Home',
+      'Buscar': 'Search', 
+      'Ajustes': 'Settings',
+      
+      // Búsqueda
+      'Buscar series y películas': 'Search series and movies',
+      'Buscando contenido...': 'Searching content...',
+      'Resultados de búsqueda': 'Search results',
+      'No se encontraron resultados': 'No results found',
+      'Intenta con otros términos de búsqueda': 'Try different search terms',
+      'resultado': 'result',
+      'resultados': 'results',
+      'encontrados': 'found',
+      
+      // Contenido
+      'Películas': 'Movies',
+      'Tendencias': 'Trending',
+      'Terror': 'Horror',
+      'Anime': 'Anime',
+      'Película': 'Movie',
+      'Episodios': 'Episodes',
+      'Temporada': 'Season',
+      'Trailer Oficial': 'Official Trailer',
+      'Reproducir': 'Play',
+      'Ver Trailer': 'Watch Trailer',
+      'Más Info': 'More Info',
+      'Próximamente': 'Coming Soon',
+      'Ver Película': 'Watch Movie',
+      'Estreno': 'Premiere',
+      'EN VIVO': 'LIVE',
+      'DISPONIBLE': 'AVAILABLE',
+      'VISTO': 'WATCHED',
+      
+      // Ajustes
+      'Configuración': 'Settings',
+      'Personaliza tu experiencia de visualización': 'Customize your viewing experience',
+      'Reproducción': 'Playback',
+      'Reproducción automática': 'Auto-play',
+      'Reproducir automáticamente el siguiente episodio': 'Automatically play next episode',
+      'Calidad de video': 'Video quality',
+      'Seleccionar calidad predeterminada': 'Select default quality',
+      'Automática': 'Auto',
+      'Idioma y Audio': 'Language & Audio',
+      'Idioma de la interfaz': 'Interface language',
+      'Cambiar idioma de la aplicación': 'Change app language',
+      'Audio preferido': 'Preferred audio',
+      'Idioma de audio predeterminado': 'Default audio language',
+      'Audio original': 'Original audio',
+      'Subtítulos': 'Subtitles',
+      'Mostrar subtítulos por defecto': 'Show subtitles by default',
+      'Notificaciones': 'Notifications',
+      'Nuevos estrenos': 'New releases',
+      'Notificar sobre nuevas películas y series': 'Notify about new movies and series',
+      'Recordatorios': 'Reminders',
+      'Recordar contenido pausado': 'Remember paused content',
+      'Control Parental': 'Parental Control',
+      'Contenido para menores': 'Content for minors',
+      'Filtrar contenido por clasificación': 'Filter content by rating',
+      'Todo el contenido': 'All content',
+      'Solo contenido familiar': 'Family content only',
+      'Restablecer': 'Reset',
+      'Guardar Cambios': 'Save Changes',
+      'Configuración guardada correctamente': 'Settings saved successfully',
+      'Configuración restablecida a valores predeterminados': 'Settings reset to defaults',
+      
+      // Video player
+      'Reproduciendo...': 'Playing...',
+      'Audio': 'Audio',
+      'No hay pistas de audio alternativas disponibles': 'No alternative audio tracks available',
+      'No hay subtítulos disponibles para este contenido': 'No subtitles available for this content',
+      'Subtítulos desactivados': 'Subtitles disabled',
+      'Error al cargar el video. Verifica tu conexión e intenta de nuevo.': 'Error loading video. Check your connection and try again.',
+      'Trailer no disponible': 'Trailer not available',
+      'Error al cargar el trailer': 'Error loading trailer',
+      
+      // Mensajes especiales
+      'ESTRENO MUNDIAL': 'WORLD PREMIERE',
+      'Transmisión simultánea mundial - Una sola vez': 'Worldwide simultaneous broadcast - One time only',
+      'ATENCIÓN: Esta es tu única oportunidad de ver esta transmisión. Una vez que termine, no podrás verla nuevamente hasta el 13 de junio.': 'ATTENTION: This is your only chance to watch this broadcast. Once it ends, you won\'t be able to watch it again until June 13th.',
+      'Esta transmisión EN VIVO ya fue vista y no puede reproducirse nuevamente. Era una experiencia única e irrepetible.': 'This LIVE broadcast has already been watched and cannot be played again. It was a unique and unrepeatable experience.',
+      'Una transmisión única que no te puedes perder.': 'A unique broadcast you can\'t miss.',
+      'Transmisión Finalizada': 'Broadcast Ended',
+      'Ver Transmisión EN VIVO': 'Watch LIVE Broadcast',
+      
+      // Fechas y tiempo
+      'DÍAS': 'DAYS',
+      'HRS': 'HRS', 
+      'MIN': 'MIN',
+      'SEG': 'SEC',
+      'Junio': 'June',
+      'lunes': 'Monday',
+      'martes': 'Tuesday',
+      'miércoles': 'Wednesday',
+      'jueves': 'Thursday',
+      'viernes': 'Friday',
+      'sábado': 'Saturday',
+      'domingo': 'Sunday'
+    };
+
     // Base de datos de series y episodios
     const seriesDatabase = {
 
@@ -1727,6 +2254,12 @@
         poster: 'https://i.ytimg.com/vi/4f3hG-5grlw/maxresdefault.jpg',
         trailer: 'https://dl.dropboxusercontent.com/scl/fi/1kpsf3351raocgyiwb1rd/3984583787530253122.mp4?rlkey=ac3xzejk67taj2odw9q94rc07&st=y2152ek3',
         youtubeReference: 'https://youtu.be/4f3hG-5grlw?si=adowKM2_Y8GX4G99',
+        audioTracks: {
+          original: 'https://dl.dropboxusercontent.com/scl/fi/1kpsf3351raocgyiwb1rd/3984583787530253122.mp4?rlkey=ac3xzejk67taj2odw9q94rc07&st=y2152ek3',
+          spanish: 'https://dl.dropboxusercontent.com/scl/fi/1kpsf3351raocgyiwb1rd/3984583787530253122.mp4?rlkey=ac3xzejk67taj2odw9q94rc07&st=y2152ek3',
+          english: 'https://dl.dropboxusercontent.com/scl/fi/1kpsf3351raocgyiwb1rd/3984583787530253122.mp4?rlkey=ac3xzejk67taj2odw9q94rc07&st=y2152ek3'
+        },
+        currentAudioTrack: 'original',
         subtitles: {
           spanish: 'subtitles/dont-look-away-es.vtt',
           english: 'subtitles/dont-look-away-en.vtt'
@@ -1743,35 +2276,7 @@
         ]
       },
 
-      sampleSeries: {
-        id: 'sampleSeries',
-        title: "Aventura Épica",
-        year: '2023',
-        genre: 'Acción, Drama, Aventura',
-        rating: '13+',
-        type: 'series',
-        description: 'Una épica aventura que te llevará a mundos inexplorados llenos de acción y emoción.',
-        poster: 'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400',
-        trailer: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-        episodes: [
-          {
-            id: 1,
-            title: "El Comienzo",
-            description: 'El inicio de una gran aventura que cambiará todo.',
-            duration: '45:30',
-            thumbnail: 'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400',
-            videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4'
-          },
-          {
-            id: 2,
-            title: "El Descubrimiento",
-            description: 'Nuevos secretos salen a la luz en este emocionante episodio.',
-            duration: '42:15',
-            thumbnail: 'https://images.unsplash.com/photo-1440404653325-ab127d49abc1?w=400',
-            videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
-          }
-        ]
-      }
+      
     };
 
     // Variables globales
@@ -2517,6 +3022,239 @@
       }
     }
 
+    // Funciones de traducción
+    async function translateText(text, targetLang = 'en') {
+      if (isTranslating || !text || text.trim() === '') return text;
+      
+      try {
+        isTranslating = true;
+        
+        // Usar API gratuita de Google Translate (limitada pero funcional)
+        const response = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=es&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`);
+        
+        if (!response.ok) {
+          throw new Error('Translation failed');
+        }
+        
+        const data = await response.json();
+        const translatedText = data[0][0][0];
+        
+        isTranslating = false;
+        return translatedText || text;
+      } catch (error) {
+        console.warn('Translation error:', error);
+        isTranslating = false;
+        
+        // Fallback a traducciones predefinidas
+        return interfaceTexts[text] || text;
+      }
+    }
+
+    function getTranslation(key, targetLang = currentLanguage) {
+      if (targetLang === 'es') return key;
+      
+      // Usar traducciones predefinidas si están disponibles
+      if (interfaceTexts[key]) {
+        return interfaceTexts[key];
+      }
+      
+      // Si no hay traducción predefinida, usar cache
+      if (translations[`${key}_${targetLang}`]) {
+        return translations[`${key}_${targetLang}`];
+      }
+      
+      return key; // Fallback al texto original
+    }
+
+    async function changeLanguage(newLang) {
+      if (newLang === currentLanguage) return;
+      
+      currentLanguage = newLang;
+      localStorage.setItem('ibtv_language', newLang);
+      
+      // Mostrar mensaje de cambio de idioma
+      showLanguageChangeMessage();
+      
+      // Traducir interfaz
+      await translateInterface();
+      
+      // Actualizar configuración
+      updateLanguageSettings();
+    }
+
+    async function translateInterface() {
+      if (currentLanguage === 'es') {
+        // Restaurar textos originales en español
+        restoreOriginalTexts();
+        return;
+      }
+      
+      const elementsToTranslate = [
+        // Navegación
+        { selector: '.bottom-nav button span', index: 0, key: 'Inicio' },
+        { selector: '.bottom-nav button span', index: 1, key: 'Buscar' },
+        { selector: '.bottom-nav button span', index: 2, key: 'Ajustes' },
+        
+        // Secciones de contenido
+        { selector: '.section-title', index: 0, key: 'Películas' },
+        { selector: '.section-title', index: 1, key: 'Tendencias' },
+        { selector: '.section-title', index: 2, key: 'Anime' },
+        { selector: '.section-title', index: 3, key: 'Terror' },
+        
+        // Placeholder de búsqueda
+        { selector: '#searchInput', attr: 'placeholder', key: 'Buscar series y películas' },
+        
+        // Títulos de configuración
+        { selector: '.settings-title', key: 'Configuración' },
+        { selector: '.settings-subtitle', key: 'Personaliza tu experiencia de visualización' },
+        
+        // Títulos de grupos en configuración
+        { selector: '.settings-group-title', index: 0, key: 'Reproducción', skip: 'i' },
+        { selector: '.settings-group-title', index: 1, key: 'Idioma y Audio', skip: 'i' },
+        { selector: '.settings-group-title', index: 2, key: 'Notificaciones', skip: 'i' },
+        { selector: '.settings-group-title', index: 3, key: 'Control Parental', skip: 'i' },
+        
+        // Botones de configuración
+        { selector: '.settings-btn.secondary', key: 'Restablecer', skip: 'i' },
+        { selector: '.settings-btn.primary', key: 'Guardar Cambios', skip: 'i' }
+      ];
+      
+      for (const item of elementsToTranslate) {
+        const elements = document.querySelectorAll(item.selector);
+        const element = item.index !== undefined ? elements[item.index] : elements[0];
+        
+        if (element) {
+          const translation = getTranslation(item.key, currentLanguage);
+          
+          if (item.attr) {
+            element.setAttribute(item.attr, translation);
+          } else {
+            // Preservar iconos si es necesario
+            if (item.skip === 'i') {
+              const icon = element.querySelector('i');
+              element.textContent = translation;
+              if (icon) {
+                element.insertBefore(icon, element.firstChild);
+              }
+            } else {
+              element.textContent = translation;
+            }
+          }
+        }
+      }
+      
+      // Traducir elementos dinámicos
+      translateDynamicContent();
+    }
+
+    function translateDynamicContent() {
+      // Traducir badges de películas
+      document.querySelectorAll('.movie-badge').forEach(badge => {
+        if (badge.textContent === 'Película') {
+          badge.textContent = getTranslation('Película', currentLanguage);
+        }
+      });
+      
+      // Traducir badges de estreno
+      document.querySelectorAll('.premiere-badge').forEach(badge => {
+        if (badge.textContent === 'Estreno') {
+          badge.textContent = getTranslation('Estreno', currentLanguage);
+        }
+      });
+      
+      // Traducir badges en vivo
+      document.querySelectorAll('.live-badge').forEach(badge => {
+        if (badge.textContent === 'EN VIVO') {
+          badge.textContent = getTranslation('EN VIVO', currentLanguage);
+        }
+      });
+    }
+
+    function restoreOriginalTexts() {
+      // Restaurar textos originales en español
+      const originalTexts = {
+        '.bottom-nav button span': ['Inicio', 'Buscar', 'Ajustes'],
+        '.section-title': ['Películas', 'Tendencias', 'Anime', 'Terror'],
+        '#searchInput': { attr: 'placeholder', text: 'Buscar series y películas' },
+        '.settings-title': 'Configuración',
+        '.settings-subtitle': 'Personaliza tu experiencia de visualización'
+      };
+      
+      Object.entries(originalTexts).forEach(([selector, texts]) => {
+        const elements = document.querySelectorAll(selector);
+        
+        if (Array.isArray(texts)) {
+          texts.forEach((text, index) => {
+            if (elements[index]) {
+              elements[index].textContent = text;
+            }
+          });
+        } else if (texts.attr) {
+          if (elements[0]) {
+            elements[0].setAttribute(texts.attr, texts.text);
+          }
+        } else {
+          if (elements[0]) {
+            elements[0].textContent = texts;
+          }
+        }
+      });
+    }
+
+    function showLanguageChangeMessage() {
+      const messages = {
+        'en': 'Language changed to English',
+        'pt': 'Idioma alterado para Português',
+        'es': 'Idioma cambiado a Español'
+      };
+      
+      const message = messages[currentLanguage] || 'Language changed';
+      showTranslationMessage(message);
+    }
+
+    function showTranslationMessage(message) {
+      const messageEl = document.createElement('div');
+      messageEl.style.cssText = `
+        position: fixed;
+        top: 20%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: linear-gradient(45deg, #1d9bf0, #00c9ff);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        z-index: 5000;
+        backdrop-filter: blur(12px);
+        border: 2px solid rgba(255, 255, 255, 0.3);
+        box-shadow: 0 4px 20px rgba(29, 155, 240, 0.4);
+        animation: languageNotification 3s ease-in-out;
+      `;
+      
+      messageEl.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <i class="fas fa-language"></i>
+          <span>${message}</span>
+        </div>
+      `;
+      
+      document.body.appendChild(messageEl);
+      
+      setTimeout(() => {
+        if (messageEl.parentNode) {
+          messageEl.parentNode.removeChild(messageEl);
+        }
+      }, 3000);
+    }
+
+    function updateLanguageSettings() {
+      const interfaceLanguageSelect = document.getElementById('interfaceLanguage');
+      if (interfaceLanguageSelect) {
+        interfaceLanguageSelect.value = currentLanguage;
+      }
+    }
+
     // Función para mostrar mensajes de error
     function showErrorMessage(message) {
       const errorEl = document.createElement('div');
@@ -3045,14 +3783,175 @@
     document.getElementById('navHome').addEventListener('click', () => {
       closeSearchSection();
       closeSeriesDetail();
+      closeSettingsSection();
       updateNavigation('navHome');
     });
 
     document.getElementById('navSearch').addEventListener('click', () => {
       closeSeriesDetail();
+      closeSettingsSection();
       document.getElementById('searchInput').focus();
       updateNavigation('navSearch');
     });
+
+    document.getElementById('navSettings').addEventListener('click', () => {
+      closeSearchSection();
+      closeSeriesDetail();
+      showSettingsSection();
+      updateNavigation('navSettings');
+    });
+
+    // Funciones de ajustes
+    function showSettingsSection() {
+      document.getElementById('settingsSection').classList.add('active');
+      loadSettings();
+    }
+
+    function closeSettingsSection() {
+      document.getElementById('settingsSection').classList.remove('active');
+    }
+
+    // Manejador de cambio de idioma
+    async function handleLanguageChange(newLang) {
+      await changeLanguage(newLang);
+      
+      // Mostrar mensaje de confirmación
+      const messages = {
+        'en': 'Interface language changed to English',
+        'pt': 'Idioma da interface alterado para Português', 
+        'es': 'Idioma de interfaz cambiado a Español'
+      };
+      
+      setTimeout(() => {
+        showSettingsMessage(messages[newLang] || 'Language changed');
+      }, 500);
+    }
+
+    function loadSettings() {
+      // Cargar configuraciones guardadas
+      const settings = JSON.parse(localStorage.getItem('ibtv_settings') || '{}');
+      
+      document.getElementById('autoplayToggle').checked = settings.autoplay !== false;
+      document.getElementById('videoQuality').value = settings.videoQuality || 'auto';
+      document.getElementById('interfaceLanguage').value = currentLanguage;
+      document.getElementById('preferredAudio').value = settings.preferredAudio || 'original';
+      document.getElementById('defaultSubtitles').checked = settings.defaultSubtitles === true;
+      document.getElementById('releaseNotifications').checked = settings.releaseNotifications !== false;
+      document.getElementById('reminderNotifications').checked = settings.reminderNotifications !== false;
+      document.getElementById('parentalControl').value = settings.parentalControl || 'all';
+    }
+
+    function saveSettings() {
+      const settings = {
+        autoplay: document.getElementById('autoplayToggle').checked,
+        videoQuality: document.getElementById('videoQuality').value,
+        interfaceLanguage: currentLanguage,
+        preferredAudio: document.getElementById('preferredAudio').value,
+        defaultSubtitles: document.getElementById('defaultSubtitles').checked,
+        releaseNotifications: document.getElementById('releaseNotifications').checked,
+        reminderNotifications: document.getElementById('reminderNotifications').checked,
+        parentalControl: document.getElementById('parentalControl').value
+      };
+
+      localStorage.setItem('ibtv_settings', JSON.stringify(settings));
+      
+      // Mostrar mensaje de confirmación
+      const message = getTranslation('Configuración guardada correctamente', currentLanguage);
+      showSettingsMessage(message);
+    }
+
+    function resetSettings() {
+      localStorage.removeItem('ibtv_settings');
+      loadSettings();
+      showSettingsMessage('Configuración restablecida a valores predeterminados');
+    }
+
+    function showSettingsMessage(message) {
+      const messageEl = document.createElement('div');
+      messageEl.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: rgba(29, 155, 240, 0.9);
+        color: white;
+        padding: 16px 24px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        z-index: 5000;
+        backdrop-filter: blur(12px);
+      `;
+      messageEl.textContent = message;
+
+      document.body.appendChild(messageEl);
+
+      setTimeout(() => {
+        if (messageEl.parentNode) {
+          messageEl.parentNode.removeChild(messageEl);
+        }
+      }, 2000);
+    }
+
+    // Función para alternar idioma de audio
+    function toggleAudioLanguage() {
+      if (!currentSeries || !currentSeries.audioTracks) {
+        showSubtitleMessage('No hay pistas de audio alternativas disponibles');
+        return;
+      }
+
+      const tracks = Object.keys(currentSeries.audioTracks);
+      const currentIndex = tracks.indexOf(currentSeries.currentAudioTrack || 'original');
+      const nextIndex = (currentIndex + 1) % tracks.length;
+      const nextTrack = tracks[nextIndex];
+
+      // Cambiar pista de audio
+      currentSeries.currentAudioTrack = nextTrack;
+      
+      // Actualizar fuente del video
+      const currentTime = videoElement.currentTime;
+      const wasPlaying = !videoElement.paused;
+      
+      videoElement.src = currentSeries.audioTracks[nextTrack];
+      
+      videoElement.addEventListener('loadedmetadata', function onLoad() {
+        videoElement.currentTime = currentTime;
+        if (wasPlaying) {
+          videoElement.play();
+        }
+        videoElement.removeEventListener('loadedmetadata', onLoad);
+      });
+
+      // Mostrar mensaje
+      const trackNames = {
+        original: 'Audio Original',
+        spanish: 'Español',
+        english: 'English'
+      };
+      
+      showSubtitleMessage(`Audio: ${trackNames[nextTrack] || nextTrack}`);
+      updateAudioButton(nextTrack);
+    }
+
+    function updateAudioButton(currentTrack) {
+      const audioBtn = document.getElementById('audioLanguageBtn');
+      const trackColors = {
+        original: '#ffffff',
+        spanish: '#ff6b6b',
+        english: '#1d9bf0'
+      };
+
+      audioBtn.style.color = trackColors[currentTrack] || '#ffffff';
+      audioBtn.style.background = currentTrack !== 'original' ? 'rgba(29, 155, 240, 0.2)' : 'transparent';
+    }
+
+    // Función para detectar reproducir en banner principal
+    function initializeBannerDetector() {
+      const heroBannerPlay = document.getElementById('heroBannerPlay');
+      
+      // Configurar para reproducir la película destacada en el banner
+      currentSeries = seriesDatabase['dontlookaway'];
+    }
 
     
 
@@ -3065,8 +3964,14 @@
     }
 
     // Inicialización
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       console.log('Netflix-style app loaded');
+      
+      // Inicializar sistema de idiomas
+      await initializeLanguageSystem();
+      
+      // Inicializar detector de banner
+      initializeBannerDetector();
 
       // Agregar estilo de animación para notificación de estreno
       const style = document.createElement('style');
@@ -3126,9 +4031,42 @@
             opacity: 0;
           }
         }
+
+        @keyframes languageNotification {
+          0% {
+            transform: translateX(-50%) scale(0.8);
+            opacity: 0;
+          }
+          15% {
+            transform: translateX(-50%) scale(1.05);
+            opacity: 1;
+          }
+          85% {
+            transform: translateX(-50%) scale(1);
+            opacity: 1;
+          }
+          100% {
+            transform: translateX(-50%) scale(0.9);
+            opacity: 0;
+          }
+        }
       `;
       document.head.appendChild(style);
     });
+
+    // Inicializar sistema de idiomas
+    async function initializeLanguageSystem() {
+      // Cargar idioma guardado
+      const savedLanguage = localStorage.getItem('ibtv_language') || 'es';
+      currentLanguage = savedLanguage;
+      
+      // Si no es español, traducir interfaz
+      if (currentLanguage !== 'es') {
+        await translateInterface();
+      }
+      
+      console.log('Language system initialized:', currentLanguage);
+    }
 
     // Función para quitar emojis y fechas de la description
     function cleanDescription(description) {
