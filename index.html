@@ -2208,7 +2208,7 @@
             description: 'Una terrorífica película de suspense que te mantendrá inmóvil del terror.',
             duration: null,
             thumbnail: 'https://i.ibb.co/DDh79krZ/image.png',
-            videoUrl: 'https://dl.dropboxusercontent.com/scl/fi/w028mor4bksl2jc6ii4do/copy_8AAD6CC4-CEE6-4167-A131-E21CB14955CA.mov?rlkey=oef4oc2m3spkafc9h6sqgpn66&st=35hmqmld'
+            videoUrl: 'https://dl.dropboxusercontent.com/scl/fi/7lmrgs40fkup2wbrgmjqr/copy_0292E685-1A97-4C5C-8970-3C692BC3D856.MOV?rlkey=md9f33uxww8je32uwq3v8yver&st=tlqdxdbi&dl=1'
           }
         ]
       },
@@ -2763,43 +2763,111 @@
       });
     }
 
-    // Función para reproducir episodio
-    function playEpisode(season, episodeId) {
-      if (!currentSeries) return;
+    // Variables para el sistema de intro
+    let isPlayingIntro = false;
+    let pendingContent = null;
+    const introVideoUrl = 'https://dl.dropboxusercontent.com/scl/fi/1mvudm8f06i3p59yfnaon/copy_8AB790B8-7052-4F60-954E-346631026EF3.mov?rlkey=jinxuowzhjvpp88usjx2m3779&st=cskg34yd&dl=1';
 
-      // Verificar si la película está disponible para reproducción
-      if (currentSeries.isLocked && !isMovieAvailable(currentSeries)) {
-        showLockedMessage(currentSeries);
-        return;
-      }
+    // Función para reproducir intro de IBTV
+    function playIBTVIntro(callback) {
+      isPlayingIntro = true;
 
-      // Para NO TE MUEVAS, verificar disponibilidad según la fecha
-      if (currentSeries.id === 'notemuevas') {
-        const now = new Date();
-        const releaseDate = createJuneReleaseDate();
-        const permanentDate = createPermanentAvailabilityDate();
-        const hasBeenWatched = hasMovieBeenWatched('notemuevas');
+      // Limpiar video anterior
+      videoElement.removeAttribute('src');
+      videoElement.load();
 
-        // Antes del estreno: no disponible
-        if (now < releaseDate) {
-          showJuneReleaseMessage(releaseDate);
-          return;
+      // Configurar video para máxima compatibilidad móvil
+      videoElement.setAttribute('playsinline', 'true');
+      videoElement.setAttribute('webkit-playsinline', 'true');
+      videoElement.setAttribute('x5-playsinline', 'true');
+      videoElement.setAttribute('x5-video-player-type', 'h5');
+      videoElement.controls = false;
+      videoElement.preload = 'metadata';
+      videoElement.crossOrigin = 'anonymous';
+
+      // Configurar título para el intro
+      videoPlayerTitle.textContent = 'IBTV';
+
+      // Ocultar indicador EN VIVO durante el intro
+      const liveIndicator = document.getElementById('videoLiveIndicator');
+      liveIndicator.style.display = 'none';
+
+      // Agregar clase al body para controlar overflow
+      document.body.classList.add('video-playing');
+
+      // Mostrar reproductor
+      videoPlayer.classList.add('active');
+
+      // Configurar fuente del intro
+      videoElement.src = introVideoUrl;
+
+      // Event listeners del intro
+      const onIntroLoadedMetadata = () => {
+        updateDuration();
+        // Auto-reproducir el intro sin botón de play
+        videoElement.play().catch(e => {
+          console.warn('Autoplay blocked, showing play button for intro');
+          showPlayButton();
+        });
+      };
+
+      const onIntroPlay = () => {
+        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+        pauseIndicator.classList.remove('visible');
+        hidePlayButton();
+      };
+
+      const onIntroPause = () => {
+        playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+        pauseIndicator.classList.add('visible');
+      };
+
+      const onIntroEnded = () => {
+        // Cuando termina el intro, reproducir el contenido principal
+        isPlayingIntro = false;
+        
+        // Limpiar listeners del intro
+        videoElement.removeEventListener('loadedmetadata', onIntroLoadedMetadata);
+        videoElement.removeEventListener('play', onIntroPlay);
+        videoElement.removeEventListener('pause', onIntroPause);
+        videoElement.removeEventListener('ended', onIntroEnded);
+        videoElement.removeEventListener('error', onIntroError);
+
+        // Ejecutar callback para reproducir contenido principal
+        if (callback) {
+          callback();
         }
+      };
 
-        // Entre el 11 y 13 de junio: solo si no ha sido vista
-        if (now >= releaseDate && now < permanentDate && hasBeenWatched) {
-          showWatchedMessage();
-          return;
+      const onIntroError = (e) => {
+        console.error('Intro error:', e);
+        isPlayingIntro = false;
+        
+        // Si hay error en el intro, ir directo al contenido
+        videoElement.removeEventListener('loadedmetadata', onIntroLoadedMetadata);
+        videoElement.removeEventListener('play', onIntroPlay);
+        videoElement.removeEventListener('pause', onIntroPause);
+        videoElement.removeEventListener('ended', onIntroEnded);
+        videoElement.removeEventListener('error', onIntroError);
+
+        if (callback) {
+          callback();
         }
+      };
 
-        // A partir del 13 de junio: siempre disponible (no verificar hasBeenWatched)
-      }
+      // Agregar listeners del intro
+      videoElement.addEventListener('loadedmetadata', onIntroLoadedMetadata);
+      videoElement.addEventListener('play', onIntroPlay);
+      videoElement.addEventListener('pause', onIntroPause);
+      videoElement.addEventListener('ended', onIntroEnded);
+      videoElement.addEventListener('error', onIntroError);
 
-      const episode = currentSeries.episodes.find(ep => ep.id === episodeId);
-      if (!episode) return;
+      // Iniciar actualización de progreso
+      startProgressUpdate();
+    }
 
-      currentVideo = episode;
-
+    // Función para reproducir contenido principal después del intro
+    function playMainContent(episode) {
       // Limpiar video anterior
       videoElement.removeAttribute('src');
       videoElement.load();
@@ -2832,24 +2900,21 @@
       // Configurar subtítulos si están disponibles
       configureSubtitles();
 
-      // Agregar clase al body para controlar overflow
-      document.body.classList.add('video-playing');
-
-      // Mostrar reproductor
-      videoPlayer.classList.add('active');
-
       // Configurar fuente de video con mejor compatibilidad
       const source = document.createElement('source');
       source.src = episode.videoUrl;
       source.type = 'video/mp4';
       videoElement.appendChild(source);
 
-      // Event listeners del video
+      // Event listeners del contenido principal
       const onLoadedMetadata = () => {
         updateDuration();
-        updateRealTimeDuration(episodeId);
-        // Mostrar botón de play para interacción del usuario
-        showPlayButton();
+        updateRealTimeDuration(episode.id);
+        // Auto-reproducir después del intro
+        videoElement.play().catch(e => {
+          console.warn('Autoplay blocked after intro');
+          showPlayButton();
+        });
       };
 
       const onPlay = () => {
@@ -2900,6 +2965,49 @@
 
       // Iniciar actualización de progreso
       startProgressUpdate();
+    }
+
+    // Función para reproducir episodio (modificada para incluir intro)
+    function playEpisode(season, episodeId) {
+      if (!currentSeries) return;
+
+      // Verificar si la película está disponible para reproducción
+      if (currentSeries.isLocked && !isMovieAvailable(currentSeries)) {
+        showLockedMessage(currentSeries);
+        return;
+      }
+
+      // Para NO TE MUEVAS, verificar disponibilidad según la fecha
+      if (currentSeries.id === 'notemuevas') {
+        const now = new Date();
+        const releaseDate = createJuneReleaseDate();
+        const permanentDate = createPermanentAvailabilityDate();
+        const hasBeenWatched = hasMovieBeenWatched('notemuevas');
+
+        // Antes del estreno: no disponible
+        if (now < releaseDate) {
+          showJuneReleaseMessage(releaseDate);
+          return;
+        }
+
+        // Entre el 11 y 13 de junio: solo si no ha sido vista
+        if (now >= releaseDate && now < permanentDate && hasBeenWatched) {
+          showWatchedMessage();
+          return;
+        }
+
+        // A partir del 13 de junio: siempre disponible (no verificar hasBeenWatched)
+      }
+
+      const episode = currentSeries.episodes.find(ep => ep.id === episodeId);
+      if (!episode) return;
+
+      currentVideo = episode;
+
+      // Reproducir intro de IBTV primero, luego el contenido principal
+      playIBTVIntro(() => {
+        playMainContent(episode);
+      });
     }
 
     // Función para reproducir trailer
@@ -3570,8 +3678,119 @@
       videoElement.currentTime = percentage * videoElement.duration;
     });
 
-    // Event listeners para toques en el video (play/pause)
-    videoElement.addEventListener('click', togglePlayPause);
+    // Función para saltar intro
+    function skipIntro() {
+      if (isPlayingIntro) {
+        // Simular que el intro terminó
+        const endEvent = new Event('ended');
+        videoElement.dispatchEvent(endEvent);
+      }
+    }
+
+    // Event listeners para toques en el video (play/pause, pero no durante intro)
+    videoElement.addEventListener('click', (e) => {
+      if (!isPlayingIntro) {
+        togglePlayPause();
+      }
+    });
+
+    // Agregar botón de "Saltar Intro" durante la reproducción del intro
+    function showSkipIntroButton() {
+      let skipButton = document.getElementById('skipIntroButton');
+      if (!skipButton) {
+        skipButton = document.createElement('div');
+        skipButton.id = 'skipIntroButton';
+        skipButton.style.cssText = `
+          position: absolute;
+          bottom: 100px;
+          right: 20px;
+          background: rgba(0, 0, 0, 0.8);
+          color: white;
+          padding: 8px 16px;
+          border-radius: 4px;
+          font-size: 14px;
+          font-weight: 600;
+          cursor: pointer;
+          z-index: 50;
+          backdrop-filter: blur(8px);
+          border: 1px solid rgba(255, 255, 255, 0.2);
+          transition: all 0.2s ease;
+          animation: fadeInSkip 0.5s ease-in-out;
+        `;
+        skipButton.innerHTML = '→ Saltar Intro';
+        skipButton.onclick = skipIntro;
+        
+        // Agregar estilo de animación
+        const skipStyle = document.createElement('style');
+        skipStyle.textContent = `
+          @keyframes fadeInSkip {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+          }
+          #skipIntroButton:hover {
+            background: rgba(29, 155, 240, 0.8);
+            transform: translateY(-2px);
+          }
+        `;
+        document.head.appendChild(skipStyle);
+        
+        document.querySelector('.video-player-container').appendChild(skipButton);
+      }
+      skipButton.style.display = 'block';
+    }
+
+    function hideSkipIntroButton() {
+      const skipButton = document.getElementById('skipIntroButton');
+      if (skipButton) {
+        skipButton.style.display = 'none';
+      }
+    }
+
+    // Modificar la función del intro para mostrar botón de saltar
+    const originalPlayIBTVIntro = playIBTVIntro;
+    playIBTVIntro = function(callback) {
+      // Mostrar botón de saltar intro después de 3 segundos
+      setTimeout(() => {
+        if (isPlayingIntro) {
+          showSkipIntroButton();
+        }
+      }, 3000);
+
+      // Función original
+      originalPlayIBTVIntro.call(this, callback);
+    };
+
+    // Ocultar botón cuando termine el intro
+    const originalPlayMainContent = playMainContent;
+    playMainContent = function(episode) {
+      hideSkipIntroButton();
+      originalPlayMainContent.call(this, episode);
+    };
+
+    const originalPlayTrailerContent = playTrailerContent;
+    playTrailerContent = function(trailerVideo) {
+      hideSkipIntroButton();
+      originalPlayTrailerContent.call(this, trailerVideo);
+    };
+
+    // Keyboard shortcuts
+    document.addEventListener('keydown', (e) => {
+      if (videoPlayer.classList.contains('active')) {
+        switch(e.key) {
+          case 'Escape':
+            if (isPlayingIntro) {
+              skipIntro();
+            }
+            break;
+          case 's':
+          case 'S':
+            if (isPlayingIntro) {
+              skipIntro();
+            }
+            break;
+        }
+      }
+    });
 
     // Prevenir comportamientos nativos de iOS
     videoElement.addEventListener('webkitbeginfullscreen', (e) => {
@@ -4172,25 +4391,8 @@
       }
     }
 
-      // Función para reproducir trailer
-      function playTrailer() {
-        if (!currentSeries || !currentSeries.trailer) {
-            showErrorMessage('Trailer no disponible');
-            return;
-        }
-
-        // Crear objeto de trailer para reproducir
-        const trailerVideo = {
-            id: 'trailer',
-            title: 'Trailer Oficial',
-            description: 'Trailer oficial',
-            duration: '2:30',
-            thumbnail: currentSeries.poster,
-            videoUrl: currentSeries.trailer
-        };
-
-        currentVideo = trailerVideo;
-
+      // Función para reproducir contenido de trailer después del intro
+      function playTrailerContent(trailerVideo) {
         // Limpiar video anterior
         videoElement.removeAttribute('src');
         videoElement.load();
@@ -4210,20 +4412,17 @@
         const liveIndicator = document.getElementById('videoLiveIndicator');
         liveIndicator.style.display = 'none';
 
-        // Agregar clase al body para controlar overflow
-        document.body.classList.add('video-playing');
-
-        // Mostrar reproductor
-        videoPlayer.classList.add('active');
-
         // Configurar fuente
         videoElement.src = trailerVideo.videoUrl;
 
-        // Event listeners
+        // Event listeners para trailer
         const onLoadedMetadata = () => {
             updateDuration();
-            // Mostrar botón de play en lugar de reproducir automáticamente
-            showPlayButton();
+            // Auto-reproducir después del intro
+            videoElement.play().catch(e => {
+              console.warn('Autoplay blocked after intro');
+              showPlayButton();
+            });
         };
 
         const onPlay = () => {
@@ -4248,7 +4447,32 @@
         videoElement.addEventListener('error', onError);
 
         startProgressUpdate();
-    }
+      }
+
+      // Función para reproducir trailer (modificada para incluir intro)
+      function playTrailer() {
+        if (!currentSeries || !currentSeries.trailer) {
+            showErrorMessage('Trailer no disponible');
+            return;
+        }
+
+        // Crear objeto de trailer para reproducir
+        const trailerVideo = {
+            id: 'trailer',
+            title: 'Trailer Oficial',
+            description: 'Trailer oficial',
+            duration: '2:30',
+            thumbnail: currentSeries.poster,
+            videoUrl: currentSeries.trailer
+        };
+
+        currentVideo = trailerVideo;
+
+        // Reproducir intro de IBTV primero, luego el trailer
+        playIBTVIntro(() => {
+          playTrailerContent(trailerVideo);
+        });
+      }
 
   </script>
 </body>
