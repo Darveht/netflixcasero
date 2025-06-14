@@ -2722,20 +2722,8 @@
       if (series.id === 'notemuevas') {
         const now = new Date();
         const releaseDate = createJuneReleaseDate();
-        const permanentDate = createPermanentAvailabilityDate();
-        
-        // Disponible para transmisión única del 11 al 13 de junio
-        if (now >= releaseDate && now < permanentDate) {
-          return !hasMovieBeenWatched(series.id);
-        }
-        
-        // Disponible permanentemente a partir del 13 de junio
-        if (now >= permanentDate) {
-          return true;
-        }
-        
-        // Antes del 11 de junio: no disponible
-        return false;
+        // Película disponible después del estreno
+        return now >= releaseDate;
       }
 
       // Otras películas funcionan normalmente
@@ -2762,36 +2750,20 @@
     function updateCountdownToJune() {
       const now = new Date();
       const releaseDate = createJuneReleaseDate();
-      const permanentDate = createPermanentAvailabilityDate();
 
       const badgeElement = document.getElementById('notemuevas-badge');
-      const hasBeenWatched = hasMovieBeenWatched('notemuevas');
 
       if (now < releaseDate) {
-        // Antes del estreno (11 de junio)
+        // Antes del estreno
         if (badgeElement) {
           badgeElement.className = 'premiere-badge';
           badgeElement.textContent = 'ESTRENO';
         }
-      } else if (now >= releaseDate && now < permanentDate) {
-        // Entre el 11 y 13 de junio: período de transmisión única
-        if (hasBeenWatched) {
-          if (badgeElement) {
-            badgeElement.className = 'movie-badge';
-            badgeElement.style.background = 'linear-gradient(45deg, #6c757d, #495057)';
-            badgeElement.textContent = 'VISTO';
-          }
-        } else {
-          if (badgeElement) {
-            badgeElement.className = 'live-badge';
-            badgeElement.textContent = 'EN VIVO';
-          }
-        }
       } else {
-        // A partir del 13 de junio: disponible permanentemente
+        // Después del estreno: disponible permanentemente
         if (badgeElement) {
           badgeElement.className = 'movie-badge';
-          badgeElement.style.background = 'linear-gradient(45deg, #ff6b6b, #ff8e53)';
+          badgeElement.style.background = 'linear-gradient(45deg, #10b981, #34d399)';
           badgeElement.textContent = 'DISPONIBLE';
         }
       }
@@ -3310,22 +3282,9 @@
         pauseIndicator.classList.remove('visible');
         hidePlayButton();
 
-        // Marcar NO TE MUEVAS como vista solo durante el período de transmisión única
+        // NO TE MUEVAS está disponible permanentemente después del estreno
         if (currentSeries.id === 'notemuevas') {
-          const now = new Date();
-          const releaseDate = createJuneReleaseDate();
-          const permanentDate = createPermanentAvailabilityDate();
-
-          // Solo marcar como vista entre el 11 y 13 de junio
-          if (now >= releaseDate && now < permanentDate) {
-            markMovieAsWatched('notemuevas');
-            updateCountdownToJune(); // Actualizar estado inmediatamente
-
-            // Mostrar notificación de que es la única vez (solo durante transmisión única)
-            setTimeout(() => {
-              showLiveNotification('ATENCIÓN: Esta es tu única oportunidad de ver esta transmisión. Una vez que termine, no podrás verla nuevamente hasta el 13 de junio.');
-            }, 3000);
-          }
+          console.log('Reproduciendo NO TE MUEVAS - disponible permanentemente');
         }
       };
 
@@ -4710,7 +4669,7 @@
       const now = new Date();
       if (now >= releaseDate) {
         seriesDatabase.notemuevas.isLocked = false;
-        seriesDatabase.notemuevas.isLive = false; //La pelicula ya no estará como en vivo
+        seriesDatabase.notemuevas.isLive = false;
       } else {
         seriesDatabase.notemuevas.isLocked = true;
         seriesDatabase.notemuevas.isLive = false;
@@ -4732,35 +4691,17 @@
       if (!playButton) return;
 
       if (series.id === 'notemuevas') {
-        const now = new Date();
-        const releaseDate = createJuneReleaseDate();
-        const permanentDate = createPermanentAvailabilityDate();
-        const hasBeenWatched = hasMovieBeenWatched('notemuevas');
         const isAvailable = isMovieAvailable(series);
 
-        if (now < releaseDate) {
-          // Antes del estreno (11 de junio)
+        if (!isAvailable) {
+          // Película no disponible (antes del estreno)
           playButton.innerHTML = '<i class="fas fa-calendar-alt"></i> Estreno: 11 de Junio';
           playButton.style.background = '#ffd700';
           playButton.style.color = '#000';
           playButton.style.cursor = 'not-allowed';
-          playButton.onclick = () => showJuneReleaseMessage(releaseDate);
-        } else if (now >= releaseDate && now < permanentDate) {
-          // Entre el 11 y 13 de junio: período de transmisión única
-          if (hasBeenWatched) {
-            playButton.innerHTML = '<i class="fas fa-eye-slash"></i> Transmisión Finalizada';
-            playButton.style.background = '#6c757d';
-            playButton.style.cursor = 'not-allowed';
-            playButton.onclick = () => showWatchedMessage();
-          } else {
-            playButton.innerHTML = '<i class="fas fa-broadcast-tower"></i> Ver Transmisión EN VIVO';
-            playButton.style.background = 'linear-gradient(45deg, #ff0000, #ff4444)';
-            playButton.style.color = '#fff';
-            playButton.style.cursor = 'pointer';
-            playButton.onclick = () => playEpisode(1, 1);
-          }
+          playButton.onclick = () => showJuneReleaseMessage(createJuneReleaseDate());
         } else {
-          // A partir del 13 de junio: disponible permanentemente
+          // Película disponible para ver
           playButton.innerHTML = '<i class="fas fa-play"></i> Ver Película';
           playButton.style.background = '#1d9bf0';
           playButton.style.color = '#fff';
