@@ -2451,15 +2451,9 @@
         genre: 'Terror, Thriller, Suspenso',
         rating: '18+',
         type: 'movie',
-        releaseDate: null, // Se establecerá dinámicamente
-        premiereTime: {
-          houston: '4:40 AM', // Houston (UTC-6)
-          lasvegas: '12:40 AM', // Las Vegas (UTC-8)
-          utc: '08:40 AM' // Tiempo UTC universal
-        },
-        isLocked: true, // Película bloqueada inicialmente
-        isLive: false, // Se activará en el momento del estreno
-        hasCountdown: true, // Activar cuenta regresiva
+        isLocked: false,
+        isLive: false,
+        hasCountdown: false,
         description: 'Una terrorífica película de suspense que te mantendrá inmóvil del terror. Cuando te dicen "no te muevas", más vale que obedezcas.',
         poster: 'https://i.ibb.co/DDh79krZ/image.png',
         trailer: 'video_BAACAgEAAxkBAAIBimg_Hd9a9bpAMm37Sz-eBpNb-0gZAAKnBgAC_aH4RQ4rFHrAoNZHNgQ.mp4',
@@ -2718,10 +2712,9 @@
 
     // Función para verificar si una película está disponible
     function isMovieAvailable(series) {
-      // NO TE MUEVAS tiene lógica especial
+      // NO TE MUEVAS ahora está completamente desbloqueada
       if (series.id === 'notemuevas') {
-        // Película ahora disponible permanentemente
-        return !hasMovieBeenWatched(series.id);
+        return true; // Siempre disponible
       }
 
       // Otras películas funcionan normalmente
@@ -2746,40 +2739,11 @@
 
     // Función principal para actualizar estado de NO TE MUEVAS
     function updateCountdownToJune() {
-      const now = new Date();
-      const releaseDate = createJuneReleaseDate();
-      const permanentDate = createPermanentAvailabilityDate();
-
       const badgeElement = document.getElementById('notemuevas-badge');
-      const hasBeenWatched = hasMovieBeenWatched('notemuevas');
-
-      if (now < releaseDate) {
-        // Antes del estreno (11 de junio)
-        if (badgeElement) {
-          badgeElement.className = 'premiere-badge';
-          badgeElement.textContent = 'ESTRENO';
-        }
-      } else if (now >= releaseDate && now < permanentDate) {
-        // Entre el 11 y 13 de junio: período de transmisión única
-        if (hasBeenWatched) {
-          if (badgeElement) {
-            badgeElement.className = 'movie-badge';
-            badgeElement.style.background = 'linear-gradient(45deg, #6c757d, #495057)';
-            badgeElement.textContent = 'VISTO';
-          }
-        } else {
-          if (badgeElement) {
-            badgeElement.className = 'live-badge';
-            badgeElement.textContent = 'EN VIVO';
-          }
-        }
-      } else {
-        // A partir del 13 de junio: disponible permanentemente
-        if (badgeElement) {
-          badgeElement.className = 'movie-badge';
-          badgeElement.style.background = 'linear-gradient(45deg, #ff6b6b, #ff8e53)';
-          badgeElement.textContent = 'DISPONIBLE';
-        }
+      
+      if (badgeElement) {
+        badgeElement.className = 'movie-badge';
+        badgeElement.textContent = 'Película';
       }
     }
 
@@ -2815,7 +2779,7 @@
       const series = seriesDatabase[seriesId];
       if (!series) return;
 
-      // Permitir ver detalles pero bloquear reproducción
+      // Mostrar detalles de la película (todas desbloqueadas)
       showSeriesDetail(seriesId);
     }
 
@@ -2937,40 +2901,14 @@
       const playButton = document.getElementById('playButton');
       if (!playButton) return;
 
-      if (series.id === 'notemuevas') {
-        const hasBeenWatched = hasMovieBeenWatched('notemuevas');
-        const isAvailable = isMovieAvailable(series);
-
-        if (hasBeenWatched) {
-          // Película ya vista
-          playButton.innerHTML = '<i class="fas fa-eye-slash"></i> Transmisión Finalizada';
-          playButton.style.background = '#6c757d';
-          playButton.style.cursor = 'not-allowed';
-          playButton.onclick = () => showWatchedMessage();
-        } else if (!isAvailable) {
-          // Película bloqueada hasta el 11 de junio
-          const releaseDate = createJuneReleaseDate();
-          playButton.innerHTML = '<i class="fas fa-calendar-alt"></i> Estreno: 11 de Junio';
-          playButton.style.background = '#ffd700';
-          playButton.style.color = '#000';
-          playButton.style.cursor = 'not-allowed';
-          playButton.onclick = () => showJuneReleaseMessage(releaseDate);
-        } else {
-          // Película disponible EN VIVO
-          playButton.innerHTML = '<i class="fas fa-broadcast-tower"></i> Ver Transmisión EN VIVO';
-          playButton.style.background = 'linear-gradient(45deg, #ff0000, #ff4444)';
-          playButton.style.color = '#fff';
-          playButton.style.cursor = 'pointer';
-          playButton.onclick = () => playEpisode(1, 1);
-        }
-      } else if (series.isLocked && !isMovieAvailable(series)) {
-        // Otras películas bloqueadas
+      if (series.isLocked && !isMovieAvailable(series)) {
+        // Películas bloqueadas
         playButton.innerHTML = '<i class="fas fa-lock"></i> Próximamente';
         playButton.style.background = '#666';
         playButton.style.cursor = 'not-allowed';
         playButton.onclick = () => showLockedMessage(series);
       } else {
-        // Otras películas disponibles
+        // Películas disponibles (incluyendo NO TE MUEVAS)
         playButton.innerHTML = '<i class="fas fa-play"></i> Reproducir';
         playButton.style.background = '#1d9bf0';
         playButton.style.cursor = 'pointer';
@@ -3263,13 +3201,9 @@
         videoPlayerTitle.textContent = `${currentSeries.title} - ${episode.title}`;
       }
 
-      // Mostrar indicador EN VIVO para NO TE MUEVAS
+      // Ocultar indicador EN VIVO para todas las películas normales
       const liveIndicator = document.getElementById('videoLiveIndicator');
-      if (currentSeries.id === 'notemuevas') {
-        liveIndicator.style.display = 'flex';
-      } else {
-        liveIndicator.style.display = 'none';
-      }
+      liveIndicator.style.display = 'none';
 
       // Configurar subtítulos si están disponibles
       configureSubtitles();
@@ -3295,24 +3229,6 @@
         playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
         pauseIndicator.classList.remove('visible');
         hidePlayButton();
-
-        // Marcar NO TE MUEVAS como vista solo durante el período de transmisión única
-        if (currentSeries.id === 'notemuevas') {
-          const now = new Date();
-          const releaseDate = createJuneReleaseDate();
-          const permanentDate = createPermanentAvailabilityDate();
-
-          // Solo marcar como vista entre el 11 y 13 de junio
-          if (now >= releaseDate && now < permanentDate) {
-            markMovieAsWatched('notemuevas');
-            updateCountdownToJune(); // Actualizar estado inmediatamente
-
-            // Mostrar notificación de que es la única vez (solo durante transmisión única)
-            setTimeout(() => {
-              showLiveNotification('ATENCIÓN: Esta es tu única oportunidad de ver esta transmisión. Una vez que termine, no podrás verla nuevamente hasta el 13 de junio.');
-            }, 3000);
-          }
-        }
       };
 
       const onPause = () => {
@@ -3349,28 +3265,6 @@
       if (currentSeries.isLocked && !isMovieAvailable(currentSeries)) {
         showLockedMessage(currentSeries);
         return;
-      }
-
-      // Para NO TE MUEVAS, verificar disponibilidad según la fecha
-      if (currentSeries.id === 'notemuevas') {
-        const now = new Date();
-        const releaseDate = createJuneReleaseDate();
-        const permanentDate = createPermanentAvailabilityDate();
-        const hasBeenWatched = hasMovieBeenWatched('notemuevas');
-
-        // Antes del estreno: no disponible
-        if (now < releaseDate) {
-          showJuneReleaseMessage(releaseDate);
-          return;
-        }
-
-        // Entre el 11 y 13 de junio: solo si no ha sido vista
-        if (now >= releaseDate && now < permanentDate && hasBeenWatched) {
-          showWatchedMessage();
-          return;
-        }
-
-        // A partir del 13 de junio: siempre disponible (no verificar hasBeenWatched)
       }
 
       const episode = currentSeries.episodes.find(ep => ep.id === episodeId);
@@ -4712,36 +4606,18 @@
       console.log('Fecha de estreno:', releaseDate.toLocaleString('es-ES'));
       console.log('Estado actual:', now >= releaseDate ? 'Disponible' : 'Bloqueada');
     }
-      //Modifico la funcion updatePlayButton para que una vez vista la pelicula, no pueda ser reproducida de nuevo.
+      // Función updatePlayButton actualizada - NO TE MUEVAS ahora siempre disponible
       function updatePlayButton(series) {
       const playButton = document.getElementById('playButton');
       if (!playButton) return;
 
       if (series.id === 'notemuevas') {
-        const hasBeenWatched = hasMovieBeenWatched('notemuevas');
-        const isAvailable = isMovieAvailable(series);
-
-        if (hasBeenWatched) {
-          // Película ya vista
-          playButton.innerHTML = '<i class="fas fa-eye-slash"></i> Transmisión Finalizada';
-          playButton.style.background = '#6c757d';
-          playButton.style.cursor = 'not-allowed';
-          playButton.onclick = () => showWatchedMessage();
-        } else if (isAvailable) {
-          // Película disponible para ver
-          playButton.innerHTML = '<i class="fas fa-play"></i> Reproducir';
-          playButton.style.background = '#e50914';
-          playButton.style.color = '#fff';
-          playButton.style.cursor = 'pointer';
-          playButton.onclick = () => playEpisode(1, 1);
-        } else {
-          // Película no disponible
-          playButton.innerHTML = '<i class="fas fa-calendar-alt"></i> Estreno: 11 de Junio';
-          playButton.style.background = '#ffd700';
-          playButton.style.color = '#000';
-          playButton.style.cursor = 'not-allowed';
-          playButton.onclick = () => showJuneReleaseMessage(createJuneReleaseDate());
-        }
+        // NO TE MUEVAS siempre disponible para ver
+        playButton.innerHTML = '<i class="fas fa-play"></i> Reproducir';
+        playButton.style.background = '#1d9bf0';
+        playButton.style.color = '#fff';
+        playButton.style.cursor = 'pointer';
+        playButton.onclick = () => playEpisode(1, 1);
       } else if (series.isLocked && !isMovieAvailable(series)) {
         // Otras películas bloqueadas
         playButton.innerHTML = '<i class="fas fa-lock"></i> Próximamente';
