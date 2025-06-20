@@ -979,6 +979,11 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      cursor: none;
+    }
+
+    .video-player-container.show-cursor {
+      cursor: default;
     }
 
     .video-player video {
@@ -1020,6 +1025,13 @@
       justify-content: space-between;
       align-items: center;
       z-index: 10;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+
+    .video-player-header.hidden {
+      opacity: 0;
+      pointer-events: none;
     }
 
     .video-player-title {
@@ -1051,6 +1063,13 @@
       background: linear-gradient(transparent, rgba(0,0,0,0.8));
       padding: 40px 16px 20px 16px;
       z-index: 10;
+      opacity: 1;
+      transition: opacity 0.3s ease;
+    }
+
+    .video-player-controls.hidden {
+      opacity: 0;
+      pointer-events: none;
     }
 
     .video-progress-container {
@@ -1375,6 +1394,15 @@
         display: none;
       }
 
+      /* En móvil horizontal, mantener controles más tiempo visibles */
+      .video-player.active .video-player-header.hidden {
+        opacity: 0.1;
+      }
+
+      .video-player.active .video-player-controls.hidden {
+        opacity: 0.1;
+      }
+
       /* Asegurar que el big play button esté centrado solo cuando el video esté activo */
       .video-player.active #bigPlayButton {
         position: absolute !important;
@@ -1382,6 +1410,54 @@
         left: 50% !important;
         transform: translate(-50%, -50%) !important;
         z-index: 60 !important;
+      }
+    }
+
+    /* Estilos profesionales para subtítulos estilo Netflix */
+    ::cue {
+      font-family: 'Netflix Sans', 'Helvetica Neue', Arial, sans-serif;
+      font-size: 20px;
+      line-height: 1.2;
+      color: #ffffff;
+      background-color: rgba(0, 0, 0, 0.8);
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.9);
+      padding: 2px 6px;
+      border-radius: 2px;
+    }
+
+    ::cue(.speaker) {
+      color: #ffd700;
+      font-style: italic;
+    }
+
+    ::cue(.sound-effect) {
+      color: #1d9bf0;
+      font-style: italic;
+    }
+
+    ::cue(.whisper) {
+      font-size: 18px;
+      opacity: 0.8;
+    }
+
+    ::cue(.loud) {
+      font-weight: bold;
+      color: #ff6b6b;
+    }
+
+    /* Animaciones suaves para aparición de subtítulos */
+    video::cue {
+      animation: subtitleFadeIn 0.3s ease-in-out;
+    }
+
+    @keyframes subtitleFadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(10px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
       }
     }
 
@@ -1403,6 +1479,16 @@
       .episode-thumbnail {
         width: 80px;
         height: 45px;
+      }
+
+      /* Ajustar subtítulos en móvil */
+      ::cue {
+        font-size: 16px;
+        padding: 1px 4px;
+      }
+
+      ::cue(.whisper) {
+        font-size: 14px;
       }
     }
 
@@ -2459,8 +2545,30 @@
         trailer: 'video_BAACAgEAAxkBAAIBimg_Hd9a9bpAMm37Sz-eBpNb-0gZAAKnBgAC_aH4RQ4rFHrAoNZHNgQ.mp4',
         youtubeReference: '#',
         subtitles: {
-          spanish: 'subtitles/no-te-muevas-es.vtt',
-          english: 'subtitles/no-te-muevas-en.vtt'
+          spanish: {
+            type: 'inline',
+            cues: [
+              { start: '00:03:09.000', end: '00:03:10.000', text: '¿Qué me pasó?' },
+              { start: '00:04:11.000', end: '00:04:12.500', text: '<v.sound-effect>{risas}</v.sound-effect>' },
+              { start: '00:04:12.500', end: '00:04:14.000', text: 'Eres un insípido niño' }
+            ]
+          },
+          english: {
+            type: 'inline',
+            cues: [
+              { start: '00:03:09.000', end: '00:03:10.000', text: 'What happened to me?' },
+              { start: '00:04:11.000', end: '00:04:12.500', text: '<v.sound-effect>{laughter}</v.sound-effect>' },
+              { start: '00:04:12.500', end: '00:04:14.000', text: 'You are an insipid child' }
+            ]
+          },
+          portuguese: {
+            type: 'inline',
+            cues: [
+              { start: '00:03:09.000', end: '00:03:10.000', text: 'O que aconteceu comigo?' },
+              { start: '00:04:11.000', end: '00:04:12.500', text: '<v.sound-effect>{risos}</v.sound-effect>' },
+              { start: '00:04:12.500', end: '00:04:14.000', text: 'Você é uma criança insípida' }
+            ]
+          }
         },
         episodes: [
           {
@@ -3706,6 +3814,7 @@
       videoElement.innerHTML = ''; // Limpiar todas las fuentes
       videoElement.load(); // Recargar elemento
       clearInterval(progressUpdateInterval);
+      clearTimeout(controlsTimeout); // Limpiar timeout de controles
       currentVideo = null;
 
       // Remover clase del body
@@ -3713,6 +3822,15 @@
 
       // Ocultar botón de play grande si existe
       hidePlayButton();
+
+      // Mostrar controles nuevamente para la próxima reproducción
+      const header = document.querySelector('.video-player-header');
+      const controls = document.querySelector('.video-player-controls');
+      if (header && controls) {
+        header.classList.remove('hidden');
+        controls.classList.remove('hidden');
+        controlsVisible = true;
+      }
     }
 
     // Controles del reproductor
@@ -3780,10 +3898,19 @@
         if (currentSeries.subtitles.spanish) {
           const spanishTrack = document.createElement('track');
           spanishTrack.kind = 'subtitles';
-          spanishTrack.src = currentSeries.subtitles.spanish;
           spanishTrack.srclang = 'es';
           spanishTrack.label = 'Español';
-          spanishTrack.default = trackCount === 0; // Primer track como default
+          spanishTrack.default = trackCount === 0;
+          
+          if (currentSeries.subtitles.spanish.type === 'inline') {
+            // Crear VTT dinámicamente desde datos inline
+            const vttContent = createVTTFromInlineData(currentSeries.subtitles.spanish.cues);
+            const vttBlob = new Blob([vttContent], { type: 'text/vtt' });
+            spanishTrack.src = URL.createObjectURL(vttBlob);
+          } else {
+            spanishTrack.src = currentSeries.subtitles.spanish;
+          }
+          
           videoElement.appendChild(spanishTrack);
           trackCount++;
         }
@@ -3792,11 +3919,39 @@
         if (currentSeries.subtitles.english) {
           const englishTrack = document.createElement('track');
           englishTrack.kind = 'subtitles';
-          englishTrack.src = currentSeries.subtitles.english;
           englishTrack.srclang = 'en';
           englishTrack.label = 'English';
-          englishTrack.default = trackCount === 0; // Si no hay español, inglés como default
+          englishTrack.default = trackCount === 0;
+          
+          if (currentSeries.subtitles.english.type === 'inline') {
+            const vttContent = createVTTFromInlineData(currentSeries.subtitles.english.cues);
+            const vttBlob = new Blob([vttContent], { type: 'text/vtt' });
+            englishTrack.src = URL.createObjectURL(vttBlob);
+          } else {
+            englishTrack.src = currentSeries.subtitles.english;
+          }
+          
           videoElement.appendChild(englishTrack);
+          trackCount++;
+        }
+
+        // Agregar subtítulos en portugués
+        if (currentSeries.subtitles.portuguese) {
+          const portugueseTrack = document.createElement('track');
+          portugueseTrack.kind = 'subtitles';
+          portugueseTrack.srclang = 'pt';
+          portugueseTrack.label = 'Português';
+          portugueseTrack.default = trackCount === 0;
+          
+          if (currentSeries.subtitles.portuguese.type === 'inline') {
+            const vttContent = createVTTFromInlineData(currentSeries.subtitles.portuguese.cues);
+            const vttBlob = new Blob([vttContent], { type: 'text/vtt' });
+            portugueseTrack.src = URL.createObjectURL(vttBlob);
+          } else {
+            portugueseTrack.src = currentSeries.subtitles.portuguese;
+          }
+          
+          videoElement.appendChild(portugueseTrack);
           trackCount++;
         }
 
@@ -3805,6 +3960,7 @@
           const languages = [];
           if (currentSeries.subtitles.spanish) languages.push('Español');
           if (currentSeries.subtitles.english) languages.push('English');
+          if (currentSeries.subtitles.portuguese) languages.push('Português');
 
           setTimeout(() => {
             showSubtitleMessage(`Subtítulos disponibles: ${languages.join(', ')}`);
@@ -3814,6 +3970,19 @@
 
       // Actualizar botón de subtítulos
       updateSubtitlesButton();
+    }
+
+    // Función para crear contenido VTT desde datos inline
+    function createVTTFromInlineData(cues) {
+      let vttContent = 'WEBVTT\n\n';
+      
+      cues.forEach((cue, index) => {
+        vttContent += `${index + 1}\n`;
+        vttContent += `${cue.start} --> ${cue.end}\n`;
+        vttContent += `${cue.text}\n\n`;
+      });
+      
+      return vttContent;
     }
 
     // Variables para subtítulos
@@ -3955,9 +4124,88 @@
       }
     }
 
+    // Variables para controlar visibilidad de controles
+    let controlsTimeout = null;
+    let controlsVisible = true;
+
+    // Función para mostrar controles
+    function showControls() {
+      const header = document.querySelector('.video-player-header');
+      const controls = document.querySelector('.video-player-controls');
+      const container = document.querySelector('.video-player-container');
+      
+      if (header && controls) {
+        header.classList.remove('hidden');
+        controls.classList.remove('hidden');
+        container.classList.add('show-cursor');
+        controlsVisible = true;
+        
+        // Reiniciar timeout para ocultar controles
+        resetControlsTimeout();
+      }
+    }
+
+    // Función para ocultar controles
+    function hideControls() {
+      const header = document.querySelector('.video-player-header');
+      const controls = document.querySelector('.video-player-controls');
+      const container = document.querySelector('.video-player-container');
+      
+      if (header && controls && !videoElement.paused) {
+        header.classList.add('hidden');
+        controls.classList.add('hidden');
+        container.classList.remove('show-cursor');
+        controlsVisible = false;
+      }
+    }
+
+    // Función para reiniciar el timeout de ocultar controles
+    function resetControlsTimeout() {
+      clearTimeout(controlsTimeout);
+      
+      // Solo ocultar si el video está reproduciéndose
+      if (!videoElement.paused) {
+        controlsTimeout = setTimeout(() => {
+          hideControls();
+        }, 3000); // Ocultar después de 3 segundos
+      }
+    }
+
+    // Event listeners para mostrar/ocultar controles
+    const videoPlayerContainer = document.querySelector('.video-player-container');
+    
+    // Mostrar controles al mover el mouse o tocar la pantalla
+    videoPlayerContainer.addEventListener('mousemove', showControls);
+    videoPlayerContainer.addEventListener('touchstart', showControls);
+    videoPlayerContainer.addEventListener('click', (e) => {
+      e.preventDefault();
+      
+      if (controlsVisible) {
+        // Si los controles están visibles, play/pause
+        if (!isPlayingIntro) {
+          togglePlayPause();
+        }
+      } else {
+        // Si los controles están ocultos, solo mostrarlos
+        showControls();
+      }
+    });
+
+    // Mostrar controles cuando el video se pausa
+    videoElement.addEventListener('pause', () => {
+      clearTimeout(controlsTimeout);
+      showControls();
+    });
+
+    // Iniciar timeout cuando el video empieza a reproducirse
+    videoElement.addEventListener('play', () => {
+      resetControlsTimeout();
+    });
+
     // Event listeners para toques en el video (play/pause, pero no durante intro)
     videoElement.addEventListener('click', (e) => {
-      if (!isPlayingIntro) {
+      e.preventDefault();
+      if (!isPlayingIntro && controlsVisible) {
         togglePlayPause();
       }
     });
