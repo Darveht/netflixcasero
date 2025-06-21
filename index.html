@@ -6,6 +6,9 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
+  <meta name="screen-orientation" content="portrait">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="theme-color" content="#000000">
   <title>IBTV</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
@@ -1254,39 +1257,44 @@
       margin-bottom: 4px;
     }
 
-    /* Orientación horizontal para móviles */
+    /* Orientación horizontal para móviles - Mejorado */
     @media screen and (orientation: landscape) and (max-height: 500px) {
+      /* Forzar pantalla completa en landscape */
       .video-player.active {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        width: 100vw;
-        height: 100vh;
-        z-index: 4000;
+        position: fixed !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100vw !important;
+        height: 100vh !important;
+        height: 100dvh !important; /* Dynamic viewport height para móviles modernos */
+        z-index: 9999 !important;
+        background: #000000 !important;
       }
 
       .video-player.active .video-player-container {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        width: 100%;
-        height: 100%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        right: 0 !important;
+        bottom: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        background: #000000 !important;
       }
 
       .video-player.active video {
-        width: 100%;
-        height: 100%;
-        object-fit: contain;
-        position: absolute;
-        top: 0;
-        left: 0;
+        width: 100% !important;
+        height: 100% !important;
+        object-fit: contain !important;
+        position: absolute !important;
+        top: 0 !important;
+        left: 0 !important;
+        background: #000000 !important;
       }
 
       .video-player.active .video-player-header {
@@ -1410,6 +1418,47 @@
         left: 50% !important;
         transform: translate(-50%, -50%) !important;
         z-index: 60 !important;
+      }
+
+      /* Ocultar elementos de navegación en landscape */
+      .video-player.active ~ .bottom-nav,
+      .video-player.active ~ .header {
+        display: none !important;
+      }
+
+      /* Forzar que el body no tenga scroll en landscape */
+      body.video-playing {
+        overflow: hidden !important;
+        position: fixed !important;
+        width: 100% !important;
+        height: 100% !important;
+      }
+    }
+
+    /* Soporte adicional para dispositivos móviles */
+    @media screen and (max-width: 768px) {
+      /* Permitir rotación automática */
+      .video-player.active {
+        -webkit-transform: rotate(0deg);
+        transform: rotate(0deg);
+        -webkit-transition: -webkit-transform 0.3s ease;
+        transition: transform 0.3s ease;
+      }
+
+      /* Optimizar para pantallas pequeñas */
+      .video-player.active video {
+        max-width: 100% !important;
+        max-height: 100% !important;
+        object-fit: contain !important;
+      }
+    }
+
+    /* Forzar pantalla completa para iOS Safari */
+    @media screen and (orientation: landscape) and (-webkit-min-device-pixel-ratio: 1) {
+      .video-player.active {
+        -webkit-appearance: none !important;
+        -webkit-transform: translateZ(0) !important;
+        transform: translateZ(0) !important;
       }
     }
 
@@ -3288,6 +3337,9 @@
 
     // Función para reproducir contenido principal después del intro
     function playMainContent(episode) {
+      // Habilitar pantalla completa automática
+      enableFullscreenVideo();
+
       // Limpiar video anterior
       videoElement.removeAttribute('src');
       videoElement.load();
@@ -3809,6 +3861,9 @@
 
     // Función para cerrar reproductor
     function closeVideoPlayer() {
+      // Restablecer orientación
+      resetVideoOrientation();
+
       videoPlayer.classList.remove('active');
       videoElement.pause();
       videoElement.innerHTML = ''; // Limpiar todas las fuentes
@@ -4324,6 +4379,51 @@
       e.preventDefault();
       return false;
     });
+
+    // Manejo automático de rotación de pantalla
+    function handleOrientationChange() {
+      if (videoPlayer.classList.contains('active')) {
+        // Forzar recálculo de dimensiones después de rotación
+        setTimeout(() => {
+          const video = document.getElementById('videoElement');
+          if (video) {
+            video.style.width = '100%';
+            video.style.height = '100%';
+            video.style.objectFit = 'contain';
+          }
+        }, 100);
+      }
+    }
+
+    // Detectar cambios de orientación
+    window.addEventListener('orientationchange', handleOrientationChange);
+    window.addEventListener('resize', handleOrientationChange);
+
+    // Forzar pantalla completa en móviles cuando se reproduce video
+    function enableFullscreenVideo() {
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        // Solicitar orientación landscape cuando sea posible
+        if (screen.orientation && screen.orientation.lock) {
+          screen.orientation.lock('landscape').catch(() => {
+            console.log('No se pudo forzar orientación landscape');
+          });
+        }
+        
+        // Ocultar barra de direcciones en móviles
+        setTimeout(() => {
+          window.scrollTo(0, 1);
+        }, 100);
+      }
+    }
+
+    // Restablecer orientación cuando se cierre el video
+    function resetVideoOrientation() {
+      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
+        if (screen.orientation && screen.orientation.unlock) {
+          screen.orientation.unlock();
+        }
+      }
+    }
 
     // Variables de búsqueda
     let searchTimeout = null;
