@@ -521,7 +521,7 @@
       }
     }
 
-    /* Vista expandida de serie */
+    /* Vista expandida de serie estilo Netflix */
     .series-detail {
       position: fixed;
       top: 0;
@@ -540,11 +540,57 @@
 
     .series-detail-header {
       position: relative;
-      height: 50vh;
-      background: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url('') center/cover;
+      height: 80vh;
+      overflow: hidden;
       display: flex;
       align-items: flex-end;
       padding: 40px 16px;
+    }
+
+    /* Video de fondo para el trailer */
+    .series-detail-video {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 2s ease-in-out;
+    }
+
+    .series-detail-video.loaded {
+      opacity: 0.7;
+    }
+
+    /* Overlay gradiente */
+    .series-detail-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        to bottom,
+        rgba(0,0,0,0.1) 0%,
+        rgba(0,0,0,0.3) 40%,
+        rgba(0,0,0,0.7) 80%,
+        rgba(0,0,0,0.9) 100%
+      );
+      z-index: 2;
+    }
+
+    /* Imagen de fondo de respaldo */
+    .series-detail-background {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-size: cover;
+      background-position: center;
+      z-index: 0;
     }
 
     .series-close-btn {
@@ -564,6 +610,7 @@
       cursor: pointer;
       transition: all 0.2s ease;
       backdrop-filter: blur(12px);
+      z-index: 10;
     }
 
     .series-close-btn:hover {
@@ -571,37 +618,140 @@
       transform: scale(1.1);
     }
 
+    /* Botón de play circular estilo Netflix */
+    .netflix-play-btn {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 80px;
+      height: 80px;
+      background: rgba(255, 255, 255, 0.9);
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 5;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(12px);
+      animation: netflixPlayPulse 3s ease-in-out infinite;
+    }
+
+    .netflix-play-btn:hover {
+      transform: translate(-50%, -50%) scale(1.1);
+      background: rgba(255, 255, 255, 1);
+      box-shadow: 0 0 30px rgba(255, 255, 255, 0.5);
+    }
+
+    .netflix-play-btn i {
+      font-size: 28px;
+      color: #000000;
+      margin-left: 4px;
+    }
+
+    /* Loading spinner para el botón */
+    .netflix-play-btn.loading {
+      border: 4px solid rgba(255, 255, 255, 0.3);
+      border-top: 4px solid #ffffff;
+      animation: netflixSpin 1s linear infinite;
+    }
+
+    .netflix-play-btn.loading i {
+      display: none;
+    }
+
+    @keyframes netflixPlayPulse {
+      0%, 100% {
+        box-shadow: 0 0 20px rgba(255, 255, 255, 0.3);
+      }
+      50% {
+        box-shadow: 0 0 40px rgba(255, 255, 255, 0.6);
+      }
+    }
+
+    @keyframes netflixSpin {
+      0% { transform: translate(-50%, -50%) rotate(0deg); }
+      100% { transform: translate(-50%, -50%) rotate(360deg); }
+    }
+
+    /* Indicador de sonido */
+    .sound-indicator {
+      position: absolute;
+      bottom: 100px;
+      right: 20px;
+      background: rgba(0, 0, 0, 0.7);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 5;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(12px);
+    }
+
+    .sound-indicator:hover {
+      background: rgba(255, 255, 255, 0.2);
+    }
+
+    .sound-indicator i {
+      color: #ffffff;
+      font-size: 16px;
+    }
+
     .series-detail-content {
       max-width: 500px;
+      position: relative;
+      z-index: 3;
     }
 
     .series-detail-title {
-      font-size: 36px;
+      font-size: 48px;
       font-weight: 800;
-      margin-bottom: 12px;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+      margin-bottom: 16px;
+      text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
+      color: #ffffff;
     }
 
     .series-detail-meta {
       display: flex;
       gap: 16px;
-      margin-bottom: 16px;
-      font-size: 14px;
-      color: #71767b;
+      margin-bottom: 20px;
+      font-size: 16px;
+      color: #e7e9ea;
+      font-weight: 600;
+    }
+
+    .series-detail-meta span {
+      background: rgba(0, 0, 0, 0.6);
+      padding: 4px 12px;
+      border-radius: 20px;
+      backdrop-filter: blur(8px);
     }
 
     .series-detail-description {
-      font-size: 16px;
-      line-height: 1.5;
-      color: #e7e9ea;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+      font-size: 18px;
+      line-height: 1.6;
+      color: #ffffff;
+      text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
+      background: rgba(0, 0, 0, 0.4);
+      padding: 20px;
+      border-radius: 12px;
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
     }
 
     .series-actions {
-      padding: 24px 16px;
+      padding: 40px 16px 24px 16px;
       display: flex;
-      gap: 12px;
+      gap: 16px;
       flex-wrap: wrap;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.8), rgba(0,0,0,1));
     }
 
     /* Sistema de calificaciones estilo Twitter */
@@ -835,31 +985,47 @@
     }
 
     .series-btn {
-      padding: 12px 24px;
+      padding: 16px 32px;
       border: none;
-      border-radius: 50px;
+      border-radius: 8px;
       font-weight: 700;
-      font-size: 16px;
+      font-size: 18px;
       cursor: pointer;
-      transition: all 0.2s ease;
+      transition: all 0.3s ease;
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 12px;
+      min-width: 160px;
+      justify-content: center;
     }
 
     .series-btn.primary {
-      background: #1d9bf0;
-      color: #ffffff;
+      background: linear-gradient(45deg, #ffffff, #f0f0f0);
+      color: #000000;
+      box-shadow: 0 4px 16px rgba(255, 255, 255, 0.2);
+    }
+
+    .series-btn.primary:hover {
+      background: linear-gradient(45deg, #f0f0f0, #e0e0e0);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 24px rgba(255, 255, 255, 0.3);
     }
 
     .series-btn.secondary {
-      background: transparent;
+      background: rgba(109, 109, 110, 0.7);
       color: #ffffff;
-      border: 1px solid #333639;
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      backdrop-filter: blur(12px);
     }
 
-    .series-btn:hover {
-      transform: translateY(-1px);
+    .series-btn.secondary:hover {
+      background: rgba(109, 109, 110, 0.9);
+      border-color: rgba(255, 255, 255, 0.5);
+      transform: translateY(-2px);
+    }
+
+    .series-btn i {
+      font-size: 20px;
     }
 
     /* Lista de episodios */
@@ -1521,8 +1687,50 @@
         height: 112px;
       }
 
+      /* Vista detallada responsive */
+      .series-detail-header {
+        height: 70vh;
+        padding: 20px 16px;
+      }
+
       .series-detail-title {
-        font-size: 28px;
+        font-size: 32px;
+      }
+
+      .series-detail-description {
+        font-size: 16px;
+        padding: 16px;
+      }
+
+      .netflix-play-btn {
+        width: 60px;
+        height: 60px;
+      }
+
+      .netflix-play-btn i {
+        font-size: 20px;
+      }
+
+      .series-btn {
+        padding: 12px 24px;
+        font-size: 16px;
+        min-width: 140px;
+      }
+
+      .series-detail-meta {
+        font-size: 14px;
+        gap: 12px;
+      }
+
+      .sound-indicator {
+        width: 36px;
+        height: 36px;
+        bottom: 80px;
+        right: 16px;
+      }
+
+      .sound-indicator i {
+        font-size: 14px;
       }
 
       .episode-thumbnail {
@@ -1538,6 +1746,26 @@
 
       ::cue(.whisper) {
         font-size: 14px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .series-detail-header {
+        height: 60vh;
+      }
+
+      .series-detail-title {
+        font-size: 28px;
+      }
+
+      .series-actions {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .series-btn {
+        width: 100%;
+        justify-content: center;
       }
     }
 
@@ -2152,12 +2380,37 @@
   <!-- Vista detallada de serie -->
   <div id="seriesDetail" class="series-detail">
     <div class="series-detail-header" id="seriesDetailHeader">
+      <!-- Imagen de fondo -->
+      <div class="series-detail-background" id="seriesDetailBackground"></div>
+      
+      <!-- Video de trailer de fondo -->
+      <video class="series-detail-video" id="seriesDetailVideo" 
+             muted autoplay loop playsinline webkit-playsinline x5-playsinline
+             style="display: none;">
+      </video>
+      
+      <!-- Overlay gradiente -->
+      <div class="series-detail-overlay"></div>
+      
+      <!-- Botón de play circular -->
+      <div class="netflix-play-btn" id="netflixPlayBtn" onclick="playMainMovie()">
+        <i class="fas fa-play"></i>
+      </div>
+      
+      <!-- Indicador de sonido -->
+      <div class="sound-indicator" id="soundToggle" onclick="toggleTrailerSound()">
+        <i class="fas fa-volume-mute"></i>
+      </div>
+      
+      <!-- Botón de cerrar -->
       <button class="series-close-btn" onclick="closeSeriesDetail()">
         <i class="fas fa-times"></i>
       </button>
+      
+      <!-- Contenido de texto -->
       <div class="series-detail-content">
         <h1 class="series-detail-title" id="seriesDetailTitle">DON'T LOOK AWAY</h1>
-        <div class="series-detail-meta">
+        <div class="series-detail-meta" id="seriesDetailMeta">
           <span>2025</span>
           <span>Película</span>
           <span>Terror</span>
@@ -3092,7 +3345,7 @@
     const durationElement = document.getElementById('duration');
     const volumeBtn = document.getElementById('volumeBtn');
 
-    // Función para mostrar detalles de serie
+    // Función para mostrar detalles de serie estilo Netflix
     function showSeriesDetail(seriesId) {
       const series = seriesDatabase[seriesId];
       if (!series) return;
@@ -3102,12 +3355,17 @@
       // Actualizar contenido
       document.getElementById('seriesDetailTitle').textContent = series.title;
       document.getElementById('seriesDetailDescription').textContent = series.description;
-      document.getElementById('seriesDetailHeader').style.backgroundImage = 
-        `linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url('${series.poster}')`;
+      
+      // Configurar imagen de fondo
+      const backgroundEl = document.getElementById('seriesDetailBackground');
+      backgroundEl.style.backgroundImage = `url('${series.poster}')`;
+
+      // Configurar video de trailer si está disponible
+      setupNetflixTrailer(series);
 
       // Actualizar metadatos según el tipo
-      const metaElement = document.querySelector('.series-detail-meta');
-      if (series.type === 'movie' || series.type === 'shortfilm') { // Añadir 'shortfilm'
+      const metaElement = document.getElementById('seriesDetailMeta');
+      if (series.type === 'movie' || series.type === 'shortfilm') {
         metaElement.innerHTML = `
           <span>${series.year}</span>
           <span>${series.type === 'movie' ? 'Película' : 'Cortometraje'}</span>
@@ -3128,7 +3386,7 @@
       loadContent(series);
 
       // Actualizar botón de reproducir según disponibilidad
-      updatePlayButton(series);
+      updateNetflixPlayButton(series);
 
       // Mostrar cuenta regresiva en detalles si es necesario
       showCountdownInDetails(series);
@@ -3138,6 +3396,97 @@
 
       // Cargar y mostrar calificaciones
       updateRatingDisplay(seriesId);
+    }
+
+    // Función para configurar el trailer estilo Netflix
+    function setupNetflixTrailer(series) {
+      const videoEl = document.getElementById('seriesDetailVideo');
+      const playBtn = document.getElementById('netflixPlayBtn');
+      const soundBtn = document.getElementById('soundToggle');
+
+      if (!series.trailer) {
+        videoEl.style.display = 'none';
+        playBtn.style.display = 'flex';
+        soundBtn.style.display = 'none';
+        return;
+      }
+
+      // Configurar video
+      videoEl.src = series.trailer;
+      videoEl.style.display = 'block';
+      videoEl.muted = true;
+      
+      // Mostrar loading en el botón
+      playBtn.classList.add('loading');
+      
+      // Event listeners para el video
+      videoEl.addEventListener('loadeddata', () => {
+        setTimeout(() => {
+          videoEl.classList.add('loaded');
+          playBtn.classList.remove('loading');
+          soundBtn.style.display = 'flex';
+        }, 1000);
+      });
+
+      videoEl.addEventListener('error', () => {
+        console.log('Error loading trailer, using poster only');
+        videoEl.style.display = 'none';
+        playBtn.classList.remove('loading');
+        soundBtn.style.display = 'none';
+      });
+
+      // Auto-reproducir después de cargar
+      videoEl.load();
+    }
+
+    // Función para alternar sonido del trailer
+    function toggleTrailerSound() {
+      const videoEl = document.getElementById('seriesDetailVideo');
+      const soundBtn = document.getElementById('soundToggle');
+      
+      if (videoEl.muted) {
+        videoEl.muted = false;
+        videoEl.volume = 0.3; // Volumen moderado
+        soundBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+      } else {
+        videoEl.muted = true;
+        soundBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+      }
+    }
+
+    // Función para reproducir película principal desde el botón Netflix
+    function playMainMovie() {
+      if (!currentSeries) return;
+      
+      // Verificar disponibilidad
+      if (currentSeries.isLocked && !isMovieAvailable(currentSeries)) {
+        showLockedMessage(currentSeries);
+        return;
+      }
+
+      // Cerrar detalles y reproducir
+      closeSeriesDetail();
+      setTimeout(() => {
+        playEpisode(1, 1);
+      }, 300);
+    }
+
+    // Función para actualizar botón de Netflix
+    function updateNetflixPlayButton(series) {
+      const playBtn = document.getElementById('netflixPlayBtn');
+      if (!playBtn) return;
+
+      if (series.isLocked && !isMovieAvailable(series)) {
+        playBtn.innerHTML = '<i class="fas fa-lock"></i>';
+        playBtn.style.background = 'rgba(128, 128, 128, 0.7)';
+        playBtn.style.cursor = 'not-allowed';
+        playBtn.onclick = () => showLockedMessage(series);
+      } else {
+        playBtn.innerHTML = '<i class="fas fa-play"></i>';
+        playBtn.style.background = 'rgba(255, 255, 255, 0.9)';
+        playBtn.style.cursor = 'pointer';
+        playBtn.onclick = playMainMovie;
+      }
     }
 
     // Función para actualizar botón de reproducir
@@ -3280,6 +3629,25 @@
     // Función para cerrar detalles de serie
     function closeSeriesDetail() {
       document.getElementById('seriesDetail').classList.remove('active');
+      
+      // Limpiar video de trailer
+      const videoEl = document.getElementById('seriesDetailVideo');
+      if (videoEl) {
+        videoEl.pause();
+        videoEl.src = '';
+        videoEl.classList.remove('loaded');
+        videoEl.style.display = 'none';
+      }
+      
+      // Resetear botones
+      const playBtn = document.getElementById('netflixPlayBtn');
+      const soundBtn = document.getElementById('soundToggle');
+      if (playBtn) playBtn.classList.remove('loading');
+      if (soundBtn) {
+        soundBtn.style.display = 'none';
+        soundBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+      }
+      
       currentSeries = null;
     }
 
