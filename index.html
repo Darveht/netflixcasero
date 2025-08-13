@@ -2432,6 +2432,30 @@
         </div>
       </div>
 
+      <div class="settings-group">
+        <h3 class="settings-group-title">
+          <i class="fas fa-user"></i>
+          Cuenta
+        </h3>
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-name">Perfil Actual</div>
+            <div class="setting-description" id="currentProfileName">Cargando...</div>
+          </div>
+          <div id="userAvatar" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px;"></div>
+        </div>
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-name">Cerrar Sesión</div>
+            <div class="setting-description">Salir de tu cuenta de IBTV</div>
+          </div>
+          <button class="settings-btn secondary" onclick="logoutFirebase()" style="width: auto; padding: 8px 16px; font-size: 14px;">
+            <i class="fas fa-sign-out-alt"></i>
+            Salir
+          </button>
+        </div>
+      </div>
+
       <div class="settings-actions">
         <button class="settings-btn secondary" onclick="resetSettings()">
           <i class="fas fa-undo"></i>
@@ -2461,22 +2485,104 @@
     </button>
   </nav>
 
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
   <script>
-    // Verificar autenticación antes de cargar la plataforma
+    // Configuración de Firebase
+    const firebaseConfig = {
+      apiKey: "AIzaSyCFQ_geG0HIv2EZ-bfKc97TJNtf2sdqPzc",
+      authDomain: "clack-koder.firebaseapp.com",
+      databaseURL: "https://clack-koder-default-rtdb.firebaseio.com",
+      projectId: "clack-koder",
+      storageBucket: "clack-koder.firebasestorage.app",
+      messagingSenderId: "478151254938",
+      appId: "1:478151254938:web:e2c00e3a5426bd192b9023",
+      measurementId: "G-P29ME5Z3S1"
+    };
+
+    // Inicializar Firebase
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const database = firebase.database();
+
+    let currentFirebaseUser = null;
+    let userProfile = null;
+
+    // Verificar autenticación con Firebase
     function checkAuthentication() {
-      const isSubscribed = localStorage.getItem('ibtv_subscription');
-      
-      if (!isSubscribed) {
-        // Redirigir a la página de login si no está suscrito
-        window.location.href = 'login.html';
-        return false;
+      return new Promise((resolve) => {
+        auth.onAuthStateChanged(async (user) => {
+          if (user) {
+            currentFirebaseUser = user;
+            
+            // Verificar que tenga suscripción y perfil
+            try {
+              const userRef = database.ref('users/' + user.uid);
+              const snapshot = await userRef.once('value');
+              const userData = snapshot.val();
+              
+              if (!userData || !userData.subscription) {
+                window.location.href = 'subscription.html';
+                return;
+              }
+              
+              if (!userData.profile) {
+                window.location.href = 'profile-setup.html';
+                return;
+              }
+              
+              // Usuario completo, cargar datos
+              userProfile = userData.profile;
+              updateUserInterface();
+              resolve(true);
+              
+            } catch (error) {
+              console.error('Error verificando usuario:', error);
+              window.location.href = 'auth.html';
+            }
+          } else {
+            window.location.href = 'auth.html';
+          }
+        });
+      });
+    }
+
+    // Actualizar interfaz con datos del usuario
+    function updateUserInterface() {
+      if (userProfile) {
+        // Actualizar avatar del usuario en ajustes si existe
+        const userAvatar = document.getElementById('userAvatar');
+        if (userAvatar && userProfile.avatar) {
+          const avatarData = userProfile.avatar.data;
+          if (avatarData.type === 'icon') {
+            userAvatar.innerHTML = `<i class="fas ${avatarData.icon}"></i>`;
+            userAvatar.style.background = avatarData.gradient;
+          }
+        }
+
+        // Guardar datos en localStorage para compatibilidad
+        localStorage.setItem('ibtv_user_profile', JSON.stringify(userProfile));
+        localStorage.setItem('ibtv_subscription', 'active');
       }
-      return true;
+    }
+
+    // Función para cerrar sesión de Firebase
+    function logoutFirebase() {
+      auth.signOut().then(() => {
+        localStorage.clear();
+        window.location.href = 'auth.html';
+      }).catch((error) => {
+        console.error('Error cerrando sesión:', error);
+      });
     }
 
     // Inicializar el sistema cuando se carga la página
-    document.addEventListener('DOMContentLoaded', function() {
-      if (checkAuthentication()) {
+    document.addEventListener('DOMContentLoaded', async function() {
+      const authenticated = await checkAuthentication();
+      if (authenticated) {
         initializePremiereSystem();
       }
     });
@@ -4688,6 +4794,17 @@
       document.getElementById('releaseNotifications').checked = settings.releaseNotifications !== false;
       document.getElementById('reminderNotifications').checked = settings.reminderNotifications !== false;
       document.getElementById('parentalControl').value = settings.parentalControl || 'all';
+
+      // Mostrar información del perfil
+      if (userProfile) {
+        document.getElementById('currentProfileName').textContent = userProfile.name || 'Usuario';
+      }
+      if (currentFirebaseUser) {
+        const profileNameEl = document.getElementById('currentProfileName');
+        if (profileNameEl) {
+          profileNameEl.textContent = userProfile?.name || currentFirebaseUser.displayName || currentFirebaseUser.email;
+        }
+      }
     }
 
     function saveSettings() {
