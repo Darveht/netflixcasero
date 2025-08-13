@@ -1995,6 +1995,7 @@
         justify-content: center;
       }
     }
+
   </style>
 </head>
 <body>
@@ -2071,6 +2072,14 @@
               <div class="carousel-item-overlay">
                 <div class="carousel-item-title">DOUBLE VISION</div>
                 <div class="carousel-item-info">2025 • Terror</div>
+              </div>
+            </div>
+            <div class="carousel-item" onclick="showSeriesDetail('thecandleman')">
+              <img src="https://i.ytimg.com/vi/i229gWn3Z5A/maxresdefault.jpg" alt="THE CANDLE MAN">
+              <div class="movie-badge">Cortometraje</div>
+              <div class="carousel-item-overlay">
+                <div class="carousel-item-title">THE CANDLE MAN</div>
+                <div class="carousel-item-info">2024 • Terror</div>
               </div>
             </div>
           </div>
@@ -2517,28 +2526,28 @@
         auth.onAuthStateChanged(async (user) => {
           if (user) {
             currentFirebaseUser = user;
-            
+
             // Verificar que tenga suscripción y perfil
             try {
               const userRef = database.ref('users/' + user.uid);
               const snapshot = await userRef.once('value');
               const userData = snapshot.val();
-              
+
               if (!userData || !userData.subscription) {
                 window.location.href = 'subscription.html';
                 return;
               }
-              
+
               if (!userData.profile) {
                 window.location.href = 'profile-setup.html';
                 return;
               }
-              
+
               // Usuario completo, cargar datos
               userProfile = userData.profile;
               updateUserInterface();
               resolve(true);
-              
+
             } catch (error) {
               console.error('Error verificando usuario:', error);
               window.location.href = 'auth.html';
@@ -2600,7 +2609,7 @@
       'Inicio': 'Home',
       'Buscar': 'Search', 
       'Ajustes': 'Settings',
-      
+
       // Búsqueda
       'Buscar series y películas': 'Search series and movies',
       'Buscando contenido...': 'Searching content...',
@@ -2610,7 +2619,7 @@
       'resultado': 'result',
       'resultados': 'results',
       'encontrados': 'found',
-      
+
       // Contenido
       'Películas': 'Movies',
       'Tendencias': 'Trending',
@@ -2629,7 +2638,7 @@
       'EN VIVO': 'LIVE',
       'DISPONIBLE': 'AVAILABLE',
       'VISTO': 'WATCHED',
-      
+
       // Ajustes
       'Configuración': 'Settings',
       'Personaliza tu experiencia de visualización': 'Customize your viewing experience',
@@ -2661,7 +2670,7 @@
       'Guardar Cambios': 'Save Changes',
       'Configuración guardada correctamente': 'Settings saved successfully',
       'Configuración restablecida a valores predeterminados': 'Settings reset to defaults',
-      
+
       // Video player
       'Reproduciendo...': 'Playing...',
       'Audio': 'Audio',
@@ -2671,7 +2680,7 @@
       'Error al cargar el video. Verifica tu conexión e intenta de nuevo.': 'Error loading video. Check your connection and try again.',
       'Trailer no disponible': 'Trailer not available',
       'Error al cargar el trailer': 'Error loading trailer',
-      
+
       // Mensajes especiales
       'ESTRENO MUNDIAL': 'WORLD PREMIERE',
       'Transmisión simultánea mundial - Una sola vez': 'Worldwide simultaneous broadcast - One time only',
@@ -2680,7 +2689,7 @@
       'Una transmisión única que no te puedes perder.': 'A unique broadcast you can\'t miss.',
       'Transmisión Finalizada': 'Broadcast Ended',
       'Ver Transmisión EN VIVO': 'Watch LIVE Broadcast',
-      
+
       // Fechas y tiempo
       'DÍAS': 'DAYS',
       'HRS': 'HRS', 
@@ -2813,8 +2822,31 @@
           }
         ]
       },
+      thecandleman: {
+        id: 'thecandleman',
+        title: "THE CANDLE MAN",
+        year: '2024',
+        genre: 'Terror, Cortometraje',
+        rating: '18+',
+        type: 'shortfilm', // Usar 'shortfilm' para cortometraje
+        description: 'In the dead of night, a man is plunged into darkness when a sudden power outage engulfs his home. Seeking illumination, he lights several candles to ward off the oppressive blackness. However, each time he extinguishes a candle, an ominous presence grows stronger. Unbeknownst to him, a malevolent demon from the depths of hell despises the snuffing out of flames. As the man endeavors to restore electricity, the demon\'s wrath escalates. The flickering candlelight casts eerie shadows, each movement hinting at the lurking terror.\nDespite his frantic attempts to reignite the power and reclaim his sanctuary, the man faces the horrifying realization that some darkness cannot be banished by mere light. In a chilling climax, as he extinguishes the final candle, the demon manifests fully, leading to a deadly confrontation that seals the man\'s fate.',
+        poster: 'https://i.ytimg.com/vi/i229gWn3Z5A/maxresdefault.jpg',
+        trailer: 'https://www.dropbox.com/scl/fi/5ktcz9zq60w5hq2s2arde/602596538962659684.mp4?rlkey=q35ez2mg7lu30xx31s5vahxso&st=r1c3005h&dl=0', // Dropbox link converted to direct streaming
+        youtubeReference: '#',
+        subtitles: {}, // No subtitles provided for this short film
+        episodes: [
+          {
+            id: 1,
+            title: "THE CANDLE MAN",
+            description: 'Un hombre enciende velas para alejar la oscuridad, sin saber que cada vela apagada enfurece a un demonio.',
+            duration: null,
+            thumbnail: 'https://i.ytimg.com/vi/i229gWn3Z5A/maxresdefault.jpg',
+            videoUrl: 'https://www.dropbox.com/scl/fi/5ktcz9zq60w5hq2s2arde/602596538962659684.mp4?rlkey=q35ez2mg7lu30xx31s5vahxso&st=r1c3005h&dl=0' // Dropbox link converted to direct streaming
+          }
+        ]
+      },
 
-      
+
     };
 
     // Variables globales
@@ -2867,7 +2899,7 @@
     // Función para mostrar feedback de calificación
     function showRatingFeedback(message) {
       const ratingSection = document.getElementById('ratingSection');
-      
+
       // Remover feedback anterior si existe
       const existingFeedback = ratingSection.querySelector('.rating-feedback');
       if (existingFeedback) {
@@ -3014,71 +3046,6 @@
       return now >= releaseDate && timeDiff <= (60 * 60 * 1000);
     }
 
-    // Función principal para actualizar estado de NO TE MUEVAS
-    function updateCountdownToJune() {
-      const badgeElement = document.getElementById('notemuevas-badge');
-      
-      if (badgeElement) {
-        badgeElement.className = 'movie-badge';
-        badgeElement.textContent = 'Película';
-      }
-    }
-
-    // Inicializar sistema de estreno para el 11 de junio
-    function initializePremiereSystem() {
-      // Configurar fecha de estreno para NO TE MUEVAS
-      const releaseDate = createJuneReleaseDate();
-      seriesDatabase.notemuevas.releaseDate = releaseDate;
-
-      // Configurar estado inicial
-      const now = new Date();
-      if (now >= releaseDate) {
-        seriesDatabase.notemuevas.isLocked = false;
-        seriesDatabase.notemuevas.isLive = true;
-      } else {
-        seriesDatabase.notemuevas.isLocked = true;
-        seriesDatabase.notemuevas.isLive = false;
-      }
-
-      // Actualizar cuenta regresiva cada segundo
-      setInterval(updateCountdownToJune, 1000);
-
-      // Ejecutar actualización inicial
-      updateCountdownToJune();
-
-      console.log('Sistema de estreno para el 11 de junio inicializado');
-      console.log('Fecha de estreno:', releaseDate.toLocaleString('es-ES'));
-      console.log('Estado actual:', now >= releaseDate ? 'Disponible' : 'Bloqueada');
-    }
-
-    // Función para manejar clics en películas
-    function handleMovieClick(seriesId) {
-      const series = seriesDatabase[seriesId];
-      if (!series) return;
-
-      // Mostrar detalles de la película (todas desbloqueadas)
-      showSeriesDetail(seriesId);
-    }
-
-    // Función para mostrar mensaje de película bloqueada
-    function showLockedMessage(series) {
-      const releaseDate = new Date(series.releaseDate);
-      const formattedDate = releaseDate.toLocaleDateString('es-ES', {
-        day: 'numeric',
-        month: 'long',
-        year: 'numeric'
-      });
-
-      const message = `Esta película se estrena el ${formattedDate}. ¡Mantente atento!`;
-      showErrorMessage(message);
-    }
-
-    // Función para mostrar mensaje de película ya vista
-    function showWatchedMessage() {
-      const message = 'Esta transmisión EN VIVO ya fue vista y no puede reproducirse nuevamente. Era una experiencia única e irrepetible.';
-      showErrorMessage(message);
-    }
-
     // Función para actualizar indicadores de estreno
     function updateReleaseIndicators() {
       Object.values(seriesDatabase).forEach(series => {
@@ -3140,10 +3107,10 @@
 
       // Actualizar metadatos según el tipo
       const metaElement = document.querySelector('.series-detail-meta');
-      if (series.type === 'movie') {
+      if (series.type === 'movie' || series.type === 'shortfilm') { // Añadir 'shortfilm'
         metaElement.innerHTML = `
           <span>${series.year}</span>
-          <span>Película</span>
+          <span>${series.type === 'movie' ? 'Película' : 'Cortometraje'}</span>
           <span>${series.genre.split(',')[0]}</span>
           <span>${series.rating}</span>
         `;
@@ -3178,14 +3145,21 @@
       const playButton = document.getElementById('playButton');
       if (!playButton) return;
 
-      if (series.isLocked && !isMovieAvailable(series)) {
-        // Películas bloqueadas
+      if (series.id === 'notemuevas') {
+        // NO TE MUEVAS siempre disponible para ver
+        playButton.innerHTML = '<i class="fas fa-play"></i> Reproducir';
+        playButton.style.background = '#1d9bf0';
+        playButton.style.color = '#fff';
+        playButton.style.cursor = 'pointer';
+        playButton.onclick = () => playEpisode(1, 1);
+      } else if (series.isLocked && !isMovieAvailable(series)) {
+        // Otras películas bloqueadas
         playButton.innerHTML = '<i class="fas fa-lock"></i> Próximamente';
         playButton.style.background = '#666';
         playButton.style.cursor = 'not-allowed';
         playButton.onclick = () => showLockedMessage(series);
       } else {
-        // Películas disponibles (incluyendo NO TE MUEVAS)
+        // Otras películas disponibles
         playButton.innerHTML = '<i class="fas fa-play"></i> Reproducir';
         playButton.style.background = '#1d9bf0';
         playButton.style.cursor = 'pointer';
@@ -3202,7 +3176,7 @@
         year: 'numeric'
       });
 
-      const formattedTime = '2:40 AM (Houston) / 12:40 AM (Las Vegas)';
+      const formattedTime = '2:40 AM (Houston) | 12:40 AM (Las Vegas)';
 
       const message = `ESTRENO MUNDIAL: ${formattedDate} a las ${formattedTime}.\n\nUna transmisión única que no te puedes perder.`;
       showErrorMessage(message);
@@ -3315,8 +3289,8 @@
       const episodesTitle = document.querySelector('.episodes-title');
 
       // Cambiar título según el tipo
-      if (series.type === 'movie') {
-        episodesTitle.textContent = 'Película';
+      if (series.type === 'movie' || series.type === 'shortfilm') { // Considerar cortometraje
+        episodesTitle.textContent = series.type === 'movie' ? 'Película' : 'Cortometraje';
       } else {
         episodesTitle.textContent = 'Episodios - Temporada 1';
       }
@@ -3328,8 +3302,8 @@
         episodeElement.className = 'episode-item';
         episodeElement.onclick = () => playEpisode(1, episode.id);
 
-        // Para películas, no mostrar número de episodio
-        const episodeNumber = series.type === 'movie' ? '' : `${episode.id}. `;
+        // Para películas y cortometrajes, no mostrar número de episodio
+        const episodeNumber = (series.type === 'movie' || series.type === 'shortfilm') ? '' : `${episode.id}. `;
         const durationDisplay = episode.duration || 'Cargando...';
 
         episodeElement.innerHTML = `
@@ -3414,7 +3388,7 @@
       const onIntroEnded = () => {
         // Cuando termina el intro, reproducir el contenido principal
         isPlayingIntro = false;
-        
+
         // Limpiar listeners del intro
         videoElement.removeEventListener('loadedmetadata', onIntroLoadedMetadata);
         videoElement.removeEventListener('play', onIntroPlay);
@@ -3431,7 +3405,7 @@
       const onIntroError = (e) => {
         console.error('Intro error:', e);
         isPlayingIntro = false;
-        
+
         // Si hay error en el intro, ir directo al contenido
         videoElement.removeEventListener('loadedmetadata', onIntroLoadedMetadata);
         videoElement.removeEventListener('play', onIntroPlay);
@@ -3475,13 +3449,13 @@
       videoElement.crossOrigin = 'anonymous';
 
       // Título diferente para películas vs series
-      if (currentSeries.type === 'movie') {
+      if (currentSeries.type === 'movie' || currentSeries.type === 'shortfilm') {
         videoPlayerTitle.textContent = currentSeries.title;
       } else {
         videoPlayerTitle.textContent = `${currentSeries.title} - ${episode.title}`;
       }
 
-      // Ocultar indicador EN VIVO para todas las películas normales
+      // Ocultar indicador EN VIVO para películas normales
       const liveIndicator = document.getElementById('videoLiveIndicator');
       liveIndicator.style.display = 'none';
 
@@ -3491,7 +3465,7 @@
       // Configurar fuente de video con mejor compatibilidad
       const source = document.createElement('source');
       source.src = episode.videoUrl;
-      source.type = 'video/mp4';
+      source.type = 'video/mp4'; // Asumir mp4 por defecto
       videoElement.appendChild(source);
 
       // Event listeners del contenido principal
@@ -3577,64 +3551,70 @@
 
       currentVideo = trailerVideo;
 
-      // Limpiar video anterior
-      videoElement.removeAttribute('src');
-      videoElement.load();
-
-      // Configurar video para máxima compatibilidad móvil
-      videoElement.setAttribute('playsinline', 'true');
-      videoElement.setAttribute('webkit-playsinline', 'true');
-      videoElement.setAttribute('x5-playsinline', 'true');
-      videoElement.setAttribute('x5-video-player-type', 'h5');
-      videoElement.controls = false;
-      videoElement.preload = 'metadata';
-      videoElement.crossOrigin = 'anonymous';
-
-      videoPlayerTitle.textContent = `${currentSeries.title} - ${trailerVideo.title}`;
-
-      // Ocultar indicador EN VIVO para trailers
-      const liveIndicator = document.getElementById('videoLiveIndicator');
-      liveIndicator.style.display = 'none';
-
-      // Agregar clase al body para controlar overflow
-      document.body.classList.add('video-playing');
-
-      // Mostrar reproductor
-      videoPlayer.classList.add('active');
-
-      // Configurar fuente
-      videoElement.src = trailerVideo.videoUrl;
-
-      // Event listeners
-      const onLoadedMetadata = () => {
-        updateDuration();
-        // Mostrar botón de play en lugar de reproducir automáticamente
-        showPlayButton();
-      };
-
-      const onPlay = () => {
-        playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
-        pauseIndicator.classList.remove('visible');
-        hidePlayButton();
-      };
-
-      const onPause = () => {
-        playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
-        pauseIndicator.classList.add('visible');
-      };
-
-      const onError = (e) => {
-        console.error('Trailer error:', e);
-        showErrorMessage('Error al cargar el trailer');
-      };
-
-      videoElement.addEventListener('loadedmetadata', onLoadedMetadata);
-      videoElement.addEventListener('play', onPlay);
-      videoElement.addEventListener('pause', onPause);
-      videoElement.addEventListener('error', onError);
-
-      startProgressUpdate();
+      // Reproducir intro de IBTV primero, luego el trailer
+      playIBTVIntro(() => {
+        playTrailerContent(trailerVideo);
+      });
     }
+
+
+      // Función para reproducir contenido de trailer después del intro
+      function playTrailerContent(trailerVideo) {
+        // Limpiar video anterior
+        videoElement.removeAttribute('src');
+        videoElement.load();
+
+        // Configurar video para máxima compatibilidad móvil
+        videoElement.setAttribute('playsinline', 'true');
+        videoElement.setAttribute('webkit-playsinline', 'true');
+        videoElement.setAttribute('x5-playsinline', 'true');
+        videoElement.setAttribute('x5-video-player-type', 'h5');
+        videoElement.controls = false;
+        videoElement.preload = 'metadata';
+        videoElement.crossOrigin = 'anonymous';
+
+        videoPlayerTitle.textContent = `${currentSeries.title} - ${trailerVideo.title}`;
+
+        // Ocultar indicador EN VIVO para trailers
+        const liveIndicator = document.getElementById('videoLiveIndicator');
+        liveIndicator.style.display = 'none';
+
+        // Configurar fuente
+        videoElement.src = trailerVideo.videoUrl;
+
+        // Event listeners para trailer
+        const onLoadedMetadata = () => {
+            updateDuration();
+            // Auto-reproducir después del intro
+            videoElement.play().catch(e => {
+              console.warn('Autoplay blocked after intro');
+              showPlayButton();
+            });
+        };
+
+        const onPlay = () => {
+            playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+            pauseIndicator.classList.remove('visible');
+            hidePlayButton();
+        };
+
+        const onPause = () => {
+            playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+            pauseIndicator.classList.add('visible');
+        };
+
+        const onError = (e) => {
+            console.error('Trailer error:', e);
+            showErrorMessage('Error al cargar el trailer');
+        };
+
+        videoElement.addEventListener('loadedmetadata', onLoadedMetadata);
+        videoElement.addEventListener('play', onPlay);
+        videoElement.addEventListener('pause', onPause);
+        videoElement.addEventListener('error', onError);
+
+        startProgressUpdate();
+      }
 
     // Función para mostrar botón de play prominente
     function showPlayButton() {
@@ -3681,26 +3661,26 @@
     // Funciones de traducción
     async function translateText(text, targetLang = 'en') {
       if (isTranslating || !text || text.trim() === '') return text;
-      
+
       try {
         isTranslating = true;
-        
+
         // Usar API gratuita de Google Translate (limitada pero funcional)
         const response = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=es&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`);
-        
+
         if (!response.ok) {
           throw new Error('Translation failed');
         }
-        
+
         const data = await response.json();
         const translatedText = data[0][0][0];
-        
+
         isTranslating = false;
         return translatedText || text;
       } catch (error) {
         console.warn('Translation error:', error);
         isTranslating = false;
-        
+
         // Fallback a traducciones predefinidas
         return interfaceTexts[text] || text;
       }
@@ -3708,32 +3688,32 @@
 
     function getTranslation(key, targetLang = currentLanguage) {
       if (targetLang === 'es') return key;
-      
+
       // Usar traducciones predefinidas si están disponibles
       if (interfaceTexts[key]) {
         return interfaceTexts[key];
       }
-      
+
       // Si no hay traducción predefinida, usar cache
       if (translations[`${key}_${targetLang}`]) {
         return translations[`${key}_${targetLang}`];
       }
-      
+
       return key; // Fallback al texto original
     }
 
     async function changeLanguage(newLang) {
       if (newLang === currentLanguage) return;
-      
+
       currentLanguage = newLang;
       localStorage.setItem('ibtv_language', newLang);
-      
+
       // Mostrar mensaje de cambio de idioma
       showLanguageChangeMessage();
-      
+
       // Traducir interfaz
       await translateInterface();
-      
+
       // Actualizar configuración
       updateLanguageSettings();
     }
@@ -3744,44 +3724,44 @@
         restoreOriginalTexts();
         return;
       }
-      
+
       const elementsToTranslate = [
         // Navegación
         { selector: '.bottom-nav button span', index: 0, key: 'Inicio' },
         { selector: '.bottom-nav button span', index: 1, key: 'Buscar' },
         { selector: '.bottom-nav button span', index: 2, key: 'Ajustes' },
-        
+
         // Secciones de contenido
         { selector: '.section-title', index: 0, key: 'Películas' },
         { selector: '.section-title', index: 1, key: 'Tendencias' },
         { selector: '.section-title', index: 2, key: 'Anime' },
         { selector: '.section-title', index: 3, key: 'Terror' },
-        
+
         // Placeholder de búsqueda
         { selector: '#searchInput', attr: 'placeholder', key: 'Buscar series y películas' },
-        
+
         // Títulos de configuración
         { selector: '.settings-title', key: 'Configuración' },
         { selector: '.settings-subtitle', key: 'Personaliza tu experiencia de visualización' },
-        
+
         // Títulos de grupos en configuración
         { selector: '.settings-group-title', index: 0, key: 'Reproducción', skip: 'i' },
         { selector: '.settings-group-title', index: 1, key: 'Idioma y Audio', skip: 'i' },
         { selector: '.settings-group-title', index: 2, key: 'Notificaciones', skip: 'i' },
         { selector: '.settings-group-title', index: 3, key: 'Control Parental', skip: 'i' },
-        
+
         // Botones de configuración
         { selector: '.settings-btn.secondary', key: 'Restablecer', skip: 'i' },
         { selector: '.settings-btn.primary', key: 'Guardar Cambios', skip: 'i' }
       ];
-      
+
       for (const item of elementsToTranslate) {
         const elements = document.querySelectorAll(item.selector);
         const element = item.index !== undefined ? elements[item.index] : elements[0];
-        
+
         if (element) {
           const translation = getTranslation(item.key, currentLanguage);
-          
+
           if (item.attr) {
             element.setAttribute(item.attr, translation);
           } else {
@@ -3798,7 +3778,7 @@
           }
         }
       }
-      
+
       // Traducir elementos dinámicos
       translateDynamicContent();
     }
@@ -3809,15 +3789,18 @@
         if (badge.textContent === 'Película') {
           badge.textContent = getTranslation('Película', currentLanguage);
         }
+        if (badge.textContent === 'Cortometraje') {
+          badge.textContent = getTranslation('Cortometraje', currentLanguage);
+        }
       });
-      
+
       // Traducir badges de estreno
       document.querySelectorAll('.premiere-badge').forEach(badge => {
         if (badge.textContent === 'Estreno') {
           badge.textContent = getTranslation('Estreno', currentLanguage);
         }
       });
-      
+
       // Traducir badges en vivo
       document.querySelectorAll('.live-badge').forEach(badge => {
         if (badge.textContent === 'EN VIVO') {
@@ -3835,10 +3818,10 @@
         '.settings-title': 'Configuración',
         '.settings-subtitle': 'Personaliza tu experiencia de visualización'
       };
-      
+
       Object.entries(originalTexts).forEach(([selector, texts]) => {
         const elements = document.querySelectorAll(selector);
-        
+
         if (Array.isArray(texts)) {
           texts.forEach((text, index) => {
             if (elements[index]) {
@@ -3855,6 +3838,18 @@
           }
         }
       });
+
+      // Restaurar badges
+      document.querySelectorAll('.movie-badge').forEach(badge => {
+        if (badge.textContent === 'Movie') badge.textContent = 'Película';
+        if (badge.textContent === 'Cortometraje') badge.textContent = 'Cortometraje';
+      });
+      document.querySelectorAll('.premiere-badge').forEach(badge => {
+        if (badge.textContent === 'Premiere') badge.textContent = 'Estreno';
+      });
+      document.querySelectorAll('.live-badge').forEach(badge => {
+        if (badge.textContent === 'LIVE') badge.textContent = 'EN VIVO';
+      });
     }
 
     function showLanguageChangeMessage() {
@@ -3863,7 +3858,7 @@
         'pt': 'Idioma alterado para Português',
         'es': 'Idioma cambiado a Español'
       };
-      
+
       const message = messages[currentLanguage] || 'Language changed';
       showTranslationMessage(message);
     }
@@ -3887,16 +3882,16 @@
         box-shadow: 0 4px 20px rgba(29, 155, 240, 0.4);
         animation: languageNotification 3s ease-in-out;
       `;
-      
+
       messageEl.innerHTML = `
         <div style="display: flex; align-items: center; gap: 8px;">
           <i class="fas fa-language"></i>
           <span>${message}</span>
         </div>
       `;
-      
+
       document.body.appendChild(messageEl);
-      
+
       setTimeout(() => {
         if (messageEl.parentNode) {
           messageEl.parentNode.removeChild(messageEl);
@@ -4076,7 +4071,7 @@
           spanishTrack.srclang = 'es';
           spanishTrack.label = 'Español';
           spanishTrack.default = trackCount === 0;
-          
+
           if (currentSeries.subtitles.spanish.type === 'inline') {
             // Crear VTT dinámicamente desde datos inline
             const vttContent = createVTTFromInlineData(currentSeries.subtitles.spanish.cues);
@@ -4085,7 +4080,7 @@
           } else {
             spanishTrack.src = currentSeries.subtitles.spanish;
           }
-          
+
           videoElement.appendChild(spanishTrack);
           trackCount++;
         }
@@ -4097,7 +4092,7 @@
           englishTrack.srclang = 'en';
           englishTrack.label = 'English';
           englishTrack.default = trackCount === 0;
-          
+
           if (currentSeries.subtitles.english.type === 'inline') {
             const vttContent = createVTTFromInlineData(currentSeries.subtitles.english.cues);
             const vttBlob = new Blob([vttContent], { type: 'text/vtt' });
@@ -4105,7 +4100,7 @@
           } else {
             englishTrack.src = currentSeries.subtitles.english;
           }
-          
+
           videoElement.appendChild(englishTrack);
           trackCount++;
         }
@@ -4117,7 +4112,7 @@
           portugueseTrack.srclang = 'pt';
           portugueseTrack.label = 'Português';
           portugueseTrack.default = trackCount === 0;
-          
+
           if (currentSeries.subtitles.portuguese.type === 'inline') {
             const vttContent = createVTTFromInlineData(currentSeries.subtitles.portuguese.cues);
             const vttBlob = new Blob([vttContent], { type: 'text/vtt' });
@@ -4125,7 +4120,7 @@
           } else {
             portugueseTrack.src = currentSeries.subtitles.portuguese;
           }
-          
+
           videoElement.appendChild(portugueseTrack);
           trackCount++;
         }
@@ -4150,13 +4145,13 @@
     // Función para crear contenido VTT desde datos inline
     function createVTTFromInlineData(cues) {
       let vttContent = 'WEBVTT\n\n';
-      
+
       cues.forEach((cue, index) => {
         vttContent += `${index + 1}\n`;
         vttContent += `${cue.start} --> ${cue.end}\n`;
         vttContent += `${cue.text}\n\n`;
       });
-      
+
       return vttContent;
     }
 
@@ -4308,13 +4303,13 @@
       const header = document.querySelector('.video-player-header');
       const controls = document.querySelector('.video-player-controls');
       const container = document.querySelector('.video-player-container');
-      
+
       if (header && controls) {
         header.classList.remove('hidden');
         controls.classList.remove('hidden');
         container.classList.add('show-cursor');
         controlsVisible = true;
-        
+
         // Reiniciar timeout para ocultar controles
         resetControlsTimeout();
       }
@@ -4325,7 +4320,7 @@
       const header = document.querySelector('.video-player-header');
       const controls = document.querySelector('.video-player-controls');
       const container = document.querySelector('.video-player-container');
-      
+
       if (header && controls && !videoElement.paused) {
         header.classList.add('hidden');
         controls.classList.add('hidden');
@@ -4337,7 +4332,7 @@
     // Función para reiniciar el timeout de ocultar controles
     function resetControlsTimeout() {
       clearTimeout(controlsTimeout);
-      
+
       // Solo ocultar si el video está reproduciéndose
       if (!videoElement.paused) {
         controlsTimeout = setTimeout(() => {
@@ -4348,13 +4343,13 @@
 
     // Event listeners para mostrar/ocultar controles
     const videoPlayerContainer = document.querySelector('.video-player-container');
-    
+
     // Mostrar controles al mover el mouse o tocar la pantalla
     videoPlayerContainer.addEventListener('mousemove', showControls);
     videoPlayerContainer.addEventListener('touchstart', showControls);
     videoPlayerContainer.addEventListener('click', (e) => {
       e.preventDefault();
-      
+
       if (controlsVisible) {
         // Si los controles están visibles, play/pause
         if (!isPlayingIntro) {
@@ -4410,7 +4405,7 @@
         `;
         skipButton.innerHTML = '→ Saltar Intro';
         skipButton.onclick = skipIntro;
-        
+
         // Agregar estilo de animación
         const skipStyle = document.createElement('style');
         skipStyle.textContent = `
@@ -4424,7 +4419,7 @@
           }
         `;
         document.head.appendChild(skipStyle);
-        
+
         document.querySelector('.video-player-container').appendChild(skipButton);
       }
       skipButton.style.display = 'block';
@@ -4528,7 +4523,7 @@
             console.log('No se pudo forzar orientación landscape');
           });
         }
-        
+
         // Ocultar barra de direcciones en móviles
         setTimeout(() => {
           window.scrollTo(0, 1);
@@ -4633,10 +4628,10 @@
 
         // Determinar metadatos según el tipo
         let metaInfo = '';
-        if (series.type === 'movie') {
+        if (series.type === 'movie' || series.type === 'shortfilm') {
           metaInfo = `
             <span>${series.year}</span>
-            <span>Película</span>
+            <span>${series.type === 'movie' ? 'Película' : 'Cortometraje'}</span>
             <span>${series.genre.split(',')[0].trim()}</span>
             <span>${series.rating}</span>
           `;
@@ -4654,6 +4649,7 @@
           <div class="search-result-poster">
             <img src="${series.poster}" alt="${series.title}">
             ${series.type === 'movie' ? '<div class="movie-badge">Película</div>' : ''}
+            ${series.type === 'shortfilm' ? '<div class="movie-badge">Cortometraje</div>' : ''}
           </div>
           <div class="search-result-content">
             <div class="search-result-title">${series.title}</div>
@@ -4769,14 +4765,14 @@
     // Manejador de cambio de idioma
     async function handleLanguageChange(newLang) {
       await changeLanguage(newLang);
-      
+
       // Mostrar mensaje de confirmación
       const messages = {
         'en': 'Interface language changed to English',
         'pt': 'Idioma da interface alterado para Português', 
         'es': 'Idioma de interfaz cambiado a Español'
       };
-      
+
       setTimeout(() => {
         showSettingsMessage(messages[newLang] || 'Language changed');
       }, 500);
@@ -4785,7 +4781,7 @@
     function loadSettings() {
       // Cargar configuraciones guardadas
       const settings = JSON.parse(localStorage.getItem('ibtv_settings') || '{}');
-      
+
       document.getElementById('autoplayToggle').checked = settings.autoplay !== false;
       document.getElementById('videoQuality').value = settings.videoQuality || 'auto';
       document.getElementById('interfaceLanguage').value = currentLanguage;
@@ -4820,7 +4816,7 @@
       };
 
       localStorage.setItem('ibtv_settings', JSON.stringify(settings));
-      
+
       // Mostrar mensaje de confirmación
       const message = getTranslation('Configuración guardada correctamente', currentLanguage);
       showSettingsMessage(message);
@@ -4873,13 +4869,13 @@
 
       // Cambiar pista de audio
       currentSeries.currentAudioTrack = nextTrack;
-      
+
       // Actualizar fuente del video
       const currentTime = videoElement.currentTime;
       const wasPlaying = !videoElement.paused;
-      
+
       videoElement.src = currentSeries.audioTracks[nextTrack];
-      
+
       videoElement.addEventListener('loadedmetadata', function onLoad() {
         videoElement.currentTime = currentTime;
         if (wasPlaying) {
@@ -4894,7 +4890,7 @@
         spanish: 'Español',
         english: 'English'
       };
-      
+
       showSubtitleMessage(`Audio: ${trackNames[nextTrack] || nextTrack}`);
       updateAudioButton(nextTrack);
     }
@@ -4914,12 +4910,12 @@
     // Función para detectar reproducir en banner principal
     function initializeBannerDetector() {
       const heroBannerPlay = document.getElementById('heroBannerPlay');
-      
+
       // Configurar para reproducir la película destacada en el banner
       currentSeries = seriesDatabase['dontlookaway'];
     }
 
-    
+
 
     // Función para actualizar navegación
     function updateNavigation(activeId) {
@@ -4930,12 +4926,12 @@
     }
 
     // Inicialización
-    document.addEventListener('DOMContentLoaded', async () => {
+    document.addEventListener('DOMContentLoaded', () => {
       console.log('Netflix-style app loaded');
-      
+
       // Inicializar sistema de idiomas
-      await initializeLanguageSystem();
-      
+      initializeLanguageSystem();
+
       // Inicializar detector de banner
       initializeBannerDetector();
 
@@ -5028,12 +5024,12 @@
       // Cargar idioma guardado
       const savedLanguage = localStorage.getItem('ibtv_language') || 'es';
       currentLanguage = savedLanguage;
-      
+
       // Si no es español, traducir interfaz
       if (currentLanguage !== 'es') {
         await translateInterface();
       }
-      
+
       console.log('Language system initialized:', currentLanguage);
     }
 
@@ -5048,7 +5044,7 @@
         return description.trim();
     }
 
-    // Modificar la función showSeriesDetail para limpiar la descripción
+    // Modificar la función showSeriesDetail para limpiar la description
     const originalShowSeriesDetail = showSeriesDetail;
     showSeriesDetail = function(seriesId) {
         const series = seriesDatabase[seriesId];
