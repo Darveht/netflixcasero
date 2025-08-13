@@ -22,16 +22,16 @@
     html, body {
       height: 100vh;
       width: 100vw;
-      overflow: hidden;
+      overflow: auto;
     }
 
     body {
       background: linear-gradient(135deg, #000000 0%, #1a1a2e 50%, #16213e 100%);
       font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       color: #ffffff;
+      min-height: 100vh;
       display: flex;
-      align-items: center;
-      justify-content: center;
+      flex-direction: column;
       position: relative;
     }
 
@@ -55,19 +55,41 @@
       50% { transform: translateY(-20px) rotate(180deg); }
     }
 
-    /* Contenedor principal */
+    /* Contenedor principal de pantalla completa */
     .auth-container {
-      background: rgba(32, 35, 39, 0.95);
-      backdrop-filter: blur(20px);
-      border-radius: 20px;
-      padding: 50px;
-      width: 100%;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+      min-height: 100vh;
       max-width: 500px;
-      max-height: 90vh;
-      overflow-y: auto;
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+      margin: 0 auto;
+      width: 100%;
+    }
+
+    /* Logo */
+    .logo {
+      text-align: center;
+      margin-bottom: 60px;
       animation: slideInUp 0.8s ease-out;
+    }
+
+    .logo h1 {
+      font-size: 64px;
+      font-weight: 900;
+      background: linear-gradient(45deg, #1d9bf0, #00c9ff);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: 4px;
+      margin-bottom: 15px;
+    }
+
+    .logo p {
+      color: #71767b;
+      font-size: 18px;
+      font-weight: 300;
     }
 
     @keyframes slideInUp {
@@ -81,25 +103,15 @@
       }
     }
 
-    /* Logo */
-    .logo {
-      text-align: center;
-      margin-bottom: 40px;
+    /* Contenedor de formularios */
+    .forms-container {
+      width: 100%;
+      animation: fadeIn 1s ease-out 0.3s both;
     }
 
-    .logo h1 {
-      font-size: 48px;
-      font-weight: 900;
-      background: linear-gradient(45deg, #1d9bf0, #00c9ff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      letter-spacing: 3px;
-      margin-bottom: 10px;
-    }
-
-    .logo p {
-      color: #71767b;
-      font-size: 16px;
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     /* Pestañas */
@@ -109,6 +121,7 @@
       background: rgba(255, 255, 255, 0.05);
       border-radius: 15px;
       padding: 5px;
+      backdrop-filter: blur(10px);
     }
 
     .auth-tab {
@@ -116,7 +129,7 @@
       background: transparent;
       border: none;
       color: #71767b;
-      padding: 15px;
+      padding: 18px;
       border-radius: 10px;
       font-weight: 600;
       font-size: 16px;
@@ -127,45 +140,61 @@
     .auth-tab.active {
       background: linear-gradient(45deg, #1d9bf0, #00c9ff);
       color: #ffffff;
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(29, 155, 240, 0.3);
     }
 
     /* Formularios */
     .auth-form {
       display: none;
+      animation: slideInForm 0.5s ease-out;
     }
 
     .auth-form.active {
       display: block;
     }
 
+    @keyframes slideInForm {
+      from {
+        opacity: 0;
+        transform: translateX(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateX(0);
+      }
+    }
+
     .form-group {
-      margin-bottom: 25px;
+      margin-bottom: 30px;
     }
 
     .form-label {
       display: block;
       color: #e7e9ea;
       font-weight: 600;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       font-size: 15px;
     }
 
     .form-input {
       width: 100%;
-      padding: 18px 20px;
+      padding: 20px 24px;
       background: rgba(255, 255, 255, 0.05);
       border: 2px solid rgba(255, 255, 255, 0.1);
       border-radius: 15px;
       color: #ffffff;
       font-size: 16px;
       transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
     }
 
     .form-input:focus {
       outline: none;
       border-color: #1d9bf0;
       background: rgba(29, 155, 240, 0.1);
-      box-shadow: 0 0 0 3px rgba(29, 155, 240, 0.2);
+      box-shadow: 0 0 0 4px rgba(29, 155, 240, 0.2);
+      transform: translateY(-2px);
     }
 
     .form-input::placeholder {
@@ -175,7 +204,7 @@
     /* Botones */
     .auth-button {
       width: 100%;
-      padding: 20px;
+      padding: 22px;
       background: linear-gradient(45deg, #1d9bf0, #00c9ff);
       border: none;
       border-radius: 15px;
@@ -184,14 +213,14 @@
       font-weight: 700;
       cursor: pointer;
       transition: all 0.3s ease;
-      margin-bottom: 20px;
+      margin-bottom: 25px;
       position: relative;
       overflow: hidden;
     }
 
     .auth-button:hover {
       transform: translateY(-3px);
-      box-shadow: 0 10px 40px rgba(29, 155, 240, 0.4);
+      box-shadow: 0 15px 50px rgba(29, 155, 240, 0.4);
     }
 
     .auth-button:disabled {
@@ -217,12 +246,13 @@
 
     /* Mensajes */
     .message {
-      padding: 15px 20px;
-      border-radius: 10px;
-      margin-bottom: 25px;
+      padding: 18px 24px;
+      border-radius: 12px;
+      margin-bottom: 30px;
       font-size: 15px;
       font-weight: 600;
       text-align: center;
+      backdrop-filter: blur(10px);
     }
 
     .message.error {
@@ -240,7 +270,7 @@
     /* Links */
     .auth-link {
       text-align: center;
-      margin-top: 25px;
+      margin-top: 30px;
     }
 
     .auth-link a {
@@ -248,22 +278,49 @@
       text-decoration: none;
       font-weight: 600;
       font-size: 15px;
+      transition: all 0.3s ease;
     }
 
     .auth-link a:hover {
       text-decoration: underline;
+      color: #00c9ff;
     }
 
     /* Responsive */
     @media (max-width: 600px) {
       .auth-container {
-        margin: 10px;
-        padding: 30px 25px;
-        max-width: 95vw;
+        padding: 20px 15px;
       }
       
       .logo h1 {
-        font-size: 36px;
+        font-size: 48px;
+        letter-spacing: 2px;
+      }
+
+      .logo {
+        margin-bottom: 40px;
+      }
+
+      .form-input {
+        padding: 18px 20px;
+      }
+
+      .auth-button {
+        padding: 20px;
+      }
+    }
+
+    @media (max-height: 700px) {
+      .logo {
+        margin-bottom: 30px;
+      }
+
+      .logo h1 {
+        font-size: 48px;
+      }
+
+      .auth-container {
+        padding: 20px;
       }
     }
   </style>
@@ -276,64 +333,67 @@
       <p>Tu servicio de streaming favorito</p>
     </div>
 
-    <!-- Pestañas -->
-    <div class="auth-tabs">
-      <button class="auth-tab active" onclick="switchTab('login')">Iniciar Sesión</button>
-      <button class="auth-tab" onclick="switchTab('register')">Registrarse</button>
+    <!-- Contenedor de formularios -->
+    <div class="forms-container">
+      <!-- Pestañas -->
+      <div class="auth-tabs">
+        <button class="auth-tab active" onclick="switchTab('login')">Iniciar Sesión</button>
+        <button class="auth-tab" onclick="switchTab('register')">Registrarse</button>
+      </div>
+
+      <!-- Mensaje de error/éxito -->
+      <div id="message" class="message" style="display: none;"></div>
+
+      <!-- Formulario de Login -->
+      <form id="loginForm" class="auth-form active">
+        <div class="form-group">
+          <label class="form-label">Correo Electrónico</label>
+          <input type="email" class="form-input" id="loginEmail" placeholder="tu@email.com" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Contraseña</label>
+          <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" required>
+        </div>
+
+        <button type="submit" class="auth-button">
+          <i class="fas fa-spinner spinner"></i>
+          Iniciar Sesión
+        </button>
+
+        <div class="auth-link">
+          <a href="#" onclick="resetPassword()">¿Olvidaste tu contraseña?</a>
+        </div>
+      </form>
+
+      <!-- Formulario de Registro -->
+      <form id="registerForm" class="auth-form">
+        <div class="form-group">
+          <label class="form-label">Nombre Completo</label>
+          <input type="text" class="form-input" id="registerName" placeholder="Tu nombre completo" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Correo Electrónico</label>
+          <input type="email" class="form-input" id="registerEmail" placeholder="tu@email.com" required>
+        </div>
+        
+        <div class="form-group">
+          <label class="form-label">Contraseña</label>
+          <input type="password" class="form-input" id="registerPassword" placeholder="Mínimo 6 caracteres" required>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Confirmar Contraseña</label>
+          <input type="password" class="form-input" id="confirmPassword" placeholder="Repite tu contraseña" required>
+        </div>
+
+        <button type="submit" class="auth-button">
+          <i class="fas fa-spinner spinner"></i>
+          Crear Cuenta
+        </button>
+      </form>
     </div>
-
-    <!-- Mensaje de error/éxito -->
-    <div id="message" class="message" style="display: none;"></div>
-
-    <!-- Formulario de Login -->
-    <form id="loginForm" class="auth-form active">
-      <div class="form-group">
-        <label class="form-label">Correo Electrónico</label>
-        <input type="email" class="form-input" id="loginEmail" placeholder="tu@email.com" required>
-      </div>
-      
-      <div class="form-group">
-        <label class="form-label">Contraseña</label>
-        <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" required>
-      </div>
-
-      <button type="submit" class="auth-button">
-        <i class="fas fa-spinner spinner"></i>
-        Iniciar Sesión
-      </button>
-
-      <div class="auth-link">
-        <a href="#" onclick="resetPassword()">¿Olvidaste tu contraseña?</a>
-      </div>
-    </form>
-
-    <!-- Formulario de Registro -->
-    <form id="registerForm" class="auth-form">
-      <div class="form-group">
-        <label class="form-label">Nombre Completo</label>
-        <input type="text" class="form-input" id="registerName" placeholder="Tu nombre completo" required>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Correo Electrónico</label>
-        <input type="email" class="form-input" id="registerEmail" placeholder="tu@email.com" required>
-      </div>
-      
-      <div class="form-group">
-        <label class="form-label">Contraseña</label>
-        <input type="password" class="form-input" id="registerPassword" placeholder="Mínimo 6 caracteres" required>
-      </div>
-
-      <div class="form-group">
-        <label class="form-label">Confirmar Contraseña</label>
-        <input type="password" class="form-input" id="confirmPassword" placeholder="Repite tu contraseña" required>
-      </div>
-
-      <button type="submit" class="auth-button">
-        <i class="fas fa-spinner spinner"></i>
-        Crear Cuenta
-      </button>
-    </form>
   </div>
 
   <script>
