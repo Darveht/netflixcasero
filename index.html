@@ -2462,9 +2462,23 @@
   </nav>
 
   <script>
+    // Verificar autenticación antes de cargar la plataforma
+    function checkAuthentication() {
+      const isSubscribed = localStorage.getItem('ibtv_subscription');
+      
+      if (!isSubscribed) {
+        // Redirigir a la página de login si no está suscrito
+        window.location.href = 'login.html';
+        return false;
+      }
+      return true;
+    }
+
     // Inicializar el sistema cuando se carga la página
     document.addEventListener('DOMContentLoaded', function() {
-      initializePremiereSystem();
+      if (checkAuthentication()) {
+        initializePremiereSystem();
+      }
     });
   </script>
 
