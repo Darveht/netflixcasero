@@ -1533,6 +1533,31 @@
       transform: scale(1.1);
     }
 
+    /* Botón de descarga */
+    .download-btn {
+      background: rgba(0, 0, 0, 0.7);
+      border: none;
+      color: #ffffff;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(12px);
+      z-index: 15;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+    }
+
+    .download-btn:hover {
+      background: rgba(29, 155, 240, 0.8);
+      border-color: rgba(29, 155, 240, 0.5);
+      transform: scale(1.1);
+    }
+
     /* Orientación horizontal para móviles - Mejorado */
     @media screen and (orientation: landscape) and (max-height: 500px) {
       /* Forzar pantalla completa en landscape */
@@ -2511,31 +2536,31 @@
     <div class="series-detail-header" id="seriesDetailHeader">
       <!-- Imagen de fondo -->
       <div class="series-detail-background" id="seriesDetailBackground"></div>
-      
+
       <!-- Video de trailer de fondo -->
-      <video class="series-detail-video" id="seriesDetailVideo" 
+      <video class="series-detail-video" id="seriesDetailVideo"
              muted autoplay loop playsinline webkit-playsinline x5-playsinline
              style="display: none;">
       </video>
-      
+
       <!-- Overlay gradiente -->
       <div class="series-detail-overlay"></div>
-      
+
       <!-- Botón de play circular -->
       <div class="netflix-play-btn" id="netflixPlayBtn" onclick="playMainMovie()">
         <i class="fas fa-play"></i>
       </div>
-      
+
       <!-- Indicador de sonido -->
       <div class="sound-indicator" id="soundToggle" onclick="toggleTrailerSound()">
         <i class="fas fa-volume-mute"></i>
       </div>
-      
+
       <!-- Botón de cerrar -->
       <button class="series-close-btn" onclick="closeSeriesDetail()">
         <i class="fas fa-times"></i>
       </button>
-      
+
       <!-- Contenido de texto -->
       <div class="series-detail-content">
         <h1 class="series-detail-title" id="seriesDetailTitle">DON'T LOOK AWAY</h1>
@@ -2622,13 +2647,16 @@
           <button class="screen-lock-btn" onclick="lockScreen()" title="Bloquear pantalla">
             <i class="fas fa-lock"></i>
           </button>
+          <button class="download-btn" onclick="downloadCurrentContent()" title="Descargar película" style="background: rgba(0, 0, 0, 0.7); border: none; color: #ffffff; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; transition: all 0.2s ease; backdrop-filter: blur(12px); z-index: 15; border: 2px solid rgba(255, 255, 255, 0.2);">
+            <i class="fas fa-download"></i>
+          </button>
           <button class="video-player-close" onclick="closeVideoPlayer()">
             <i class="fas fa-times"></i>
           </button>
         </div>
       </div>
 
-      <video id="videoElement" 
+      <video id="videoElement"
              playsinline
              webkit-playsinline
              x5-playsinline
@@ -3008,7 +3036,7 @@
     const interfaceTexts = {
       // Navegación
       'Inicio': 'Home',
-      'Buscar': 'Search', 
+      'Buscar': 'Search',
       'Ajustes': 'Settings',
 
       // Búsqueda
@@ -3093,7 +3121,7 @@
 
       // Fechas y tiempo
       'DÍAS': 'DAYS',
-      'HRS': 'HRS', 
+      'HRS': 'HRS',
       'MIN': 'MIN',
       'SEG': 'SEC',
       'Junio': 'June',
@@ -3503,7 +3531,7 @@
       // Actualizar contenido
       document.getElementById('seriesDetailTitle').textContent = series.title;
       document.getElementById('seriesDetailDescription').textContent = series.description;
-      
+
       // Configurar imagen de fondo
       const backgroundEl = document.getElementById('seriesDetailBackground');
       backgroundEl.style.backgroundImage = `url('${series.poster}')`;
@@ -3576,7 +3604,7 @@
       videoEl.setAttribute('playsinline', 'true');
       videoEl.setAttribute('webkit-playsinline', 'true');
       videoEl.setAttribute('x5-playsinline', 'true');
-      
+
       // Event listener para cuando el video esté listo
       const onLoadedData = () => {
         setTimeout(() => {
@@ -3584,14 +3612,14 @@
           videoEl.classList.add('loaded');
           playBtn.style.display = 'none'; // Ocultar botón de play cuando el video carga
           soundBtn.style.display = 'flex';
-          
+
           // Auto-reproducir el trailer
           videoEl.play().catch(e => {
             console.log('Autoplay prevented:', e);
             playBtn.style.display = 'flex'; // Mostrar botón si autoplay falla
           });
         }, 500);
-        
+
         videoEl.removeEventListener('loadeddata', onLoadedData);
       };
 
@@ -3623,7 +3651,7 @@
     function toggleTrailerSound() {
       const videoEl = document.getElementById('seriesDetailVideo');
       const soundBtn = document.getElementById('soundToggle');
-      
+
       if (videoEl.muted) {
         videoEl.muted = false;
         videoEl.volume = 0.3; // Volumen moderado
@@ -3637,7 +3665,7 @@
     // Función para reproducir película principal desde el botón Netflix
     function playMainMovie() {
       if (!currentSeries) return;
-      
+
       // Verificar disponibilidad
       if (currentSeries.isLocked && !isMovieAvailable(currentSeries)) {
         showLockedMessage(currentSeries);
@@ -3809,7 +3837,7 @@
     // Función para cerrar detalles de serie
     function closeSeriesDetail() {
       document.getElementById('seriesDetail').classList.remove('active');
-      
+
       // Limpiar video de trailer
       const videoEl = document.getElementById('seriesDetailVideo');
       if (videoEl) {
@@ -3818,7 +3846,7 @@
         videoEl.classList.remove('loaded');
         videoEl.style.display = 'none';
       }
-      
+
       // Resetear botones
       const playBtn = document.getElementById('netflixPlayBtn');
       const soundBtn = document.getElementById('soundToggle');
@@ -3827,7 +3855,7 @@
         soundBtn.style.display = 'none';
         soundBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
       }
-      
+
       currentSeries = null;
     }
 
@@ -3980,8 +4008,7 @@
     // Función para reproducir contenido principal después del intro
     function playMainContent(episode) {
       // Habilitar pantalla completa automática y rotación
-      enableFullscreenVideo();
-      forceAutoRotation();
+      enableVideoFullscreenAndRotation();
 
       // Limpiar video anterior
       videoElement.removeAttribute('src');
@@ -4773,8 +4800,8 @@
       const tracks = videoElement.textTracks;
 
       // Verificar si hay track activo
-      const hasActiveTrack = currentSubtitleTrack >= 0 && 
-                            tracks[currentSubtitleTrack] && 
+      const hasActiveTrack = currentSubtitleTrack >= 0 &&
+                            tracks[currentSubtitleTrack] &&
                             tracks[currentSubtitleTrack].mode === 'showing';
 
       // Cambiar color del botón
@@ -5050,10 +5077,10 @@
     // Función para bloquear pantalla
     function lockScreen() {
       if (!videoPlayer.classList.contains('active')) return;
-      
+
       isScreenLocked = true;
       document.getElementById('screenLockOverlay').classList.add('active');
-      
+
       // Ocultar controles del video
       const header = document.querySelector('.video-player-header');
       const controls = document.querySelector('.video-player-controls');
@@ -5061,7 +5088,7 @@
         header.style.display = 'none';
         controls.style.display = 'none';
       }
-      
+
       // Mostrar mensaje
       showLockMessage('Pantalla bloqueada - Toca el botón para desbloquear');
     }
@@ -5070,7 +5097,7 @@
     function unlockScreen() {
       isScreenLocked = false;
       document.getElementById('screenLockOverlay').classList.remove('active');
-      
+
       // Mostrar controles del video
       const header = document.querySelector('.video-player-header');
       const controls = document.querySelector('.video-player-controls');
@@ -5078,7 +5105,7 @@
         header.style.display = 'flex';
         controls.style.display = 'block';
       }
-      
+
       // Mostrar mensaje
       showLockMessage('Pantalla desbloqueada');
     }
@@ -5142,12 +5169,12 @@
               });
             });
           }
-          
+
           // Configurar dimensiones del video
           video.style.width = '100vw';
           video.style.height = '100vh';
           video.style.objectFit = 'contain';
-          
+
           // Forzar pantalla completa si es posible
           const container = document.querySelector('.video-player-container');
           if (container) {
@@ -5180,7 +5207,7 @@
     }, true);
 
     // Forzar pantalla completa en móviles cuando se reproduce video
-    function enableFullscreenVideo() {
+    function enableVideoFullscreenAndRotation() {
       if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
         // Solicitar orientación landscape cuando sea posible
         if (screen.orientation && screen.orientation.lock) {
@@ -5434,7 +5461,7 @@
       // Mostrar mensaje de confirmación
       const messages = {
         'en': 'Interface language changed to English',
-        'pt': 'Idioma da interface alterado para Português', 
+        'pt': 'Idioma da interface alterado para Português',
         'es': 'Idioma de interfaz cambiado a Español'
       };
 
@@ -5584,7 +5611,7 @@
 
     // Función para actualizar navegación
     function updateNavigation(activeId) {
-      document.querySelectorAll('.bottom-nav button').forEach(btn => 
+      document.querySelectorAll('.bottom-nav button').forEach(btn =>
         btn.classList.remove('active')
       );
       document.getElementById(activeId).classList.add('active');
@@ -5717,7 +5744,7 @@
       console.log('Language system initialized:', currentLanguage);
     }
 
-    // Función para quitar emojis y fechas de la description
+    // Función para limpiar emojis y fechas de la description
     function cleanDescription(description) {
         // Eliminar emojis (esta expresión regular puede no ser exhaustiva)
         description = description.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '');
@@ -5874,6 +5901,190 @@
           playTrailerContent(trailerVideo);
         });
       }
+
+      // Función de descarga de contenido actual
+      function downloadCurrentContent() {
+        if (!currentVideo || !currentVideo.videoUrl) {
+          showErrorMessage("No se puede descargar contenido en este momento.");
+          return;
+        }
+
+        const url = currentVideo.videoUrl;
+        const filename = currentVideo.title || "downloaded_content";
+
+        // Intentar descargar el archivo
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = filename; // Nombre del archivo para descargar
+
+        // Simular clic en el enlace
+        document.body.appendChild(link);
+        link.click();
+
+        // Remover el enlace después de la descarga
+        document.body.removeChild(link);
+
+        // Mostrar mensaje de que la descarga ha comenzado
+        showDownloadMessage(`Iniciando descarga de "${filename}"...`);
+      }
+
+      // Mostrar mensaje de inicio de descarga
+      function showDownloadMessage(message) {
+        const messageEl = document.createElement('div');
+        messageEl.style.cssText = `
+          position: fixed;
+          bottom: 100px; /* Posicionar sobre la barra de navegación */
+          left: 50%;
+          transform: translateX(-50%);
+          background: rgba(29, 155, 240, 0.9);
+          color: white;
+          padding: 12px 20px;
+          border-radius: 8px;
+          font-size: 14px;
+          font-weight: 600;
+          z-index: 5000;
+          backdrop-filter: blur(12px);
+          animation: slideInRight 3s ease-out forwards; /* Usar animación para que desaparezca */
+        `;
+        messageEl.innerHTML = `
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <i class="fas fa-download"></i>
+            <span>${message}</span>
+          </div>
+        `;
+
+        document.body.appendChild(messageEl);
+
+        // Remover mensaje después de la animación
+        setTimeout(() => {
+          if (messageEl.parentNode) {
+            messageEl.parentNode.removeChild(messageEl);
+          }
+        }, 3000);
+      }
+
+      // Función para crear y añadir el elemento para la sección de descargas en ajustes
+      function addDownloadSectionToSettings() {
+        const settingsContent = document.querySelector('.settings-content');
+        if (!settingsContent) return;
+
+        // Verificar si la sección de descargas ya existe
+        if (document.getElementById('downloadSettingsGroup')) return;
+
+        const downloadGroup = document.createElement('div');
+        downloadGroup.className = 'settings-group';
+        downloadGroup.id = 'downloadSettingsGroup';
+        downloadGroup.innerHTML = `
+          <h3 class="settings-group-title">
+            <i class="fas fa-download"></i>
+            Descargas
+          </h3>
+          <div class="setting-item">
+            <div class="setting-info">
+              <div class="setting-name">Espacio de Almacenamiento</div>
+              <div class="setting-description">Libre: 50 GB / Total: 256 GB</div>
+            </div>
+            <div class="setting-select" style="background: #202327; border: 1px solid #333639; color: #ffffff; padding: 8px 12px; border-radius: 6px; font-size: 14px;">Ver Descargas</div>
+          </div>
+          <div class="setting-item">
+            <div class="setting-info">
+              <div class="setting-name">Descargas Automáticas</div>
+              <div class="setting-description">Descargar automáticamente contenido seleccionado</div>
+            </div>
+            <label class="toggle-switch">
+              <input type="checkbox" id="autoDownloadToggle">
+              <span class="toggle-slider"></span>
+            </label>
+          </div>
+          <div class="setting-item">
+            <div class="setting-info">
+              <div class="setting-name">Calidad de Descarga</div>
+              <div class="setting-description">Seleccionar calidad para descargas</div>
+            </div>
+            <select class="setting-select" id="downloadQuality">
+              <option value="auto">Automática</option>
+              <option value="1080p">1080p HD</option>
+              <option value="720p">720p HD</option>
+              <option value="480p">480p</option>
+            </select>
+          </div>
+        `;
+
+        // Añadir el nuevo grupo al final del contenido de ajustes
+        settingsContent.appendChild(downloadGroup);
+
+        // Actualizar configuraciones de descargas si existen
+        loadDownloadSettings();
+      }
+
+      // Cargar configuraciones dedescarga
+    function loadDownloadSettings() {
+      const settings = JSON.parse(localStorage.getItem('ibtv_download_settings') || '{}');
+
+      document.getElementById('autoDownloadToggle').checked = settings.autoDownload !== false;
+      document.getElementById('downloadQuality').value = settings.downloadQuality || 'auto';
+    }
+
+    // Guardar configuraciones de descarga
+    function saveDownloadSettings() {
+      const settings = {
+        autoDownload: document.getElementById('autoDownloadToggle').checked,
+        downloadQuality: document.getElementById('downloadQuality').value
+      };
+      localStorage.setItem('ibtv_download_settings', JSON.stringify(settings));
+      showSettingsMessage('Configuración de descarga guardada');
+    }
+
+    // Inicializar la sección de descargas al cargar la página
+    document.addEventListener('DOMContentLoaded', () => {
+      addDownloadSectionToSettings();
+      // ... resto de la inicialización ...
+    });
+
+    // Modificación para la función de bloqueo de pantalla
+    // Reemplazar en la función lockScreen()
+    function lockScreen() {
+      if (!videoPlayer.classList.contains('active')) return;
+
+      isScreenLocked = true;
+      document.getElementById('screenLockOverlay').classList.add('active');
+
+      // Ocultar controles del video
+      const header = document.querySelector('.video-player-header');
+      const controls = document.querySelector('.video-player-controls');
+      if (header && controls) {
+        // Ocultar controles para siempre hasta desbloquear
+        header.style.display = 'none';
+        controls.style.display = 'none';
+      }
+      // Ocultar el botón de bloqueo también, para evitar clics accidentales
+      const lockButton = document.querySelector('.screen-lock-btn');
+      if(lockButton) lockButton.style.display = 'none';
+
+      // Mostrar mensaje
+      showLockMessage('Pantalla bloqueada - Toca el botón para desbloquear');
+    }
+
+    // Modificación para la función de desbloqueo de pantalla
+    // Reemplazar en la función unlockScreen()
+    function unlockScreen() {
+      isScreenLocked = false;
+      document.getElementById('screenLockOverlay').classList.remove('active');
+
+      // Mostrar controles del video
+      const header = document.querySelector('.video-player-header');
+      const controls = document.querySelector('.video-player-controls');
+      if (header && controls) {
+        header.style.display = 'flex'; // Asegurarse de que sean visibles
+        controls.style.display = 'block'; // Asegurarse de que sean visibles
+      }
+      // Mostrar el botón de bloqueo nuevamente
+      const lockButton = document.querySelector('.screen-lock-btn');
+      if(lockButton) lockButton.style.display = 'flex';
+
+      // Mostrar mensaje
+      showLockMessage('Pantalla desbloqueada');
+    }
 
   </script>
 </body>
