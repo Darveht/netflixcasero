@@ -67,6 +67,28 @@
       letter-spacing: 2px;
     }
 
+    /* Video de fondo para la sección de bienvenida */
+    .background-video {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -2;
+      opacity: 0.3;
+    }
+
+    .video-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.7), rgba(26, 26, 46, 0.8));
+      z-index: -1;
+    }
+
     /* Contenedor principal */
     .main-container {
       min-height: 100vh;
@@ -76,6 +98,7 @@
       align-items: center;
       padding: 100px 24px 40px 24px;
       position: relative;
+      z-index: 10;
     }
 
     /* Sección de bienvenida */
@@ -179,6 +202,14 @@
       opacity: 1;
     }
 
+    .offers-modal.active ~ .background-video {
+      opacity: 0;
+    }
+
+    .offers-modal.active ~ .video-overlay {
+      background: rgba(0, 0, 0, 0.95);
+    }
+
     .offers-content {
       width: 100%;
       max-width: 1200px;
@@ -223,9 +254,9 @@
 
     /* Botón cerrar */
     .close-button {
-      position: absolute;
+      position: fixed;
       top: 20px;
-      right: 24px;
+      right: 20px;
       background: rgba(255, 255, 255, 0.1);
       border: none;
       color: #ffffff;
@@ -236,6 +267,7 @@
       cursor: pointer;
       transition: all 0.3s ease;
       backdrop-filter: blur(12px);
+      z-index: 3000;
     }
 
     .close-button:hover {
@@ -533,6 +565,14 @@
   </style>
 </head>
 <body>
+  <!-- Video de fondo -->
+  <video class="background-video" autoplay muted loop playsinline>
+    <source src="https://www.dropbox.com/scl/fi/ihubj9uce7s7y6f59uhes/copy_EA1A3A3F-1D80-4515-B996-33E382098CB5.mov?rlkey=h46rizthcrx0ab0cfqmt8vn1m&st=v1vvm9dz&raw=1" type="video/mp4">
+  </video>
+  
+  <!-- Overlay para el video -->
+  <div class="video-overlay"></div>
+
   <!-- Partículas flotantes -->
   <div class="particles" id="particles"></div>
 
