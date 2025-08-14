@@ -2378,12 +2378,125 @@
       }
     }
 
+    /* Sección VIP completa */
+    .vip-section {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: #000000;
+      z-index: 2000;
+      display: none;
+      overflow-y: auto;
+      padding-top: 80px;
+    }
+
+    .vip-section.active {
+      display: block;
+    }
+
+    .vip-close-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: rgba(0,0,0,0.75);
+      border: none;
+      color: #ffffff;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      backdrop-filter: blur(12px);
+      z-index: 10;
+    }
+
+    .vip-close-btn:hover {
+      background: rgba(255,255,255,0.2);
+      transform: scale(1.1);
+    }
+
+    .vip-header {
+      padding: 20px 16px 30px 16px;
+      border-bottom: 1px solid #333639;
+      text-align: center;
+    }
+
+    .vip-title {
+      font-size: 28px;
+      font-weight: 800;
+      color: #ffffff;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .vip-title i {
+      color: #ffd700;
+      font-size: 32px;
+    }
+
+    .vip-subtitle {
+      font-size: 16px;
+      color: #71767b;
+    }
+
+    .vip-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 16px;
+      text-align: center;
+    }
+
+    .vip-loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(255, 215, 0, 0.2);
+      border-top: 3px solid #ffd700;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 16px;
+    }
+
+    .vip-loading-text {
+      color: #71767b;
+      font-size: 16px;
+    }
+
+    .vip-no-users {
+      text-align: center;
+      padding: 60px 16px;
+      color: #71767b;
+    }
+
+    .vip-no-users i {
+      font-size: 48px;
+      margin-bottom: 16px;
+      display: block;
+      color: #ffd700;
+    }
+
+    .vip-no-users h3 {
+      font-size: 20px;
+      margin-bottom: 8px;
+      color: #ffffff;
+    }
+
     /* Estilos para la sección VIP */
     .vip-users-container {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
       gap: 20px;
-      padding: 0 16px;
+      padding: 20px 16px;
     }
 
     .vip-user-card {
@@ -2636,96 +2749,7 @@
         </div>
       </div>
 
-      <!-- Sección VIP -->
-      <div class="section">
-        <h2 class="section-title">VIP</h2>
-        <div class="vip-users-container">
-          <div class="vip-user-card" data-user-id="user1">
-            <div class="vip-user-avatar">
-              <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&crop=face" alt="Usuario VIP">
-            </div>
-            <div class="vip-user-info">
-              <div class="vip-user-name">
-                <span>@alexcinema</span>
-                <i class="fas fa-check-circle vip-verified"></i>
-              </div>
-              <div class="vip-followers-count" id="followers-user1">1,247 seguidores</div>
-            </div>
-            <button class="vip-follow-btn" onclick="toggleFollow('user1')">
-              <i class="fas fa-user-plus"></i>
-              Seguir
-            </button>
-          </div>
-
-          <div class="vip-user-card" data-user-id="user2">
-            <div class="vip-user-avatar">
-              <img src="https://images.unsplash.com/photo-1494790108755-2616b332c3cd?w=150&h=150&fit=crop&crop=face" alt="Usuario VIP">
-            </div>
-            <div class="vip-user-info">
-              <div class="vip-user-name">
-                <span>@horrorqueen</span>
-                <i class="fas fa-check-circle vip-verified"></i>
-              </div>
-              <div class="vip-followers-count" id="followers-user2">2,891 seguidores</div>
-            </div>
-            <button class="vip-follow-btn" onclick="toggleFollow('user2')">
-              <i class="fas fa-user-plus"></i>
-              Seguir
-            </button>
-          </div>
-
-          <div class="vip-user-card" data-user-id="user3">
-            <div class="vip-user-avatar">
-              <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face" alt="Usuario VIP">
-            </div>
-            <div class="vip-user-info">
-              <div class="vip-user-name">
-                <span>@filmcritic</span>
-                <i class="fas fa-check-circle vip-verified"></i>
-              </div>
-              <div class="vip-followers-count" id="followers-user3">892 seguidores</div>
-            </div>
-            <button class="vip-follow-btn" onclick="toggleFollow('user3')">
-              <i class="fas fa-user-plus"></i>
-              Seguir
-            </button>
-          </div>
-
-          <div class="vip-user-card" data-user-id="user4">
-            <div class="vip-user-avatar">
-              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" alt="Usuario VIP">
-            </div>
-            <div class="vip-user-info">
-              <div class="vip-user-name">
-                <span>@moviebuff</span>
-                <i class="fas fa-check-circle vip-verified"></i>
-              </div>
-              <div class="vip-followers-count" id="followers-user4">3,456 seguidores</div>
-            </div>
-            <button class="vip-follow-btn" onclick="toggleFollow('user4')">
-              <i class="fas fa-user-plus"></i>
-              Seguir
-            </button>
-          </div>
-
-          <div class="vip-user-card" data-user-id="user5">
-            <div class="vip-user-avatar">
-              <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face" alt="Usuario VIP">
-            </div>
-            <div class="vip-user-info">
-              <div class="vip-user-name">
-                <span>@screamfan</span>
-                <i class="fas fa-check-circle vip-verified"></i>
-              </div>
-              <div class="vip-followers-count" id="followers-user5">1,678 seguidores</div>
-            </div>
-            <button class="vip-follow-btn" onclick="toggleFollow('user5')">
-              <i class="fas fa-user-plus"></i>
-              Seguir
-            </button>
-          </div>
-        </div>
-      </div>
+      
     </div>
   </div>
 
@@ -2943,6 +2967,36 @@
     </div>
   </div>
 
+  <!-- Sección VIP -->
+  <div id="vipSection" class="vip-section">
+    <button class="vip-close-btn" onclick="closeVipSection()">
+      <i class="fas fa-times"></i>
+    </button>
+
+    <div class="vip-header">
+      <h2 class="vip-title">
+        <i class="fas fa-crown"></i>
+        Usuarios VIP
+      </h2>
+      <p class="vip-subtitle">Conecta con otros usuarios destacados de la plataforma</p>
+    </div>
+
+    <div id="vipLoading" class="vip-loading hidden">
+      <div class="vip-loading-spinner"></div>
+      <div class="vip-loading-text">Cargando usuarios VIP...</div>
+    </div>
+
+    <div id="vipUsersContainer" class="vip-users-container">
+      <!-- Los usuarios VIP se cargarán dinámicamente desde Firebase -->
+    </div>
+
+    <div id="vipNoUsers" class="vip-no-users hidden">
+      <i class="fas fa-crown"></i>
+      <h3>No hay usuarios VIP aún</h3>
+      <p>Los usuarios VIP aparecerán aquí cuando se registren en la plataforma</p>
+    </div>
+  </div>
+
   <!-- Sección de Ajustes -->
   <div id="settingsSection" class="settings-section">
     <button class="settings-close-btn" onclick="closeSettingsSection()">
@@ -3115,6 +3169,10 @@
       <i class="fas fa-search"></i>
       <span>Buscar</span>
     </button>
+    <button id="navVip">
+      <i class="fas fa-crown"></i>
+      <span>VIP</span>
+    </button>
     <button id="navSettings">
       <i class="fas fa-cog"></i>
       <span>Ajustes</span>
@@ -3245,8 +3303,7 @@
       updateReleaseIndicators();
       setInterval(updateReleaseIndicators, 60000);
 
-      // Inicializar sistema de seguimiento VIP
-      initializeVIPFollowSystem();
+      // El sistema VIP ahora carga dinámicamente desde Firebase
     }
 
     // Sistema de navegación
@@ -3268,6 +3325,8 @@
             showHomeSection();
           } else if (buttonId === 'navSearch') {
             showSearchSection();
+          } else if (buttonId === 'navVip') {
+            showVipSection();
           } else if (buttonId === 'navSettings') {
             showSettingsSection();
           }
@@ -3287,6 +3346,13 @@
       document.getElementById('searchSection').classList.add('active');
     }
 
+    // Mostrar sección VIP
+    function showVipSection() {
+      hideAllSections();
+      document.getElementById('vipSection').classList.add('active');
+      loadVipUsers();
+    }
+
     // Mostrar sección de ajustes
     function showSettingsSection() {
       hideAllSections();
@@ -3298,12 +3364,23 @@
     function hideAllSections() {
       document.getElementById('homeSection').style.display = 'none';
       document.getElementById('searchSection').classList.remove('active');
+      document.getElementById('vipSection').classList.remove('active');
       document.getElementById('settingsSection').classList.remove('active');
     }
 
     // Cerrar sección de búsqueda
     function closeSearchSection() {
       document.getElementById('searchSection').classList.remove('active');
+      showHomeSection();
+
+      // Activar botón home
+      document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active'));
+      document.getElementById('navHome').classList.add('active');
+    }
+
+    // Cerrar sección VIP
+    function closeVipSection() {
+      document.getElementById('vipSection').classList.remove('active');
       showHomeSection();
 
       // Activar botón home
@@ -3411,19 +3488,265 @@
       });
     }
 
-    // Sistema VIP de seguimiento
-    function initializeVIPFollowSystem() {
-      // Cargar estado de seguimiento
-      const followState = JSON.parse(localStorage.getItem('vip_follow_state') || '{}');
+    // Sistema VIP con usuarios reales de Firebase
+    async function loadVipUsers() {
+      const vipContainer = document.getElementById('vipUsersContainer');
+      const vipLoading = document.getElementById('vipLoading');
+      const vipNoUsers = document.getElementById('vipNoUsers');
 
-      // Configurar estado inicial
-      Object.keys(followState).forEach(userId => {
-        const button = document.querySelector(`[data-user-id="${userId}"] .vip-follow-btn`);
-        if (button && followState[userId]) {
+      // Mostrar loading
+      vipLoading.classList.remove('hidden');
+      vipContainer.innerHTML = '';
+      vipNoUsers.classList.add('hidden');
+
+      try {
+        // Obtener usuarios VIP desde Firebase
+        const vipUsersRef = database.ref('vip_users');
+        const snapshot = await vipUsersRef.once('value');
+        const vipUsers = snapshot.val();
+
+        // Obtener todos los usuarios registrados
+        const usersRef = database.ref('users');
+        const usersSnapshot = await usersRef.once('value');
+        const allUsers = usersSnapshot.val();
+
+        vipLoading.classList.add('hidden');
+
+        if (!vipUsers && !allUsers) {
+          vipNoUsers.classList.remove('hidden');
+          return;
+        }
+
+        // Crear lista de usuarios VIP (incluye usuarios marcados como VIP y colaboradores)
+        const vipUsersList = [];
+
+        // Agregar usuarios marcados específicamente como VIP
+        if (vipUsers) {
+          Object.keys(vipUsers).forEach(userId => {
+            if (allUsers[userId] && vipUsers[userId].isVip) {
+              vipUsersList.push({
+                uid: userId,
+                ...allUsers[userId],
+                vipType: 'vip',
+                followers: vipUsers[userId].followers || 0
+              });
+            }
+          });
+        }
+
+        // Agregar colaboradores (usuarios con acceso gratuito)
+        if (allUsers) {
+          Object.keys(allUsers).forEach(userId => {
+            const user = allUsers[userId];
+            if (user.subscription && user.subscription.type === 'collaborator') {
+              vipUsersList.push({
+                uid: userId,
+                ...user,
+                vipType: 'collaborator',
+                followers: (vipUsers && vipUsers[userId]) ? vipUsers[userId].followers || 0 : 0
+              });
+            }
+          });
+        }
+
+        if (vipUsersList.length === 0) {
+          vipNoUsers.classList.remove('hidden');
+          return;
+        }
+
+        // Renderizar usuarios VIP
+        vipUsersList.forEach(user => {
+          const userCard = createVipUserCard(user);
+          vipContainer.appendChild(userCard);
+        });
+
+      } catch (error) {
+        console.error('Error cargando usuarios VIP:', error);
+        vipLoading.classList.add('hidden');
+        vipNoUsers.classList.remove('hidden');
+      }
+    }
+
+    // Crear tarjeta de usuario VIP
+    function createVipUserCard(user) {
+      const userCard = document.createElement('div');
+      userCard.className = 'vip-user-card';
+      userCard.setAttribute('data-user-id', user.uid);
+
+      // Obtener avatar del usuario
+      let avatarContent = '';
+      if (user.profile && user.profile.avatar) {
+        const avatarData = user.profile.avatar.data;
+        if (avatarData.type === 'icon') {
+          avatarContent = `<i class="fas ${avatarData.icon}" style="font-size: 24px; color: white;"></i>`;
+        } else if (avatarData.type === 'image') {
+          avatarContent = `<img src="${avatarData.url}" alt="${user.name}">`;
+        }
+      } else {
+        // Avatar por defecto
+        const firstLetter = user.name ? user.name.charAt(0).toUpperCase() : 'U';
+        avatarContent = `<span style="font-size: 20px; font-weight: bold;">${firstLetter}</span>`;
+      }
+
+      // Determinar tipo de verificación
+      const vipIcon = user.vipType === 'collaborator' ? 
+        '<i class="fas fa-star" style="color: #ffd700;"></i>' : 
+        '<i class="fas fa-check-circle" style="color: #1d9bf0;"></i>';
+
+      const vipLabel = user.vipType === 'collaborator' ? 'Colaborador' : 'VIP';
+
+      // Crear username desde email si no existe
+      const username = user.profile?.username || user.email.split('@')[0];
+
+      userCard.innerHTML = `
+        <div class="vip-user-avatar" style="background: linear-gradient(45deg, #1d9bf0, #00c9ff);">
+          ${avatarContent}
+        </div>
+        <div class="vip-user-info">
+          <div class="vip-user-name">
+            <span>@${username}</span>
+            ${vipIcon}
+          </div>
+          <div class="vip-followers-count" id="followers-${user.uid}">${user.followers.toLocaleString()} seguidores</div>
+          <div style="font-size: 12px; color: #71767b; margin-top: 2px;">${vipLabel}</div>
+        </div>
+        <button class="vip-follow-btn" onclick="toggleFollowReal('${user.uid}')">
+          <i class="fas fa-user-plus"></i>
+          Seguir
+        </button>
+      `;
+
+      return userCard;
+    }
+
+    // Sistema de seguimiento para usuarios reales
+    async function toggleFollowReal(userId) {
+      const button = document.querySelector(`[data-user-id="${userId}"] .vip-follow-btn`);
+      const followersElement = document.getElementById(`followers-${userId}`);
+
+      if (!button || !followersElement || !currentFirebaseUser) return;
+
+      try {
+        const followStateRef = database.ref(`vip_users/${userId}/followers_list/${currentFirebaseUser.uid}`);
+        const followersCountRef = database.ref(`vip_users/${userId}/followers`);
+        
+        // Verificar estado actual
+        const snapshot = await followStateRef.once('value');
+        const isFollowing = snapshot.exists();
+
+        if (!isFollowing) {
+          // Seguir usuario
+          await followStateRef.set({
+            followedAt: firebase.database.ServerValue.TIMESTAMP,
+            followerName: currentFirebaseUser.displayName || currentFirebaseUser.email
+          });
+
+          // Incrementar contador
+          await followersCountRef.transaction(currentCount => (currentCount || 0) + 1);
+
           button.classList.add('following');
           button.innerHTML = '<i class="fas fa-user-check"></i> Siguiendo';
+
+          showFollowFeedback(button, true);
+        } else {
+          // Dejar de seguir
+          await followStateRef.remove();
+
+          // Decrementar contador
+          await followersCountRef.transaction(currentCount => Math.max(0, (currentCount || 1) - 1));
+
+          button.classList.remove('following');
+          button.innerHTML = '<i class="fas fa-user-plus"></i> Seguir';
+
+          showFollowFeedback(button, false);
         }
-      });
+
+        // Actualizar contador en tiempo real
+        const newCountSnapshot = await followersCountRef.once('value');
+        const newCount = newCountSnapshot.val() || 0;
+        followersElement.textContent = `${newCount.toLocaleString()} seguidores`;
+
+      } catch (error) {
+        console.error('Error al seguir/dejar de seguir usuario:', error);
+        showFollowFeedback(button, null, 'Error al procesar la acción');
+      }
+    }
+
+    // Función para marcar usuario como VIP (solo para admins)
+    async function markUserAsVip(userEmail, isVip = true) {
+      if (!currentFirebaseUser) return;
+
+      try {
+        // Buscar usuario por email
+        const usersRef = database.ref('users');
+        const snapshot = await usersRef.orderByChild('email').equalTo(userEmail).once('value');
+        const users = snapshot.val();
+
+        if (!users) {
+          console.error('Usuario no encontrado:', userEmail);
+          return;
+        }
+
+        const userId = Object.keys(users)[0];
+        const vipRef = database.ref(`vip_users/${userId}`);
+
+        if (isVip) {
+          await vipRef.set({
+            isVip: true,
+            markedAt: firebase.database.ServerValue.TIMESTAMP,
+            markedBy: currentFirebaseUser.uid,
+            followers: 0
+          });
+        } else {
+          await vipRef.remove();
+        }
+
+        console.log(`Usuario ${userEmail} ${isVip ? 'marcado como VIP' : 'removido de VIP'}`);
+      } catch (error) {
+        console.error('Error marcando usuario como VIP:', error);
+      }
+    }
+
+    // Función para dar acceso de colaborador gratuito
+    async function grantCollaboratorAccess(userEmail) {
+      if (!currentFirebaseUser) return;
+
+      try {
+        // Buscar usuario por email
+        const usersRef = database.ref('users');
+        const snapshot = await usersRef.orderByChild('email').equalTo(userEmail).once('value');
+        const users = snapshot.val();
+
+        if (!users) {
+          console.error('Usuario no encontrado:', userEmail);
+          return;
+        }
+
+        const userId = Object.keys(users)[0];
+        const userRef = database.ref(`users/${userId}/subscription`);
+
+        await userRef.set({
+          type: 'collaborator',
+          status: 'active',
+          grantedAt: firebase.database.ServerValue.TIMESTAMP,
+          grantedBy: currentFirebaseUser.uid,
+          plan: 'free_collaborator'
+        });
+
+        // También agregar a VIP
+        const vipRef = database.ref(`vip_users/${userId}`);
+        await vipRef.set({
+          isVip: true,
+          isCollaborator: true,
+          markedAt: firebase.database.ServerValue.TIMESTAMP,
+          markedBy: currentFirebaseUser.uid,
+          followers: 0
+        });
+
+        console.log(`Acceso de colaborador otorgado a ${userEmail}`);
+      } catch (error) {
+        console.error('Error otorgando acceso de colaborador:', error);
+      }
     }
 
     // Función para seguir/dejar de seguir usuarios VIP
