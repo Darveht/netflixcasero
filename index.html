@@ -3215,6 +3215,364 @@
       });
     }
 
+    // Variables globales necesarias
+    let isScreenLocked = false;
+    let isPlayingIntro = false;
+    let controlsTimeout = null;
+    
+    // URL del intro de IBTV
+    const introVideoUrl = 'https://dl.dropboxusercontent.com/scl/fi/h5ekhsy1045o93jdnp6ff/video_BAACAgEAAxkBAAIBimg_Hd9a9bpAMm37Sz-eBpNb-0gZAAKnBgAC_aH4RQ4rFHrAoNZHNgQ.mp4?rlkey=hpz7w3qyd67yboabi09svgl64&st=embhl2dy';
+
+    // Función para manejar clics de películas especiales
+    function handleMovieClick(movieId) {
+      if (movieId === 'notemuevas') {
+        showSeriesDetail('notemuevas');
+      }
+    }
+
+    // Función para inicializar el sistema de estreno
+    function initializePremiereSystem() {
+      // Cargar calificaciones
+      loadRatings();
+      
+      // Configurar navegación
+      setupNavigation();
+      
+      // Configurar búsqueda
+      setupSearch();
+      
+      // Actualizar indicadores cada minuto
+      updateReleaseIndicators();
+      setInterval(updateReleaseIndicators, 60000);
+      
+      // Inicializar sistema de seguimiento VIP
+      initializeVIPFollowSystem();
+    }
+
+    // Sistema de navegación
+    function setupNavigation() {
+      const navButtons = document.querySelectorAll('.bottom-nav button');
+      
+      navButtons.forEach(button => {
+        button.addEventListener('click', function() {
+          // Remover active de todos
+          navButtons.forEach(btn => btn.classList.remove('active'));
+          
+          // Agregar active al clickeado
+          this.classList.add('active');
+          
+          // Manejar navegación
+          const buttonId = this.id;
+          
+          if (buttonId === 'navHome') {
+            showHomeSection();
+          } else if (buttonId === 'navSearch') {
+            showSearchSection();
+          } else if (buttonId === 'navSettings') {
+            showSettingsSection();
+          }
+        });
+      });
+    }
+
+    // Mostrar sección home
+    function showHomeSection() {
+      hideAllSections();
+      document.getElementById('homeSection').style.display = 'block';
+    }
+
+    // Mostrar sección de búsqueda
+    function showSearchSection() {
+      hideAllSections();
+      document.getElementById('searchSection').classList.add('active');
+    }
+
+    // Mostrar sección de ajustes
+    function showSettingsSection() {
+      hideAllSections();
+      document.getElementById('settingsSection').classList.add('active');
+      loadCurrentSettings();
+    }
+
+    // Ocultar todas las secciones
+    function hideAllSections() {
+      document.getElementById('homeSection').style.display = 'none';
+      document.getElementById('searchSection').classList.remove('active');
+      document.getElementById('settingsSection').classList.remove('active');
+    }
+
+    // Cerrar sección de búsqueda
+    function closeSearchSection() {
+      document.getElementById('searchSection').classList.remove('active');
+      showHomeSection();
+      
+      // Activar botón home
+      document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active'));
+      document.getElementById('navHome').classList.add('active');
+    }
+
+    // Cerrar sección de ajustes
+    function closeSettingsSection() {
+      document.getElementById('settingsSection').classList.remove('active');
+      showHomeSection();
+      
+      // Activar botón home
+      document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active'));
+      document.getElementById('navHome').classList.add('active');
+    }
+
+    // Sistema de búsqueda
+    function setupSearch() {
+      const searchInput = document.getElementById('searchInput');
+      const searchBtn = document.getElementById('searchBtn');
+      
+      searchBtn.addEventListener('click', performSearch);
+      searchInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+          performSearch();
+        }
+      });
+    }
+
+    // Realizar búsqueda
+    function performSearch() {
+      const query = document.getElementById('searchInput').value.trim();
+      if (!query) return;
+      
+      showSearchSection();
+      
+      // Mostrar loading
+      document.getElementById('searchLoading').classList.remove('hidden');
+      document.getElementById('searchResultsGrid').innerHTML = '';
+      document.getElementById('searchNoResults').classList.add('hidden');
+      
+      // Simular búsqueda
+      setTimeout(() => {
+        const results = searchContent(query);
+        displaySearchResults(results, query);
+        document.getElementById('searchLoading').classList.add('hidden');
+      }, 1000);
+    }
+
+    // Buscar contenido
+    function searchContent(query) {
+      const results = [];
+      const lowerQuery = query.toLowerCase();
+      
+      Object.values(seriesDatabase).forEach(series => {
+        if (series.title.toLowerCase().includes(lowerQuery) ||
+            series.description.toLowerCase().includes(lowerQuery) ||
+            series.genre.toLowerCase().includes(lowerQuery)) {
+          results.push(series);
+        }
+      });
+      
+      return results;
+    }
+
+    // Mostrar resultados de búsqueda
+    function displaySearchResults(results, query) {
+      const resultsGrid = document.getElementById('searchResultsGrid');
+      const noResults = document.getElementById('searchNoResults');
+      const resultsTitle = document.getElementById('searchResultsTitle');
+      const resultsCount = document.getElementById('searchResultsCount');
+      
+      resultsTitle.textContent = `Resultados para "${query}"`;
+      resultsCount.textContent = `${results.length} resultado${results.length !== 1 ? 's' : ''} encontrado${results.length !== 1 ? 's' : ''}`;
+      
+      if (results.length === 0) {
+        noResults.classList.remove('hidden');
+        return;
+      }
+      
+      resultsGrid.innerHTML = '';
+      
+      results.forEach(series => {
+        const resultItem = document.createElement('div');
+        resultItem.className = 'search-result-item';
+        resultItem.onclick = () => showSeriesDetail(series.id);
+        
+        resultItem.innerHTML = `
+          <div class="search-result-poster">
+            <img src="${series.poster}" alt="${series.title}">
+          </div>
+          <div class="search-result-content">
+            <h3 class="search-result-title">${series.title}</h3>
+            <div class="search-result-meta">
+              <span>${series.year}</span>
+              <span>${series.type === 'movie' ? 'Película' : 'Serie'}</span>
+              <span>${series.rating}</span>
+            </div>
+            <p class="search-result-description">${series.description}</p>
+          </div>
+        `;
+        
+        resultsGrid.appendChild(resultItem);
+      });
+    }
+
+    // Sistema VIP de seguimiento
+    function initializeVIPFollowSystem() {
+      // Cargar estado de seguimiento
+      const followState = JSON.parse(localStorage.getItem('vip_follow_state') || '{}');
+      
+      // Configurar estado inicial
+      Object.keys(followState).forEach(userId => {
+        const button = document.querySelector(`[data-user-id="${userId}"] .vip-follow-btn`);
+        if (button && followState[userId]) {
+          button.classList.add('following');
+          button.innerHTML = '<i class="fas fa-user-check"></i> Siguiendo';
+        }
+      });
+    }
+
+    // Función para seguir/dejar de seguir usuarios VIP
+    function toggleFollow(userId) {
+      const button = document.querySelector(`[data-user-id="${userId}"] .vip-follow-btn`);
+      const followersElement = document.getElementById(`followers-${userId}`);
+      
+      if (!button || !followersElement) return;
+      
+      const followState = JSON.parse(localStorage.getItem('vip_follow_state') || '{}');
+      const isFollowing = followState[userId] || false;
+      
+      // Obtener número actual de seguidores
+      const currentText = followersElement.textContent;
+      let currentCount = parseInt(currentText.replace(/[^\d]/g, ''));
+      
+      if (!isFollowing) {
+        // Seguir
+        followState[userId] = true;
+        button.classList.add('following');
+        button.innerHTML = '<i class="fas fa-user-check"></i> Siguiendo';
+        currentCount++;
+      } else {
+        // Dejar de seguir
+        followState[userId] = false;
+        button.classList.remove('following');
+        button.innerHTML = '<i class="fas fa-user-plus"></i> Seguir';
+        currentCount--;
+      }
+      
+      // Actualizar contador en tiempo real
+      followersElement.textContent = `${currentCount.toLocaleString()} seguidores`;
+      
+      // Guardar estado
+      localStorage.setItem('vip_follow_state', JSON.stringify(followState));
+      
+      // Mostrar feedback visual
+      showFollowFeedback(button, !isFollowing);
+    }
+
+    // Mostrar feedback de seguimiento
+    function showFollowFeedback(button, isFollowing) {
+      const feedback = document.createElement('div');
+      feedback.textContent = isFollowing ? '¡Siguiendo!' : 'Dejaste de seguir';
+      feedback.style.cssText = `
+        position: absolute;
+        top: -40px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: ${isFollowing ? '#10b981' : '#6b7280'};
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+        z-index: 1000;
+        pointer-events: none;
+        opacity: 0;
+        animation: feedbackPop 2s ease-out;
+      `;
+      
+      button.style.position = 'relative';
+      button.appendChild(feedback);
+      
+      setTimeout(() => {
+        if (feedback.parentNode) {
+          feedback.parentNode.removeChild(feedback);
+        }
+      }, 2000);
+    }
+
+    // Cargar configuraciones actuales
+    function loadCurrentSettings() {
+      // Cargar perfil del usuario
+      if (userProfile) {
+        document.getElementById('currentProfileName').textContent = userProfile.name || 'Usuario';
+      }
+      
+      // Cargar configuraciones guardadas
+      const settings = JSON.parse(localStorage.getItem('ibtv_settings') || '{}');
+      
+      document.getElementById('autoplayToggle').checked = settings.autoplay !== false;
+      document.getElementById('videoQuality').value = settings.videoQuality || 'auto';
+      document.getElementById('interfaceLanguage').value = settings.language || 'es';
+      document.getElementById('preferredAudio').value = settings.preferredAudio || 'original';
+      document.getElementById('defaultSubtitles').checked = settings.defaultSubtitles || false;
+      document.getElementById('releaseNotifications').checked = settings.releaseNotifications !== false;
+      document.getElementById('reminderNotifications').checked = settings.reminderNotifications !== false;
+      document.getElementById('parentalControl').value = settings.parentalControl || 'all';
+    }
+
+    // Guardar ajustes
+    function saveSettings() {
+      const settings = {
+        autoplay: document.getElementById('autoplayToggle').checked,
+        videoQuality: document.getElementById('videoQuality').value,
+        language: document.getElementById('interfaceLanguage').value,
+        preferredAudio: document.getElementById('preferredAudio').value,
+        defaultSubtitles: document.getElementById('defaultSubtitles').checked,
+        releaseNotifications: document.getElementById('releaseNotifications').checked,
+        reminderNotifications: document.getElementById('reminderNotifications').checked,
+        parentalControl: document.getElementById('parentalControl').value
+      };
+      
+      localStorage.setItem('ibtv_settings', JSON.stringify(settings));
+      showSettingsMessage('Configuración guardada correctamente');
+    }
+
+    // Restablecer ajustes
+    function resetSettings() {
+      localStorage.removeItem('ibtv_settings');
+      loadCurrentSettings();
+      showSettingsMessage('Configuración restablecida a valores predeterminados');
+    }
+
+    // Mostrar mensaje de ajustes
+    function showSettingsMessage(message) {
+      const messageEl = document.createElement('div');
+      messageEl.style.cssText = `
+        position: fixed;
+        bottom: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(29, 155, 240, 0.9);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        z-index: 5000;
+        backdrop-filter: blur(12px);
+      `;
+      messageEl.textContent = message;
+      
+      document.body.appendChild(messageEl);
+      
+      setTimeout(() => {
+        if (messageEl.parentNode) {
+          messageEl.parentNode.removeChild(messageEl);
+        }
+      }, 3000);
+    }
+
+    // Manejar cambio de idioma
+    function handleLanguageChange(language) {
+      localStorage.setItem('ibtv_language', language);
+      showSettingsMessage('Idioma cambiado. Recarga la página para ver los cambios.');
+    }
+
     // Inicializar el sistema cuando se carga la página
     document.addEventListener('DOMContentLoaded', async function() {
       const authenticated = await checkAuthentication();
@@ -3920,6 +4278,257 @@
         playButton.style.cursor = 'pointer';
         playButton.onclick = () => playEpisode(1, 1);
       }
+    }
+
+    // Funciones del reproductor de video
+    function closeVideoPlayer() {
+      videoPlayer.classList.remove('active');
+      document.body.classList.remove('video-playing');
+      
+      if (videoElement) {
+        videoElement.pause();
+        videoElement.removeAttribute('src');
+        videoElement.load();
+      }
+      
+      if (progressUpdateInterval) {
+        clearInterval(progressUpdateInterval);
+      }
+      
+      currentVideo = null;
+      isPlayingIntro = false;
+      isScreenLocked = false;
+    }
+
+    // Función para alternar reproducción/pausa
+    function togglePlayPause() {
+      if (!videoElement) return;
+      
+      if (videoElement.paused) {
+        videoElement.play();
+      } else {
+        videoElement.pause();
+      }
+    }
+
+    // Funciones de control de video
+    function rewind() {
+      if (videoElement) {
+        videoElement.currentTime = Math.max(0, videoElement.currentTime - 10);
+      }
+    }
+
+    function forward() {
+      if (videoElement) {
+        videoElement.currentTime = Math.min(videoElement.duration, videoElement.currentTime + 10);
+      }
+    }
+
+    // Función para alternar silencio
+    function toggleMute() {
+      if (!videoElement) return;
+      
+      videoElement.muted = !videoElement.muted;
+      const volumeBtn = document.getElementById('volumeBtn');
+      
+      if (videoElement.muted) {
+        volumeBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+      } else {
+        volumeBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+      }
+    }
+
+    // Función para alternar subtítulos
+    function toggleSubtitles() {
+      if (!videoElement || !videoElement.textTracks) return;
+      
+      const textTracks = videoElement.textTracks;
+      const subtitlesBtn = document.getElementById('subtitlesBtn');
+      
+      if (textTracks.length === 0) {
+        showErrorMessage('No hay subtítulos disponibles para este contenido');
+        return;
+      }
+      
+      let activeTrack = null;
+      for (let i = 0; i < textTracks.length; i++) {
+        if (textTracks[i].mode === 'showing') {
+          activeTrack = textTracks[i];
+          break;
+        }
+      }
+      
+      if (activeTrack) {
+        activeTrack.mode = 'disabled';
+        subtitlesBtn.style.color = '#71767b';
+        showErrorMessage('Subtítulos desactivados');
+      } else {
+        textTracks[0].mode = 'showing';
+        subtitlesBtn.style.color = '#1d9bf0';
+      }
+    }
+
+    // Función para alternar idioma de audio
+    function toggleAudioLanguage() {
+      if (!currentSeries || !currentSeries.audioTracks) {
+        showErrorMessage('No hay pistas de audio alternativas disponibles');
+        return;
+      }
+      
+      const tracks = Object.keys(currentSeries.audioTracks);
+      const currentIndex = tracks.indexOf(currentSeries.currentAudioTrack || 'original');
+      const nextIndex = (currentIndex + 1) % tracks.length;
+      const nextTrack = tracks[nextIndex];
+      
+      currentSeries.currentAudioTrack = nextTrack;
+      videoElement.src = currentSeries.audioTracks[nextTrack];
+      
+      const currentTime = videoElement.currentTime;
+      videoElement.load();
+      videoElement.currentTime = currentTime;
+      videoElement.play();
+      
+      showErrorMessage(`Audio: ${nextTrack}`);
+    }
+
+    // Función para configurar subtítulos
+    function configureSubtitles() {
+      if (!currentSeries || !currentSeries.subtitles) return;
+      
+      // Remover tracks existentes
+      const existingTracks = videoElement.querySelectorAll('track');
+      existingTracks.forEach(track => track.remove());
+      
+      // Agregar nuevos tracks
+      Object.keys(currentSeries.subtitles).forEach(language => {
+        const track = document.createElement('track');
+        track.kind = 'captions';
+        track.src = currentSeries.subtitles[language];
+        track.srclang = language;
+        track.label = language === 'spanish' ? 'Español' : 'English';
+        
+        if (language === 'spanish') {
+          track.default = true;
+        }
+        
+        videoElement.appendChild(track);
+      });
+    }
+
+    // Función para actualizar duración
+    function updateDuration() {
+      if (!videoElement || !durationElement) return;
+      
+      const duration = videoElement.duration;
+      if (!isNaN(duration)) {
+        durationElement.textContent = formatTime(duration);
+      }
+    }
+
+    // Función para actualizar duración en tiempo real
+    function updateRealTimeDuration(episodeId) {
+      if (!videoElement) return;
+      
+      videoElement.addEventListener('loadedmetadata', () => {
+        const duration = videoElement.duration;
+        if (!isNaN(duration)) {
+          const durationEl = document.getElementById(`duration-${episodeId}`);
+          if (durationEl) {
+            durationEl.textContent = formatTime(duration);
+          }
+        }
+      });
+    }
+
+    // Función para formatear tiempo
+    function formatTime(seconds) {
+      const hours = Math.floor(seconds / 3600);
+      const minutes = Math.floor((seconds % 3600) / 60);
+      const secs = Math.floor(seconds % 60);
+      
+      if (hours > 0) {
+        return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+      } else {
+        return `${minutes}:${secs.toString().padStart(2, '0')}`;
+      }
+    }
+
+    // Función para iniciar actualización de progreso
+    function startProgressUpdate() {
+      if (progressUpdateInterval) {
+        clearInterval(progressUpdateInterval);
+      }
+      
+      progressUpdateInterval = setInterval(() => {
+        if (videoElement && !videoElement.paused) {
+          const progress = (videoElement.currentTime / videoElement.duration) * 100;
+          videoProgressFill.style.width = `${progress}%`;
+          currentTimeElement.textContent = formatTime(videoElement.currentTime);
+        }
+      }, 1000);
+    }
+
+    // Función para mostrar/ocultar botón de play
+    function showPlayButton() {
+      // Implementar si es necesario
+    }
+
+    function hidePlayButton() {
+      // Implementar si es necesario
+    }
+
+    // Función para habilitar pantalla completa y rotación
+    function enableVideoFullscreenAndRotation() {
+      // Forzar orientación landscape en móviles si es posible
+      if (screen.orientation && screen.orientation.lock) {
+        screen.orientation.lock('landscape').catch(() => {
+          // Ignorar error si no se puede bloquear orientación
+        });
+      }
+    }
+
+    // Función para mostrar mensaje de error
+    function showErrorMessage(message) {
+      const errorEl = document.createElement('div');
+      errorEl.style.cssText = `
+        position: fixed;
+        bottom: 100px;
+        left: 50%;
+        transform: translateX(-50%);
+        background: rgba(239, 68, 68, 0.9);
+        color: white;
+        padding: 12px 20px;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        z-index: 5000;
+        backdrop-filter: blur(12px);
+      `;
+      errorEl.textContent = message;
+      
+      document.body.appendChild(errorEl);
+      
+      setTimeout(() => {
+        if (errorEl.parentNode) {
+          errorEl.parentNode.removeChild(errorEl);
+        }
+      }, 3000);
+    }
+
+    // Función para mostrar mensaje de bloqueo
+    function showLockedMessage(series) {
+      showErrorMessage('Este contenido no está disponible aún. Revisa la fecha de estreno.');
+    }
+
+    // Función para mostrar mensaje de bloqueo de pantalla
+    function showLockMessage(message) {
+      showErrorMessage(message);
+    }
+
+    // Función para actualizar cuenta regresiva a junio
+    function updateCountdownToJune() {
+      // Esta función ya no es necesaria para NO TE MUEVAS
+      // ya que está completamente desbloqueada
     }
 
     // Función para mostrar mensaje de estreno del 11 de junio
