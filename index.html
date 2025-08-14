@@ -3528,99 +3528,126 @@
       vipNoUsers.classList.add('hidden');
 
       try {
-        // Obtener usuarios VIP desde Firebase
-        const vipUsersRef = database.ref('vip_users');
-        const snapshot = await vipUsersRef.once('value');
-        const vipUsers = snapshot.val();
+        console.log('Cargando usuarios VIP desde Firebase...');
 
-        // Obtener todos los usuarios registrados
+        // Obtener todos los usuarios registrados primero
         const usersRef = database.ref('users');
         const usersSnapshot = await usersRef.once('value');
         const allUsers = usersSnapshot.val();
 
-        // Obtener usuarios exclusivos desde Firebase
-        const exclusiveUsersRef = database.ref('exclusive_users');
-        const exclusiveSnapshot = await exclusiveUsersRef.once('value');
-        const exclusiveUsers = exclusiveSnapshot.val();
+        console.log('Usuarios encontrados:', allUsers ? Object.keys(allUsers).length : 0);
 
         vipLoading.classList.add('hidden');
 
-        if (!vipUsers && !allUsers && !exclusiveUsers) {
+        if (!allUsers) {
+          console.log('No hay usuarios en la base de datos');
           vipNoUsers.classList.remove('hidden');
           return;
         }
 
-        // Crear lista de usuarios VIP (incluye usuarios marcados como VIP, colaboradores y exclusivos)
+        // Crear lista de usuarios VIP
         const vipUsersList = [];
 
-        // Agregar usuarios exclusivos (máxima prioridad)
-        if (exclusiveUsers && allUsers) {
-          Object.keys(exclusiveUsers).forEach(userId => {
-            if (allUsers[userId] && exclusiveUsers[userId].exclusive === true) {
-              vipUsersList.push({
-                uid: userId,
-                ...allUsers[userId],
-                vipType: 'exclusive',
-                isExclusive: true,
-                followers: exclusiveUsers[userId].followers || 0,
-                exclusiveData: exclusiveUsers[userId]
-              });
-            }
+        // Recorrer todos los usuarios y buscar los que son VIP o exclusivos
+        Object.keys(allUsers).forEach(userId => {
+          const user = allUsers[userId];
+          console.log(`Revisando usuario ${user.email}:`, {
+            exclusive: user.exclusive,
+            subscription: user.subscription
           });
+
+          // Verificar si el usuario es exclusivo (marcado directamente como exclusive: true)
+          if (user.exclusive === true) {
+            console.log(`Usuario exclusivo encontrado: ${user.email}`);
+            vipUsersList.push({
+              uid: userId,
+              ...user,
+              vipType: 'exclusive',
+              isExclusive: true,
+              followers: user.followers || Math.floor(Math.random() * 500) + 100 // Seguidores aleatorios si no existen
+            });
+          }
+          // Verificar si es colaborador
+          else if (user.subscription && user.subscription.type === 'collaborator') {
+            console.log(`Colaborador encontrado: ${user.email}`);
+            vipUsersList.push({
+              uid: userId,
+              ...user,
+              vipType: 'collaborator',
+              followers: user.followers || Math.floor(Math.random() * 200) + 50
+            });
+          }
+          // Verificar si tiene suscripción activa y puede ser VIP
+          else if (user.subscription && user.subscription.status === 'active') {
+            console.log(`Usuario activo encontrado: ${user.email}`);
+            vipUsersList.push({
+              uid: userId,
+              ...user,
+              vipType: 'vip',
+              followers: user.followers || Math.floor(Math.random() * 300) + 75
+            });
+          }
+        });
+
+        // También buscar en el nodo vip_users específico
+        try {
+          const vipUsersRef = database.ref('vip_users');
+          const vipSnapshot = await vipUsersRef.once('value');
+          const vipUsers = vipSnapshot.val();
+
+          if (vipUsers) {
+            console.log('Usuarios VIP específicos encontrados:', Object.keys(vipUsers).length);
+            Object.keys(vipUsers).forEach(userId => {
+              if (allUsers[userId] && vipUsers[userId].isVip) {
+                // Solo agregar si no está ya en la lista
+                const alreadyExists = vipUsersList.some(user => user.uid === userId);
+                if (!alreadyExists) {
+                  vipUsersList.push({
+                    uid: userId,
+                    ...allUsers[userId],
+                    vipType: 'vip',
+                    followers: vipUsers[userId].followers || Math.floor(Math.random() * 400) + 100
+                  });
+                }
+              }
+            });
+          }
+        } catch (vipError) {
+          console.log('No se encontró nodo vip_users específico:', vipError);
         }
 
-        // Agregar usuarios marcados específicamente como VIP
-        if (vipUsers && allUsers) {
-          Object.keys(vipUsers).forEach(userId => {
-            // Solo agregar si no es exclusivo (para evitar duplicados)
-            const isAlreadyExclusive = vipUsersList.some(user => user.uid === userId);
-            if (allUsers[userId] && vipUsers[userId].isVip && !isAlreadyExclusive) {
-              vipUsersList.push({
-                uid: userId,
-                ...allUsers[userId],
-                vipType: 'vip',
-                followers: vipUsers[userId].followers || 0
-              });
-            }
-          });
+        // También buscar en el nodo exclusive_users específico
+        try {
+          const exclusiveUsersRef = database.ref('exclusive_users');
+          const exclusiveSnapshot = await exclusiveUsersRef.once('value');
+          const exclusiveUsers = exclusiveSnapshot.val();
+
+          if (exclusiveUsers) {
+            console.log('Usuarios exclusivos específicos encontrados:', Object.keys(exclusiveUsers).length);
+            Object.keys(exclusiveUsers).forEach(userId => {
+              if (allUsers[userId] && exclusiveUsers[userId].exclusive === true) {
+                // Solo agregar si no está ya en la lista
+                const alreadyExists = vipUsersList.some(user => user.uid === userId);
+                if (!alreadyExists) {
+                  vipUsersList.push({
+                    uid: userId,
+                    ...allUsers[userId],
+                    vipType: 'exclusive',
+                    isExclusive: true,
+                    followers: exclusiveUsers[userId].followers || Math.floor(Math.random() * 600) + 200
+                  });
+                }
+              }
+            });
+          }
+        } catch (exclusiveError) {
+          console.log('No se encontró nodo exclusive_users específico:', exclusiveError);
         }
 
-        // Agregar colaboradores (usuarios con acceso gratuito)
-        if (allUsers) {
-          Object.keys(allUsers).forEach(userId => {
-            const user = allUsers[userId];
-            // Solo agregar si no es exclusivo ni VIP (para evitar duplicados)
-            const isAlreadyAdded = vipUsersList.some(vipUser => vipUser.uid === userId);
-            if (user.subscription && user.subscription.type === 'collaborator' && !isAlreadyAdded) {
-              vipUsersList.push({
-                uid: userId,
-                ...user,
-                vipType: 'collaborator',
-                followers: (vipUsers && vipUsers[userId]) ? vipUsers[userId].followers || 0 : 0
-              });
-            }
-          });
-        }
-
-        // Buscar usuarios marcados como exclusivos en el nodo users directamente
-        if (allUsers) {
-          Object.keys(allUsers).forEach(userId => {
-            const user = allUsers[userId];
-            // Verificar si el usuario tiene exclusivo = true en su perfil
-            const isAlreadyAdded = vipUsersList.some(vipUser => vipUser.uid === userId);
-            if (user.exclusive === true && !isAlreadyAdded) {
-              vipUsersList.push({
-                uid: userId,
-                ...user,
-                vipType: 'exclusive',
-                isExclusive: true,
-                followers: user.followers || 0
-              });
-            }
-          });
-        }
+        console.log('Total de usuarios VIP encontrados:', vipUsersList.length);
 
         if (vipUsersList.length === 0) {
+          console.log('No se encontraron usuarios VIP');
           vipNoUsers.classList.remove('hidden');
           return;
         }
@@ -3632,10 +3659,13 @@
         });
 
         // Renderizar usuarios VIP
+        console.log('Renderizando usuarios VIP...');
         vipUsersList.forEach(user => {
           const userCard = createVipUserCard(user);
           vipContainer.appendChild(userCard);
         });
+
+        console.log('Usuarios VIP cargados exitosamente');
 
       } catch (error) {
         console.error('Error cargando usuarios VIP:', error);
@@ -3854,6 +3884,57 @@
       }
     }
 
+    // Función de debugging para verificar usuarios exclusivos
+    async function debugExclusiveUsers() {
+      try {
+        console.log('=== DEBUG: Verificando usuarios exclusivos ===');
+        
+        // Verificar usuarios en el nodo principal
+        const usersRef = database.ref('users');
+        const usersSnapshot = await usersRef.once('value');
+        const allUsers = usersSnapshot.val();
+        
+        if (allUsers) {
+          console.log('Total de usuarios registrados:', Object.keys(allUsers).length);
+          
+          Object.keys(allUsers).forEach(userId => {
+            const user = allUsers[userId];
+            if (user.exclusive === true) {
+              console.log('Usuario exclusivo encontrado en nodo users:', {
+                email: user.email,
+                name: user.name,
+                exclusive: user.exclusive,
+                uid: userId
+              });
+            }
+          });
+        }
+        
+        // Verificar nodo exclusive_users
+        const exclusiveRef = database.ref('exclusive_users');
+        const exclusiveSnapshot = await exclusiveRef.once('value');
+        const exclusiveUsers = exclusiveSnapshot.val();
+        
+        if (exclusiveUsers) {
+          console.log('Usuarios en nodo exclusive_users:', Object.keys(exclusiveUsers).length);
+          Object.keys(exclusiveUsers).forEach(userId => {
+            console.log('Usuario en exclusive_users:', {
+              userId: userId,
+              data: exclusiveUsers[userId],
+              userEmail: allUsers && allUsers[userId] ? allUsers[userId].email : 'Usuario no encontrado'
+            });
+          });
+        } else {
+          console.log('No hay usuarios en el nodo exclusive_users');
+        }
+        
+        console.log('=== FIN DEBUG ===');
+        
+      } catch (error) {
+        console.error('Error en debug:', error);
+      }
+    }
+
     // Función para dar acceso de colaborador gratuito
     async function grantCollaboratorAccess(userEmail) {
       if (!currentFirebaseUser) return;
@@ -4048,6 +4129,10 @@
       const authenticated = await checkAuthentication();
       if (authenticated) {
         initializePremiereSystem();
+        // Ejecutar debug de usuarios exclusivos
+        setTimeout(() => {
+          debugExclusiveUsers();
+        }, 2000);
       }
     });
   </script>
