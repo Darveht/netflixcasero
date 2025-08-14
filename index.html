@@ -2378,6 +2378,113 @@
       }
     }
 
+    /* Estilos para la sección VIP */
+    .vip-users-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+      padding: 0 16px;
+    }
+
+    .vip-user-card {
+      background: #202327;
+      border-radius: 12px;
+      padding: 20px;
+      border: 1px solid #333639;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      transition: all 0.3s ease;
+      cursor: pointer;
+    }
+
+    .vip-user-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 32px rgba(29, 155, 240, 0.3);
+      border-color: #1d9bf0;
+    }
+
+    .vip-user-avatar {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      overflow: hidden;
+      flex-shrink: 0;
+      position: relative;
+    }
+
+    .vip-user-avatar img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .vip-user-info {
+      flex-grow: 1;
+    }
+
+    .vip-user-name {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 16px;
+      font-weight: 700;
+      color: #ffffff;
+      margin-bottom: 4px;
+    }
+
+    .vip-verified {
+      color: #1d9bf0;
+      font-size: 14px;
+    }
+
+    .vip-followers-count {
+      font-size: 13px;
+      color: #71767b;
+      font-weight: 500;
+    }
+
+    .vip-follow-btn {
+      background: #1d9bf0;
+      color: #ffffff;
+      border: none;
+      padding: 10px 16px;
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      white-space: nowrap;
+    }
+
+    .vip-follow-btn:hover {
+      background: #1a8cd8;
+    }
+
+    .vip-follow-btn.following {
+      background: #333639;
+      color: #ffffff;
+      border: 1px solid #71767b;
+    }
+
+    .vip-follow-btn.following:hover {
+      background: #44474a;
+      border-color: #909497;
+    }
+
+    .vip-follow-btn i {
+      font-size: 14px;
+    }
+
+    @media (max-width: 768px) {
+      .vip-users-container {
+        grid-template-columns: 1fr;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -2404,7 +2511,7 @@
     <!-- Banner principal -->
     <div class="hero-banner" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url('https://i.ytimg.com/vi/4f3hG-5grlw/maxresdefault.jpg');">
       <div class="hero-content">
-        <h1 class="hero-title">DON'T LOOK AWAY</h1>
+        <h1 class="hero-title">NO TE MUEVAS</h1>
         <p class="hero-description">Una aterradora experiencia cinematográfica que desafía los límites del horror psicológico.</p>
 
         <div class="hero-buttons">
@@ -2525,6 +2632,97 @@
                 <div class="carousel-item-info">Película completa</div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sección VIP -->
+      <div class="section">
+        <h2 class="section-title">VIP</h2>
+        <div class="vip-users-container">
+          <div class="vip-user-card" data-user-id="user1">
+            <div class="vip-user-avatar">
+              <img src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&h=150&fit=crop&crop=face" alt="Usuario VIP">
+            </div>
+            <div class="vip-user-info">
+              <div class="vip-user-name">
+                <span>@alexcinema</span>
+                <i class="fas fa-check-circle vip-verified"></i>
+              </div>
+              <div class="vip-followers-count" id="followers-user1">1,247 seguidores</div>
+            </div>
+            <button class="vip-follow-btn" onclick="toggleFollow('user1')">
+              <i class="fas fa-user-plus"></i>
+              Seguir
+            </button>
+          </div>
+
+          <div class="vip-user-card" data-user-id="user2">
+            <div class="vip-user-avatar">
+              <img src="https://images.unsplash.com/photo-1494790108755-2616b332c3cd?w=150&h=150&fit=crop&crop=face" alt="Usuario VIP">
+            </div>
+            <div class="vip-user-info">
+              <div class="vip-user-name">
+                <span>@horrorqueen</span>
+                <i class="fas fa-check-circle vip-verified"></i>
+              </div>
+              <div class="vip-followers-count" id="followers-user2">2,891 seguidores</div>
+            </div>
+            <button class="vip-follow-btn" onclick="toggleFollow('user2')">
+              <i class="fas fa-user-plus"></i>
+              Seguir
+            </button>
+          </div>
+
+          <div class="vip-user-card" data-user-id="user3">
+            <div class="vip-user-avatar">
+              <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face" alt="Usuario VIP">
+            </div>
+            <div class="vip-user-info">
+              <div class="vip-user-name">
+                <span>@filmcritic</span>
+                <i class="fas fa-check-circle vip-verified"></i>
+              </div>
+              <div class="vip-followers-count" id="followers-user3">892 seguidores</div>
+            </div>
+            <button class="vip-follow-btn" onclick="toggleFollow('user3')">
+              <i class="fas fa-user-plus"></i>
+              Seguir
+            </button>
+          </div>
+
+          <div class="vip-user-card" data-user-id="user4">
+            <div class="vip-user-avatar">
+              <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face" alt="Usuario VIP">
+            </div>
+            <div class="vip-user-info">
+              <div class="vip-user-name">
+                <span>@moviebuff</span>
+                <i class="fas fa-check-circle vip-verified"></i>
+              </div>
+              <div class="vip-followers-count" id="followers-user4">3,456 seguidores</div>
+            </div>
+            <button class="vip-follow-btn" onclick="toggleFollow('user4')">
+              <i class="fas fa-user-plus"></i>
+              Seguir
+            </button>
+          </div>
+
+          <div class="vip-user-card" data-user-id="user5">
+            <div class="vip-user-avatar">
+              <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face" alt="Usuario VIP">
+            </div>
+            <div class="vip-user-info">
+              <div class="vip-user-name">
+                <span>@screamfan</span>
+                <i class="fas fa-check-circle vip-verified"></i>
+              </div>
+              <div class="vip-followers-count" id="followers-user5">1,678 seguidores</div>
+            </div>
+            <button class="vip-follow-btn" onclick="toggleFollow('user5')">
+              <i class="fas fa-user-plus"></i>
+              Seguir
+            </button>
           </div>
         </div>
       </div>
@@ -3455,7 +3653,7 @@
         return true; // Siempre disponible
       }
 
-      // Otras películas funcionan normalmente
+      // Otras películas funcionan normally
       if (!series.releaseDate) return true;
 
       const now = new Date();
@@ -3483,7 +3681,7 @@
 
           if (series.id === 'notemuevas') {
             // Manejo especial para NO TE MUEVAS con cuenta regresiva
-            updateCountdown();
+            updateCountdownToJune();
           } else if (badgeElement) {
             // Manejo estándar para otras películas
             const lockElement = document.getElementById(`${series.id}-lock`);
@@ -3902,11 +4100,6 @@
       });
     }
 
-    // Variables para el sistema de intro
-    let isPlayingIntro = false;
-    let pendingContent = null;
-    const introVideoUrl = 'https://dl.dropboxusercontent.com/scl/fi/1mvudm8f06i3p59yfnaon/copy_8AB790B8-7052-4F60-954E-346631026EF3.mov?rlkey=jinxuowzhjvpp88usjx2m3779&st=cskg34yd&dl=1';
-
     // Función para reproducir intro de IBTV
     function playIBTVIntro(callback) {
       isPlayingIntro = true;
@@ -4190,1716 +4383,6 @@
         videoElement.addEventListener('error', onError);
 
         startProgressUpdate();
-      }
-
-    // Función para mostrar botón de play prominente
-    function showPlayButton() {
-      let bigPlayBtn = document.getElementById('bigPlayButton');
-      if (!bigPlayBtn) {
-        bigPlayBtn = document.createElement('div');
-        bigPlayBtn.id = 'bigPlayButton';
-        bigPlayBtn.style.cssText = `
-          position: absolute;
-          top: 50%;
-          left: 50%;
-          transform: translate(-50%, -50%);
-          background: rgba(29, 155, 240, 0.9);
-          border-radius: 50%;
-          width: 80px;
-          height: 80px;
-          display: flex;
-          align-items: center;
-          justify-content: center;
-          color: white;
-          font-size: 32px;
-          cursor: pointer;
-          z-index: 30;
-          backdrop-filter: blur(12px);
-          border: 3px solid rgba(255,255,255,0.3);
-        `;
-        bigPlayBtn.innerHTML = '<i class="fas fa-play"></i>';
-        bigPlayBtn.onclick = () => {
-          videoElement.play();
-        };
-        document.querySelector('.video-player-container').appendChild(bigPlayBtn);
-      }
-      bigPlayBtn.style.display = 'flex';
-    }
-
-    // Función para ocultar botón de play prominente
-    function hidePlayButton() {
-      const bigPlayBtn = document.getElementById('bigPlayButton');
-      if (bigPlayBtn) {
-        bigPlayBtn.style.display = 'none';
-      }
-    }
-
-    // Funciones de traducción
-    async function translateText(text, targetLang = 'en') {
-      if (isTranslating || !text || text.trim() === '') return text;
-
-      try {
-        isTranslating = true;
-
-        // Usar API gratuita de Google Translate (limitada pero funcional)
-        const response = await fetch(`https://translate.googleapis.com/translate_a/single?client=gtx&sl=es&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`);
-
-        if (!response.ok) {
-          throw new Error('Translation failed');
-        }
-
-        const data = await response.json();
-        const translatedText = data[0][0][0];
-
-        isTranslating = false;
-        return translatedText || text;
-      } catch (error) {
-        console.warn('Translation error:', error);
-        isTranslating = false;
-
-        // Fallback a traducciones predefinidas
-        return interfaceTexts[text] || text;
-      }
-    }
-
-    function getTranslation(key, targetLang = currentLanguage) {
-      if (targetLang === 'es') return key;
-
-      // Usar traducciones predefinidas si están disponibles
-      if (interfaceTexts[key]) {
-        return interfaceTexts[key];
-      }
-
-      // Si no hay traducción predefinida, usar cache
-      if (translations[`${key}_${targetLang}`]) {
-        return translations[`${key}_${targetLang}`];
-      }
-
-      return key; // Fallback al texto original
-    }
-
-    async function changeLanguage(newLang) {
-      if (newLang === currentLanguage) return;
-
-      currentLanguage = newLang;
-      localStorage.setItem('ibtv_language', newLang);
-
-      // Mostrar mensaje de cambio de idioma
-      showLanguageChangeMessage();
-
-      // Traducir interfaz
-      await translateInterface();
-
-      // Actualizar configuración
-      updateLanguageSettings();
-    }
-
-    async function translateInterface() {
-      if (currentLanguage === 'es') {
-        // Restaurar textos originales en español
-        restoreOriginalTexts();
-        return;
-      }
-
-      const elementsToTranslate = [
-        // Navegación
-        { selector: '.bottom-nav button span', index: 0, key: 'Inicio' },
-        { selector: '.bottom-nav button span', index: 1, key: 'Buscar' },
-        { selector: '.bottom-nav button span', index: 2, key: 'Ajustes' },
-
-        // Secciones de contenido
-        { selector: '.section-title', index: 0, key: 'Películas' },
-        { selector: '.section-title', index: 1, key: 'Tendencias' },
-        { selector: '.section-title', index: 2, key: 'Anime' },
-        { selector: '.section-title', index: 3, key: 'Terror' },
-
-        // Placeholder de búsqueda
-        { selector: '#searchInput', attr: 'placeholder', key: 'Buscar series y películas' },
-
-        // Títulos de configuración
-        { selector: '.settings-title', key: 'Configuración' },
-        { selector: '.settings-subtitle', key: 'Personaliza tu experiencia de visualización' },
-
-        // Títulos de grupos en configuración
-        { selector: '.settings-group-title', index: 0, key: 'Reproducción', skip: 'i' },
-        { selector: '.settings-group-title', index: 1, key: 'Idioma y Audio', skip: 'i' },
-        { selector: '.settings-group-title', index: 2, key: 'Notificaciones', skip: 'i' },
-        { selector: '.settings-group-title', index: 3, key: 'Control Parental', skip: 'i' },
-
-        // Botones de configuración
-        { selector: '.settings-btn.secondary', key: 'Restablecer', skip: 'i' },
-        { selector: '.settings-btn.primary', key: 'Guardar Cambios', skip: 'i' }
-      ];
-
-      for (const item of elementsToTranslate) {
-        const elements = document.querySelectorAll(item.selector);
-        const element = item.index !== undefined ? elements[item.index] : elements[0];
-
-        if (element) {
-          const translation = getTranslation(item.key, currentLanguage);
-
-          if (item.attr) {
-            element.setAttribute(item.attr, translation);
-          } else {
-            // Preservar iconos si es necesario
-            if (item.skip === 'i') {
-              const icon = element.querySelector('i');
-              element.textContent = translation;
-              if (icon) {
-                element.insertBefore(icon, element.firstChild);
-              }
-            } else {
-              element.textContent = translation;
-            }
-          }
-        }
-      }
-
-      // Traducir elementos dinámicos
-      translateDynamicContent();
-    }
-
-    function translateDynamicContent() {
-      // Traducir badges de películas
-      document.querySelectorAll('.movie-badge').forEach(badge => {
-        if (badge.textContent === 'Película') {
-          badge.textContent = getTranslation('Película', currentLanguage);
-        }
-        if (badge.textContent === 'Cortometraje') {
-          badge.textContent = getTranslation('Cortometraje', currentLanguage);
-        }
-      });
-
-      // Traducir badges de estreno
-      document.querySelectorAll('.premiere-badge').forEach(badge => {
-        if (badge.textContent === 'Estreno') {
-          badge.textContent = getTranslation('Estreno', currentLanguage);
-        }
-      });
-
-      // Traducir badges en vivo
-      document.querySelectorAll('.live-badge').forEach(badge => {
-        if (badge.textContent === 'EN VIVO') {
-          badge.textContent = getTranslation('EN VIVO', currentLanguage);
-        }
-      });
-    }
-
-    function restoreOriginalTexts() {
-      // Restaurar textos originales en español
-      const originalTexts = {
-        '.bottom-nav button span': ['Inicio', 'Buscar', 'Ajustes'],
-        '.section-title': ['Películas', 'Tendencias', 'Anime', 'Terror'],
-        '#searchInput': { attr: 'placeholder', text: 'Buscar series y películas' },
-        '.settings-title': 'Configuración',
-        '.settings-subtitle': 'Personaliza tu experiencia de visualización'
-      };
-
-      Object.entries(originalTexts).forEach(([selector, texts]) => {
-        const elements = document.querySelectorAll(selector);
-
-        if (Array.isArray(texts)) {
-          texts.forEach((text, index) => {
-            if (elements[index]) {
-              elements[index].textContent = text;
-            }
-          });
-        } else if (texts.attr) {
-          if (elements[0]) {
-            elements[0].setAttribute(texts.attr, texts.text);
-          }
-        } else {
-          if (elements[0]) {
-            elements[0].textContent = texts;
-          }
-        }
-      });
-
-      // Restaurar badges
-      document.querySelectorAll('.movie-badge').forEach(badge => {
-        if (badge.textContent === 'Movie') badge.textContent = 'Película';
-        if (badge.textContent === 'Cortometraje') badge.textContent = 'Cortometraje';
-      });
-      document.querySelectorAll('.premiere-badge').forEach(badge => {
-        if (badge.textContent === 'Premiere') badge.textContent = 'Estreno';
-      });
-      document.querySelectorAll('.live-badge').forEach(badge => {
-        if (badge.textContent === 'LIVE') badge.textContent = 'EN VIVO';
-      });
-    }
-
-    function showLanguageChangeMessage() {
-      const messages = {
-        'en': 'Language changed to English',
-        'pt': 'Idioma alterado para Português',
-        'es': 'Idioma cambiado a Español'
-      };
-
-      const message = messages[currentLanguage] || 'Language changed';
-      showTranslationMessage(message);
-    }
-
-    function showTranslationMessage(message) {
-      const messageEl = document.createElement('div');
-      messageEl.style.cssText = `
-        position: fixed;
-        top: 20%;
-        left: 50%;
-        transform: translateX(-50%);
-        background: linear-gradient(45deg, #1d9bf0, #00c9ff);
-        color: white;
-        padding: 12px 20px;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 600;
-        z-index: 5000;
-        backdrop-filter: blur(12px);
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        box-shadow: 0 4px 20px rgba(29, 155, 240, 0.4);
-        animation: languageNotification 3s ease-in-out;
-      `;
-
-      messageEl.innerHTML = `
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <i class="fas fa-language"></i>
-          <span>${message}</span>
-        </div>
-      `;
-
-      document.body.appendChild(messageEl);
-
-      setTimeout(() => {
-        if (messageEl.parentNode) {
-          messageEl.parentNode.removeChild(messageEl);
-        }
-      }, 3000);
-    }
-
-    function updateLanguageSettings() {
-      const interfaceLanguageSelect = document.getElementById('interfaceLanguage');
-      if (interfaceLanguageSelect) {
-        interfaceLanguageSelect.value = currentLanguage;
-      }
-    }
-
-    // Función para mostrar mensajes de error
-    function showErrorMessage(message) {
-      const errorEl = document.createElement('div');
-      errorEl.style.cssText = `
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: rgba(220, 53, 69, 0.9);
-        color: white;
-        padding: 20px;
-        border-radius: 10px;
-        font-size: 16px;
-        z-index: 5000;
-        text-align: center;
-        backdrop-filter: blur(12px);
-        max-width: 300px;
-      `;
-      errorEl.textContent = message;
-
-      document.body.appendChild(errorEl);
-
-      setTimeout(() => {
-        if (errorEl.parentNode) {
-          errorEl.parentNode.removeChild(errorEl);
-        }
-      }, 3000);
-    }
-
-    // Función para mostrar notificación especial de transmisión EN VIVO
-    function showLiveNotification(message) {
-      const notificationEl = document.createElement('div');
-      notificationEl.style.cssText = `
-        position: fixed;
-        top: 20%;
-        left: 50%;
-        transform: translateX(-50%);
-        background: linear-gradient(45deg, #ff0000, #ff4444);
-        color: white;
-        padding: 15px 20px;
-        border-radius: 10px;
-        font-size: 14px;
-        font-weight: 600;
-        z-index: 5000;
-        text-align: center;
-        backdrop-filter: blur(12px);
-        max-width: 350px;
-        border: 2px solid rgba(255, 255, 255, 0.3);
-        box-shadow: 0 8px 32px rgba(255, 0, 0, 0.4);
-        animation: liveNotificationPulse 6s ease-in-out;
-      `;
-      notificationEl.innerHTML = `
-        <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 8px;">
-          <div style="width: 8px; height: 8px; background: white; border-radius: 50%; animation: liveDotPulse 1s ease-in-out infinite;"></div>
-          <span style="font-weight: 800; text-transform: uppercase; letter-spacing: 1px;">TRANSMISIÓN EN VIVO</span>
-        </div>
-        <div style="font-size: 12px; opacity: 0.9;">${message}</div>
-      `;
-
-      document.body.appendChild(notificationEl);
-
-      setTimeout(() => {
-        if (notificationEl.parentNode) {
-          notificationEl.parentNode.removeChild(notificationEl);
-        }
-      }, 6000);
-    }
-
-    // Función para cerrar reproductor
-    function closeVideoPlayer() {
-      // Restablecer orientación
-      resetVideoOrientation();
-
-      videoPlayer.classList.remove('active');
-      videoElement.pause();
-      videoElement.innerHTML = ''; // Limpiar todas las fuentes
-      videoElement.load(); // Recargar elemento
-      clearInterval(progressUpdateInterval);
-      clearTimeout(controlsTimeout); // Limpiar timeout de controles
-      currentVideo = null;
-
-      // Remover clase del body
-      document.body.classList.remove('video-playing');
-
-      // Ocultar botón de play grande si existe
-      hidePlayButton();
-
-      // Mostrar controles nuevamente para la próxima reproducción
-      const header = document.querySelector('.video-player-header');
-      const controls = document.querySelector('.video-player-controls');
-      if (header && controls) {
-        header.classList.remove('hidden');
-        controls.classList.remove('hidden');
-        controlsVisible = true;
-      }
-    }
-
-    // Controles del reproductor
-    function togglePlayPause() {
-      if (videoElement.paused) {
-        videoElement.play();
-      } else {
-        videoElement.pause();
-      }
-    }
-
-    function rewind() {
-      videoElement.currentTime = Math.max(0, videoElement.currentTime - 10);
-    }
-
-    function forward() {
-      videoElement.currentTime = Math.min(videoElement.duration, videoElement.currentTime + 10);
-    }
-
-    function toggleMute() {
-      if (videoElement.muted || videoElement.volume === 0) {
-        videoElement.muted = false;
-        videoElement.volume = 1.0;
-        volumeBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
-      } else {
-        videoElement.muted = true;
-        volumeBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
-      }
-    }
-
-    // Función para actualizar duración en tiempo real
-    function updateRealTimeDuration(episodeId) {
-      if (videoElement.duration) {
-        const realDuration = formatTime(videoElement.duration);
-
-        // Actualizar en la base de datos
-        if (currentSeries && currentVideo) {
-          currentVideo.duration = realDuration;
-        }
-
-        // Actualizar en la UI
-        const durationElement = document.getElementById(`duration-${episodeId}`);
-        if (durationElement) {
-          durationElement.textContent = realDuration;
-        }
-
-        console.log(`Duración real detectada: ${realDuration}`);
-      }
-    }
-
-    // Función para configurar subtítulos
-    function configureSubtitles() {
-      // Limpiar subtítulos existentes
-      const existingTracks = videoElement.querySelectorAll('track');
-      existingTracks.forEach(track => track.remove());
-
-      // Resetear contador de subtítulos
-      currentSubtitleTrack = -1;
-
-      // Agregar subtítulos disponibles
-      if (currentSeries && currentSeries.subtitles) {
-        let trackCount = 0;
-
-        // Agregar subtítulos en español
-        if (currentSeries.subtitles.spanish) {
-          const spanishTrack = document.createElement('track');
-          spanishTrack.kind = 'subtitles';
-          spanishTrack.srclang = 'es';
-          spanishTrack.label = 'Español';
-          spanishTrack.default = trackCount === 0;
-
-          if (currentSeries.subtitles.spanish.type === 'inline') {
-            // Crear VTT dinámicamente desde datos inline
-            const vttContent = createVTTFromInlineData(currentSeries.subtitles.spanish.cues);
-            const vttBlob = new Blob([vttContent], { type: 'text/vtt' });
-            spanishTrack.src = URL.createObjectURL(vttBlob);
-          } else {
-            spanishTrack.src = currentSeries.subtitles.spanish;
-          }
-
-          videoElement.appendChild(spanishTrack);
-          trackCount++;
-        }
-
-        // Agregar subtítulos en inglés
-        if (currentSeries.subtitles.english) {
-          const englishTrack = document.createElement('track');
-          englishTrack.kind = 'subtitles';
-          englishTrack.srclang = 'en';
-          englishTrack.label = 'English';
-          englishTrack.default = trackCount === 0;
-
-          if (currentSeries.subtitles.english.type === 'inline') {
-            const vttContent = createVTTFromInlineData(currentSeries.subtitles.english.cues);
-            const vttBlob = new Blob([vttContent], { type: 'text/vtt' });
-            englishTrack.src = URL.createObjectURL(vttBlob);
-          } else {
-            englishTrack.src = currentSeries.subtitles.english;
-          }
-
-          videoElement.appendChild(englishTrack);
-          trackCount++;
-        }
-
-        // Agregar subtítulos en portugués
-        if (currentSeries.subtitles.portuguese) {
-          const portugueseTrack = document.createElement('track');
-          portugueseTrack.kind = 'subtitles';
-          portugueseTrack.srclang = 'pt';
-          portugueseTrack.label = 'Português';
-          portugueseTrack.default = trackCount === 0;
-
-          if (currentSeries.subtitles.portuguese.type === 'inline') {
-            const vttContent = createVTTFromInlineData(currentSeries.subtitles.portuguese.cues);
-            const vttBlob = new Blob([vttContent], { type: 'text/vtt' });
-            portugueseTrack.src = URL.createObjectURL(vttBlob);
-          } else {
-            portugueseTrack.src = currentSeries.subtitles.portuguese;
-          }
-
-          videoElement.appendChild(portugueseTrack);
-          trackCount++;
-        }
-
-        // Mostrar mensaje de subtítulos disponibles
-        if (trackCount > 0) {
-          const languages = [];
-          if (currentSeries.subtitles.spanish) languages.push('Español');
-          if (currentSeries.subtitles.english) languages.push('English');
-          if (currentSeries.subtitles.portuguese) languages.push('Português');
-
-          setTimeout(() => {
-            showSubtitleMessage(`Subtítulos disponibles: ${languages.join(', ')}`);
-          }, 1000);
-        }
-      }
-
-      // Actualizar botón de subtítulos
-      updateSubtitlesButton();
-    }
-
-    // Función para crear contenido VTT desde datos inline
-    function createVTTFromInlineData(cues) {
-      let vttContent = 'WEBVTT\n\n';
-
-      cues.forEach((cue, index) => {
-        vttContent += `${index + 1}\n`;
-        vttContent += `${cue.start} --> ${cue.end}\n`;
-        vttContent += `${cue.text}\n\n`;
-      });
-
-      return vttContent;
-    }
-
-    // Variables para subtítulos
-    let currentSubtitleTrack = -1; // -1 = sin subtítulos, 0+ = índice del track
-
-    // Función para alternar subtítulos
-    function toggleSubtitles() {
-      const tracks = videoElement.textTracks;
-
-      if (tracks.length === 0) {
-        showSubtitleMessage('No hay subtítulos disponibles para este contenido');
-        return;
-      }
-
-      // Desactivar track actual
-      if (currentSubtitleTrack >= 0 && tracks[currentSubtitleTrack]) {
-        tracks[currentSubtitleTrack].mode = 'hidden';
-      }
-
-      // Avanzar al siguiente track
-      currentSubtitleTrack++;
-
-      if (currentSubtitleTrack >= tracks.length) {
-        currentSubtitleTrack = -1; // Sin subtítulos
-        showSubtitleMessage('Subtítulos desactivados');
-      } else {
-        tracks[currentSubtitleTrack].mode = 'showing';
-        const language = tracks[currentSubtitleTrack].language;
-        const label = tracks[currentSubtitleTrack].label;
-        showSubtitleMessage(`Subtítulos: ${label || language}`);
-      }
-
-      updateSubtitlesButton();
-    }
-
-    // Función para mostrar mensaje de subtítulos
-    function showSubtitleMessage(message) {
-      // Crear elemento de mensaje temporal
-      const messageEl = document.createElement('div');
-      messageEl.style.cssText = `
-        position: absolute;
-        top: 20%;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(0, 0, 0, 0.8);
-        color: white;
-        padding: 10px 20px;
-        border-radius: 5px;
-        font-size: 16px;
-        z-index: 100;
-        pointer-events: none;
-      `;
-      messageEl.textContent = message;
-
-      const playerContainer = document.querySelector('.video-player-container');
-      playerContainer.appendChild(messageEl);
-
-      // Remover mensaje después de 2 segundos
-      setTimeout(() => {
-        if (messageEl.parentNode) {
-          messageEl.parentNode.removeChild(messageEl);
-        }
-      }, 2000);
-    }
-
-    // Función para actualizar el botón de subtítulos
-    function updateSubtitlesButton() {
-      const subtitlesBtn = document.getElementById('subtitlesBtn');
-      const tracks = videoElement.textTracks;
-
-      // Verificar si hay track activo
-      const hasActiveTrack = currentSubtitleTrack >= 0 &&
-                            tracks[currentSubtitleTrack] &&
-                            tracks[currentSubtitleTrack].mode === 'showing';
-
-      // Cambiar color del botón
-      if (hasActiveTrack) {
-        subtitlesBtn.style.color = '#1d9bf0';
-        subtitlesBtn.style.background = 'rgba(29, 155, 240, 0.2)';
-      } else {
-        subtitlesBtn.style.color = '#ffffff';
-        subtitlesBtn.style.background = 'transparent';
-      }
-
-      // Siempre mostrar el botón pero cambiar opacidad según disponibilidad
-      subtitlesBtn.style.display = 'flex';
-      if (tracks.length > 0) {
-        subtitlesBtn.style.opacity = '1';
-        subtitlesBtn.style.cursor = 'pointer';
-      } else {
-        subtitlesBtn.style.opacity = '0.5';
-        subtitlesBtn.style.cursor = 'not-allowed';
-      }
-    }
-
-    // Función para actualizar progreso
-    function startProgressUpdate() {
-      clearInterval(progressUpdateInterval);
-      progressUpdateInterval = setInterval(() => {
-        if (videoElement.duration) {
-          const progress = (videoElement.currentTime / videoElement.duration) * 100;
-          videoProgressFill.style.width = `${progress}%`;
-          updateCurrentTime();
-        }
-      }, 100);
-    }
-
-    function updateDuration() {
-      const duration = formatTime(videoElement.duration);
-      durationElement.textContent = duration;
-    }
-
-    function updateCurrentTime() {
-      const current = formatTime(videoElement.currentTime);
-      currentTimeElement.textContent = current;
-    }
-
-    function formatTime(seconds) {
-      const mins = Math.floor(seconds / 60);
-      const secs = Math.floor(seconds % 60);
-      return `${mins}:${secs.toString().padStart(2, '0')}`;
-    }
-
-    // Event listeners para la barra de progreso
-    document.getElementById('videoProgress').addEventListener('click', (e) => {
-      const rect = e.target.getBoundingClientRect();
-      const clickX = e.clientX - rect.left;
-      const width = rect.width;
-      const percentage = clickX / width;
-      videoElement.currentTime = percentage * videoElement.duration;
-    });
-
-    // Función para saltar intro
-    function skipIntro() {
-      if (isPlayingIntro) {
-        // Simular que el intro terminó
-        const endEvent = new Event('ended');
-        videoElement.dispatchEvent(endEvent);
-      }
-    }
-
-    // Variables para controlar visibilidad de controles
-    let controlsTimeout = null;
-    let controlsVisible = true;
-
-    // Función para mostrar controles
-    function showControls() {
-      const header = document.querySelector('.video-player-header');
-      const controls = document.querySelector('.video-player-controls');
-      const container = document.querySelector('.video-player-container');
-
-      if (header && controls) {
-        header.classList.remove('hidden');
-        controls.classList.remove('hidden');
-        container.classList.add('show-cursor');
-        controlsVisible = true;
-
-        // Reiniciar timeout para ocultar controles
-        resetControlsTimeout();
-      }
-    }
-
-    // Función para ocultar controles
-    function hideControls() {
-      const header = document.querySelector('.video-player-header');
-      const controls = document.querySelector('.video-player-controls');
-      const container = document.querySelector('.video-player-container');
-
-      if (header && controls && !videoElement.paused) {
-        header.classList.add('hidden');
-        controls.classList.add('hidden');
-        container.classList.remove('show-cursor');
-        controlsVisible = false;
-      }
-    }
-
-    // Función para reiniciar el timeout de ocultar controles
-    function resetControlsTimeout() {
-      clearTimeout(controlsTimeout);
-
-      // Solo ocultar si el video está reproduciéndose
-      if (!videoElement.paused) {
-        controlsTimeout = setTimeout(() => {
-          hideControls();
-        }, 3000); // Ocultar después de 3 segundos
-      }
-    }
-
-    // Event listeners para mostrar/ocultar controles
-    const videoPlayerContainer = document.querySelector('.video-player-container');
-
-    // Mostrar controles al mover el mouse o tocar la pantalla
-    videoPlayerContainer.addEventListener('mousemove', showControls);
-    videoPlayerContainer.addEventListener('touchstart', showControls);
-    videoPlayerContainer.addEventListener('click', (e) => {
-      e.preventDefault();
-
-      if (controlsVisible) {
-        // Si los controles están visibles, play/pause
-        if (!isPlayingIntro) {
-          togglePlayPause();
-        }
-      } else {
-        // Si los controles están ocultos, solo mostrarlos
-        showControls();
-      }
-    });
-
-    // Mostrar controles cuando el video se pausa
-    videoElement.addEventListener('pause', () => {
-      clearTimeout(controlsTimeout);
-      showControls();
-    });
-
-    // Iniciar timeout cuando el video empieza a reproducirse
-    videoElement.addEventListener('play', () => {
-      resetControlsTimeout();
-    });
-
-    // Event listeners para toques en el video (play/pause, pero no durante intro)
-    videoElement.addEventListener('click', (e) => {
-      e.preventDefault();
-      if (!isPlayingIntro && controlsVisible) {
-        togglePlayPause();
-      }
-    });
-
-    // Agregar botón de "Saltar Intro" durante la reproducción del intro
-    function showSkipIntroButton() {
-      let skipButton = document.getElementById('skipIntroButton');
-      if (!skipButton) {
-        skipButton = document.createElement('div');
-        skipButton.id = 'skipIntroButton';
-        skipButton.style.cssText = `
-          position: absolute;
-          bottom: 100px;
-          right: 20px;
-          background: rgba(0, 0, 0, 0.8);
-          color: white;
-          padding: 8px 16px;
-          border-radius: 4px;
-          font-size: 14px;
-          font-weight: 600;
-          cursor: pointer;
-          z-index: 50;
-          backdrop-filter: blur(8px);
-          border: 1px solid rgba(255, 255, 255, 0.2);
-          transition: all 0.2s ease;
-          animation: fadeInSkip 0.5s ease-in-out;
-        `;
-        skipButton.innerHTML = '→ Saltar Intro';
-        skipButton.onclick = skipIntro;
-
-        // Agregar estilo de animación
-        const skipStyle = document.createElement('style');
-        skipStyle.textContent = `
-          @keyframes fadeInSkip {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-          }
-          #skipIntroButton:hover {
-            background: rgba(29, 155, 240, 0.8);
-            transform: translateY(-2px);
-          }
-        `;
-        document.head.appendChild(skipStyle);
-
-        document.querySelector('.video-player-container').appendChild(skipButton);
-      }
-      skipButton.style.display = 'block';
-    }
-
-    function hideSkipIntroButton() {
-      const skipButton = document.getElementById('skipIntroButton');
-      if (skipButton) {
-        skipButton.style.display = 'none';
-      }
-    }
-
-    // Modificar la función del intro para mostrar botón de saltar
-    const originalPlayIBTVIntro = playIBTVIntro;
-    playIBTVIntro = function(callback) {
-      // Mostrar botón de saltar intro después de 3 segundos
-      setTimeout(() => {
-        if (isPlayingIntro) {
-          showSkipIntroButton();
-        }
-      }, 3000);
-
-      // Función original
-      originalPlayIBTVIntro.call(this, callback);
-    };
-
-    // Ocultar botón cuando termine el intro
-    const originalPlayMainContent = playMainContent;
-    playMainContent = function(episode) {
-      hideSkipIntroButton();
-      originalPlayMainContent.call(this, episode);
-    };
-
-    const originalPlayTrailerContent = playTrailerContent;
-    playTrailerContent = function(trailerVideo) {
-      hideSkipIntroButton();
-      originalPlayTrailerContent.call(this, trailerVideo);
-    };
-
-    // Keyboard shortcuts
-    document.addEventListener('keydown', (e) => {
-      if (videoPlayer.classList.contains('active')) {
-        switch(e.key) {
-          case 'Escape':
-            if (isPlayingIntro) {
-              skipIntro();
-            }
-            break;
-          case 's':
-          case 'S':
-            if (isPlayingIntro) {
-              skipIntro();
-            }
-            break;
-        }
-      }
-    });
-
-    // Prevenir comportamientos nativos de iOS
-    videoElement.addEventListener('webkitbeginfullscreen', (e) => {
-      e.preventDefault();
-      return false;
-    });
-
-    videoElement.addEventListener('webkitendfullscreen', (e) => {
-      e.preventDefault();
-      return false;
-    });
-
-    // Prevenir contexto de menú
-    videoElement.addEventListener('contextmenu', (e) => {
-      e.preventDefault();
-      return false;
-    });
-
-    // Variables para el sistema de bloqueo
-    let isScreenLocked = false;
-
-    // Función para bloquear pantalla
-    function lockScreen() {
-      if (!videoPlayer.classList.contains('active')) return;
-
-      isScreenLocked = true;
-      document.getElementById('screenLockOverlay').classList.add('active');
-
-      // Ocultar controles del video
-      const header = document.querySelector('.video-player-header');
-      const controls = document.querySelector('.video-player-controls');
-      if (header && controls) {
-        header.style.display = 'none';
-        controls.style.display = 'none';
-      }
-
-      // Mostrar mensaje
-      showLockMessage('Pantalla bloqueada - Toca el botón para desbloquear');
-    }
-
-    // Función para desbloquear pantalla
-    function unlockScreen() {
-      isScreenLocked = false;
-      document.getElementById('screenLockOverlay').classList.remove('active');
-
-      // Mostrar controles del video
-      const header = document.querySelector('.video-player-header');
-      const controls = document.querySelector('.video-player-controls');
-      if (header && controls) {
-        header.style.display = 'flex';
-        controls.style.display = 'block';
-      }
-
-      // Mostrar mensaje
-      showLockMessage('Pantalla desbloqueada');
-    }
-
-    // Función para mostrar mensaje de bloqueo
-    function showLockMessage(message) {
-      const messageEl = document.createElement('div');
-      messageEl.style.cssText = `
-        position: fixed;
-        top: 20%;
-        left: 50%;
-        transform: translateX(-50%);
-        background: rgba(0, 0, 0, 0.9);
-        color: #ffffff;
-        padding: 12px 20px;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 600;
-        z-index: 7000;
-        backdrop-filter: blur(12px);
-        border: 2px solid rgba(29, 155, 240, 0.3);
-        animation: lockMessageFade 3s ease-in-out;
-      `;
-      messageEl.innerHTML = `
-        <div style="display: flex; align-items: center; gap: 8px;">
-          <i class="fas fa-${isScreenLocked ? 'lock' : 'unlock'}"></i>
-          <span>${message}</span>
-        </div>
-      `;
-
-      document.body.appendChild(messageEl);
-
-      setTimeout(() => {
-        if (messageEl.parentNode) {
-          messageEl.parentNode.removeChild(messageEl);
-        }
-      }, 3000);
-    }
-
-    // Manejo automático de rotación de pantalla
-    function handleOrientationChange() {
-      if (videoPlayer.classList.contains('active')) {
-        // Forzar rotación landscape automáticamente
-        setTimeout(() => {
-          forceAutoRotation();
-        }, 100);
-      }
-    }
-
-    // Función para forzar rotación automática
-    function forceAutoRotation() {
-      const video = document.getElementById('videoElement');
-      if (video && videoPlayer.classList.contains('active')) {
-        // Forzar orientación landscape en móviles
-        if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-          // Intentar bloquear orientación landscape
-          if (screen.orientation && screen.orientation.lock) {
-            screen.orientation.lock('landscape-primary').catch(() => {
-              screen.orientation.lock('landscape').catch(() => {
-                console.log('No se pudo forzar orientación landscape');
-              });
-            });
-          }
-
-          // Configurar dimensiones del video
-          video.style.width = '100vw';
-          video.style.height = '100vh';
-          video.style.objectFit = 'contain';
-
-          // Forzar pantalla completa si es posible
-          const container = document.querySelector('.video-player-container');
-          if (container) {
-            container.style.width = '100vw';
-            container.style.height = '100vh';
-          }
-        }
-      }
-    }
-
-    // Detectar cambios de orientación
-    window.addEventListener('orientationchange', handleOrientationChange);
-    window.addEventListener('resize', handleOrientationChange);
-
-    // Prevenir acciones cuando la pantalla está bloqueada
-    document.addEventListener('click', (e) => {
-      if (isScreenLocked && !e.target.closest('#screenLockOverlay')) {
-        e.preventDefault();
-        e.stopPropagation();
-        return false;
-      }
-    }, true);
-
-    document.addEventListener('touchstart', (e) => {
-      if (isScreenLocked && !e.target.closest('#screenLockOverlay')) {
-        e.preventDefault();
-        e.stopPropagation();
-        return false;
-      }
-    }, true);
-
-    // Forzar pantalla completa en móviles cuando se reproduce video
-    function enableVideoFullscreenAndRotation() {
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        // Solicitar orientación landscape cuando sea posible
-        if (screen.orientation && screen.orientation.lock) {
-          screen.orientation.lock('landscape').catch(() => {
-            console.log('No se pudo forzar orientación landscape');
-          });
-        }
-
-        // Ocultar barra de direcciones en móviles
-        setTimeout(() => {
-          window.scrollTo(0, 1);
-        }, 100);
-      }
-    }
-
-    // Restablecer orientación cuando se cierre el video
-    function resetVideoOrientation() {
-      if (/iPhone|iPad|iPod|Android/i.test(navigator.userAgent)) {
-        if (screen.orientation && screen.orientation.unlock) {
-          screen.orientation.unlock();
-        }
-      }
-    }
-
-    // Variables de búsqueda
-    let searchTimeout = null;
-    let isSearching = false;
-
-    // Función para realizar búsqueda
-    function performSearch(query) {
-      if (!query.trim()) {
-        closeSearchSection();
-        return;
-      }
-
-      // Mostrar sección de búsqueda
-      document.getElementById('searchSection').classList.add('active');
-
-      // Mostrar indicador de carga
-      showSearchLoading(true);
-
-      // Actualizar título
-      document.getElementById('searchResultsTitle').textContent = `Resultados para "${query}"`;
-
-      // Simular búsqueda con delay
-      setTimeout(() => {
-        const results = searchContent(query);
-        displaySearchResults(results, query);
-        showSearchLoading(false);
-      }, 800); // Simular tiempo de búsqueda
-    }
-
-    // Función para buscar en la base de datos
-    function searchContent(query) {
-      const results = [];
-      const searchTerm = query.toLowerCase();
-
-      // Buscar en todas las series/películas
-      Object.values(seriesDatabase).forEach(series => {
-        const titleMatch = series.title.toLowerCase().includes(searchTerm);
-        const genreMatch = series.genre.toLowerCase().includes(searchTerm);
-        const descriptionMatch = series.description.toLowerCase().includes(searchTerm);
-
-        if (titleMatch || genreMatch || descriptionMatch) {
-          results.push({
-            ...series,
-            relevance: titleMatch ? 3 : (genreMatch ? 2 : 1) // Prioridad de relevancia
-          });
-        }
-      });
-
-      // Ordenar por relevancia
-      results.sort((a, b) => b.relevance - a.relevance);
-
-      return results;
-    }
-
-    // Función para mostrar resultados
-    function displaySearchResults(results, query) {
-      const resultsGrid = document.getElementById('searchResultsGrid');
-      const noResults = document.getElementById('searchNoResults');
-      const resultsCount = document.getElementById('searchResultsCount');
-
-      // Limpiar resultados anteriores
-      resultsGrid.innerHTML = '';
-
-      if (results.length === 0) {
-        resultsGrid.classList.add('hidden');
-        noResults.classList.remove('hidden');
-        resultsCount.textContent = 'No se encontraron resultados';
-        return;
-      }
-
-      // Ocultar mensaje de "no resultados"
-      noResults.classList.add('hidden');
-      resultsGrid.classList.remove('hidden');
-
-      // Actualizar contador
-      const pluralText = results.length === 1 ? 'resultado' : 'resultados';
-      resultsCount.textContent = `${results.length} ${pluralText} encontrados`;
-
-      // Crear elementos de resultados
-      results.forEach(series => {
-        const resultElement = document.createElement('div');
-        resultElement.className = 'search-result-item';
-        resultElement.onclick = () => {
-          closeSearchSection();
-          showSeriesDetail(series.id);
-        };
-
-        // Determinar metadatos según el tipo
-        let metaInfo = '';
-        if (series.type === 'movie' || series.type === 'shortfilm') {
-          metaInfo = `
-            <span>${series.year}</span>
-            <span>${series.type === 'movie' ? 'Película' : 'Cortometraje'}</span>
-            <span>${series.genre.split(',')[0].trim()}</span>
-            <span>${series.rating}</span>
-          `;
-        } else {
-          const episodeCount = series.episodes ? series.episodes.length : 0;
-          metaInfo = `
-            <span>${series.year}</span>
-            <span>${episodeCount} episodios</span>
-            <span>${series.genre.split(',')[0].trim()}</span>
-            <span>${series.rating}</span>
-          `;
-        }
-
-        resultElement.innerHTML = `
-          <div class="search-result-poster">
-            <img src="${series.poster}" alt="${series.title}">
-            ${series.type === 'movie' ? '<div class="movie-badge">Película</div>' : ''}
-            ${series.type === 'shortfilm' ? '<div class="movie-badge">Cortometraje</div>' : ''}
-          </div>
-          <div class="search-result-content">
-            <div class="search-result-title">${series.title}</div>
-            <div class="search-result-meta">${metaInfo}</div>
-            <div class="search-result-description">${series.description}</div>
-          </div>
-        `;
-
-        resultsGrid.appendChild(resultElement);
-      });
-    }
-
-    // Función para mostrar/ocultar loading
-    function showSearchLoading(show) {
-      const loading = document.getElementById('searchLoading');
-      const resultsGrid = document.getElementById('searchResultsGrid');
-      const noResults = document.getElementById('searchNoResults');
-
-      if (show) {
-        loading.classList.remove('hidden');
-        resultsGrid.classList.add('hidden');
-        noResults.classList.add('hidden');
-        isSearching = true;
-      } else {
-        loading.classList.add('hidden');
-        isSearching = false;
-      }
-    }
-
-    // Función para cerrar sección de búsqueda
-    function closeSearchSection() {
-      document.getElementById('searchSection').classList.remove('active');
-      document.getElementById('searchInput').value = '';
-    }
-
-    // Event listeners para búsqueda
-    document.getElementById('searchBtn').addEventListener('click', () => {
-      const query = document.getElementById('searchInput').value.trim();
-      if (query && !isSearching) {
-        performSearch(query);
-      }
-    });
-
-    // Búsqueda en tiempo real mientras escribes
-    document.getElementById('searchInput').addEventListener('input', (e) => {
-      const query = e.target.value.trim();
-
-      // Limpiar timeout anterior
-      if (searchTimeout) {
-        clearTimeout(searchTimeout);
-      }
-
-      // Si no hay query, cerrar búsqueda
-      if (!query) {
-        closeSearchSection();
-        return;
-      }
-
-      // Búsqueda con delay para evitar muchas llamadas
-      searchTimeout = setTimeout(() => {
-        if (!isSearching) {
-          performSearch(query);
-        }
-      }, 500); // Esperar 500ms después de que el usuario deje de escribir
-    });
-
-    // Enter para buscar
-    document.getElementById('searchInput').addEventListener('keypress', (e) => {
-      if (e.key === 'Enter') {
-        const query = e.target.value.trim();
-        if (query && !isSearching) {
-          // Cancelar búsqueda automática y hacer búsqueda inmediata
-          if (searchTimeout) {
-            clearTimeout(searchTimeout);
-          }
-          performSearch(query);
-        }
-      }
-    });
-
-    // Navegación inferior
-    document.getElementById('navHome').addEventListener('click', () => {
-      closeSearchSection();
-      closeSeriesDetail();
-      closeSettingsSection();
-      updateNavigation('navHome');
-    });
-
-    document.getElementById('navSearch').addEventListener('click', () => {
-      closeSeriesDetail();
-      closeSettingsSection();
-      document.getElementById('searchInput').focus();
-      updateNavigation('navSearch');
-    });
-
-    document.getElementById('navSettings').addEventListener('click', () => {
-      closeSearchSection();
-      closeSeriesDetail();
-      showSettingsSection();
-      updateNavigation('navSettings');
-    });
-
-    // Funciones de ajustes
-    function showSettingsSection() {
-      document.getElementById('settingsSection').classList.add('active');
-      loadSettings();
-    }
-
-    function closeSettingsSection() {
-      document.getElementById('settingsSection').classList.remove('active');
-    }
-
-    // Manejador de cambio de idioma
-    async function handleLanguageChange(newLang) {
-      await changeLanguage(newLang);
-
-      // Mostrar mensaje de confirmación
-      const messages = {
-        'en': 'Interface language changed to English',
-        'pt': 'Idioma da interface alterado para Português',
-        'es': 'Idioma de interfaz cambiado a Español'
-      };
-
-      setTimeout(() => {
-        showSettingsMessage(messages[newLang] || 'Language changed');
-      }, 500);
-    }
-
-    function loadSettings() {
-      // Cargar configuraciones guardadas
-      const settings = JSON.parse(localStorage.getItem('ibtv_settings') || '{}');
-
-      document.getElementById('autoplayToggle').checked = settings.autoplay !== false;
-      document.getElementById('videoQuality').value = settings.videoQuality || 'auto';
-      document.getElementById('interfaceLanguage').value = currentLanguage;
-      document.getElementById('preferredAudio').value = settings.preferredAudio || 'original';
-      document.getElementById('defaultSubtitles').checked = settings.defaultSubtitles === true;
-      document.getElementById('releaseNotifications').checked = settings.releaseNotifications !== false;
-      document.getElementById('reminderNotifications').checked = settings.reminderNotifications !== false;
-      document.getElementById('parentalControl').value = settings.parentalControl || 'all';
-
-      // Mostrar información del perfil
-      if (userProfile) {
-        document.getElementById('currentProfileName').textContent = userProfile.name || 'Usuario';
-      }
-      if (currentFirebaseUser) {
-        const profileNameEl = document.getElementById('currentProfileName');
-        if (profileNameEl) {
-          profileNameEl.textContent = userProfile?.name || currentFirebaseUser.displayName || currentFirebaseUser.email;
-        }
-      }
-    }
-
-    function saveSettings() {
-      const settings = {
-        autoplay: document.getElementById('autoplayToggle').checked,
-        videoQuality: document.getElementById('videoQuality').value,
-        interfaceLanguage: currentLanguage,
-        preferredAudio: document.getElementById('preferredAudio').value,
-        defaultSubtitles: document.getElementById('defaultSubtitles').checked,
-        releaseNotifications: document.getElementById('releaseNotifications').checked,
-        reminderNotifications: document.getElementById('reminderNotifications').checked,
-        parentalControl: document.getElementById('parentalControl').value
-      };
-
-      localStorage.setItem('ibtv_settings', JSON.stringify(settings));
-
-      // Mostrar mensaje de confirmación
-      const message = getTranslation('Configuración guardada correctamente', currentLanguage);
-      showSettingsMessage(message);
-    }
-
-    function resetSettings() {
-      localStorage.removeItem('ibtv_settings');
-      loadSettings();
-      showSettingsMessage('Configuración restablecida a valores predeterminados');
-    }
-
-    function showSettingsMessage(message) {
-      const messageEl = document.createElement('div');
-      messageEl.style.cssText = `
-        position: fixed;
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        background: rgba(29, 155, 240, 0.9);
-        color: white;
-        padding: 16px 24px;
-        border-radius: 8px;
-        font-size: 14px;
-        font-weight: 600;
-        z-index: 5000;
-        backdrop-filter: blur(12px);
-      `;
-      messageEl.textContent = message;
-
-      document.body.appendChild(messageEl);
-
-      setTimeout(() => {
-        if (messageEl.parentNode) {
-          messageEl.parentNode.removeChild(messageEl);
-        }
-      }, 2000);
-    }
-
-    // Función para alternar idioma de audio
-    function toggleAudioLanguage() {
-      if (!currentSeries || !currentSeries.audioTracks) {
-        showSubtitleMessage('No hay pistas de audio alternativas disponibles');
-        return;
-      }
-
-      const tracks = Object.keys(currentSeries.audioTracks);
-      const currentIndex = tracks.indexOf(currentSeries.currentAudioTrack || 'original');
-      const nextIndex = (currentIndex + 1) % tracks.length;
-      const nextTrack = tracks[nextIndex];
-
-      // Cambiar pista de audio
-      currentSeries.currentAudioTrack = nextTrack;
-
-      // Actualizar fuente del video
-      const currentTime = videoElement.currentTime;
-      const wasPlaying = !videoElement.paused;
-
-      videoElement.src = currentSeries.audioTracks[nextTrack];
-
-      videoElement.addEventListener('loadedmetadata', function onLoad() {
-        videoElement.currentTime = currentTime;
-        if (wasPlaying) {
-          videoElement.play();
-        }
-        videoElement.removeEventListener('loadedmetadata', onLoad);
-      });
-
-      // Mostrar mensaje
-      const trackNames = {
-        original: 'Audio Original',
-        spanish: 'Español',
-        english: 'English'
-      };
-
-      showSubtitleMessage(`Audio: ${trackNames[nextTrack] || nextTrack}`);
-      updateAudioButton(nextTrack);
-    }
-
-    function updateAudioButton(currentTrack) {
-      const audioBtn = document.getElementById('audioLanguageBtn');
-      const trackColors = {
-        original: '#ffffff',
-        spanish: '#ff6b6b',
-        english: '#1d9bf0'
-      };
-
-      audioBtn.style.color = trackColors[currentTrack] || '#ffffff';
-      audioBtn.style.background = currentTrack !== 'original' ? 'rgba(29, 155, 240, 0.2)' : 'transparent';
-    }
-
-    // Función para detectar reproducir en banner principal
-    function initializeBannerDetector() {
-      const heroBannerPlay = document.getElementById('heroBannerPlay');
-
-      // Configurar para reproducir la película destacada en el banner
-      currentSeries = seriesDatabase['dontlookaway'];
-    }
-
-
-
-    // Función para actualizar navegación
-    function updateNavigation(activeId) {
-      document.querySelectorAll('.bottom-nav button').forEach(btn =>
-        btn.classList.remove('active')
-      );
-      document.getElementById(activeId).classList.add('active');
-    }
-
-    // Inicialización
-    document.addEventListener('DOMContentLoaded', () => {
-      console.log('Netflix-style app loaded');
-
-      // Inicializar sistema de idiomas
-      initializeLanguageSystem();
-
-      // Inicializar detector de banner
-      initializeBannerDetector();
-
-      // Cargar calificaciones guardadas
-      loadRatings();
-
-      // Agregar estilo de animación para notificación de estreno
-      const style = document.createElement('style');
-      style.textContent = `
-        @keyframes premiereNotification {
-          0% {
-            transform: translate(-50%, -50%) scale(0.8);
-            opacity: 0;
-          }
-          20% {
-            transform: translate(-50%, -50%) scale(1.1);
-            opacity: 1;
-          }
-          80% {
-            transform: translate(-50%, -50%) scale(1);
-            opacity: 1;
-          }
-          100% {
-            transform: translate(-50%, -50%) scale(0.9);
-            opacity: 0;
-          }
-        }
-
-        @keyframes slideInRight {
-          0% {
-            transform: translateX(100%);
-            opacity: 0;
-          }
-          20% {
-            transform: translateX(0);
-            opacity: 1;
-          }
-          80% {
-            opacity: 1;
-          }
-          100% {
-            transform: translateX(100%);
-            opacity: 0;
-          }
-        }
-
-        @keyframes liveNotificationPulse {
-          0% {
-            transform: translateX(-50%) scale(0.9);
-            opacity: 0;
-          }
-          10% {
-            transform: translateX(-50%) scale(1.05);
-            opacity: 1;
-          }
-          90% {
-            transform: translateX(-50%) scale(1);
-            opacity: 1;
-          }
-          100% {
-            transform: translateX(-50%) scale(0.95);
-            opacity: 0;
-          }
-        }
-
-        @keyframes languageNotification {
-          0% {
-            transform: translateX(-50%) scale(0.8);
-            opacity: 0;
-          }
-          15% {
-            transform: translateX(-50%) scale(1.05);
-            opacity: 1;
-          }
-          85% {
-            transform: translateX(-50%) scale(1);
-            opacity: 1;
-          }
-          100% {
-            transform: translateX(-50%) scale(0.9);
-            opacity: 0;
-          }
-        }
-
-        @keyframes lockMessageFade {
-          0% {
-            transform: translateX(-50%) scale(0.8);
-            opacity: 0;
-          }
-          10% {
-            transform: translateX(-50%) scale(1.05);
-            opacity: 1;
-          }
-          90% {
-            transform: translateX(-50%) scale(1);
-            opacity: 1;
-          }
-          100% {
-            transform: translateX(-50%) scale(0.9);
-            opacity: 0;
-          }
-        }
-      `;
-      document.head.appendChild(style);
-    });
-
-    // Inicializar sistema de idiomas
-    async function initializeLanguageSystem() {
-      // Cargar idioma guardado
-      const savedLanguage = localStorage.getItem('ibtv_language') || 'es';
-      currentLanguage = savedLanguage;
-
-      // Si no es español, traducir interfaz
-      if (currentLanguage !== 'es') {
-        await translateInterface();
-      }
-
-      console.log('Language system initialized:', currentLanguage);
-    }
-
-    // Función para limpiar emojis y fechas de la description
-    function cleanDescription(description) {
-        // Eliminar emojis (esta expresión regular puede no ser exhaustiva)
-        description = description.replace(/[\u{1F600}-\u{1F64F}\u{1F300}-\u{1F5FF}\u{1F680}-\u{1F6FF}\u{1F900}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}]/gu, '');
-
-        // Eliminar menciones de fechas y horarios
-        description = description.replace(/ESTRENO MUNDIAL:.*?Transmisión simultánea mundial - Una sola vez/g, '');
-
-        return description.trim();
-    }
-
-    // Modificar la función showSeriesDetail para limpiar la description
-    const originalShowSeriesDetail = showSeriesDetail;
-    showSeriesDetail = function(seriesId) {
-        const series = seriesDatabase[seriesId];
-        if (series) {
-            series.description = cleanDescription(series.description);
-            seriesDatabase[seriesId].description = series.description; // Actualizar en la base de datos
-        }
-        originalShowSeriesDetail.call(this, seriesId);
-    };
-
-    //Modificar la función intializePremireSystem, una vez que la pelicula se estrene, no estará más bloqueada, sino que estará disponible para ver cuando se desee.
-      function initializePremiereSystem() {
-      // Configurar fecha de estreno para NO TE MUEVAS
-      const releaseDate = createJuneReleaseDate();
-      seriesDatabase.notemuevas.releaseDate = releaseDate;
-
-      // Configurar estado inicial
-      const now = new Date();
-      if (now >= releaseDate) {
-        seriesDatabase.notemuevas.isLocked = false;
-        seriesDatabase.notemuevas.isLive = false;
-      } else {
-        seriesDatabase.notemuevas.isLocked = true;
-        seriesDatabase.notemuevas.isLive = false;
-      }
-
-      // Actualizar cuenta regresiva cada segundo
-      setInterval(updateCountdownToJune, 1000);
-
-      // Ejecutar actualización inicial
-      updateCountdownToJune();
-
-      console.log('Sistema de estreno para el 11 de junio inicializado');
-      console.log('Fecha de estreno:', releaseDate.toLocaleString('es-ES'));
-      console.log('Estado actual:', now >= releaseDate ? 'Disponible' : 'Bloqueada');
-    }
-      // Función updatePlayButton actualizada - NO TE MUEVAS ahora siempre disponible
-      function updatePlayButton(series) {
-      const playButton = document.getElementById('playButton');
-      if (!playButton) return;
-
-      if (series.id === 'notemuevas') {
-        // NO TE MUEVAS siempre disponible para ver
-        playButton.innerHTML = '<i class="fas fa-play"></i> Reproducir';
-        playButton.style.background = '#1d9bf0';
-        playButton.style.color = '#fff';
-        playButton.style.cursor = 'pointer';
-        playButton.onclick = () => playEpisode(1, 1);
-      } else if (series.isLocked && !isMovieAvailable(series)) {
-        // Otras películas bloqueadas
-        playButton.innerHTML = '<i class="fas fa-lock"></i> Próximamente';
-        playButton.style.background = '#666';
-        playButton.style.cursor = 'not-allowed';
-        playButton.onclick = () => showLockedMessage(series);
-      } else {
-        // Otras películas disponibles
-        playButton.innerHTML = '<i class="fas fa-play"></i> Reproducir';
-        playButton.style.background = '#1d9bf0';
-        playButton.style.cursor = 'pointer';
-        playButton.onclick = () => playEpisode(1, 1);
-      }
-    }
-
-      // Función para reproducir contenido de trailer después del intro
-      function playTrailerContent(trailerVideo) {
-        // Limpiar video anterior
-        videoElement.removeAttribute('src');
-        videoElement.load();
-
-        // Configurar video para máxima compatibilidad móvil
-        videoElement.setAttribute('playsinline', 'true');
-        videoElement.setAttribute('webkit-playsinline', 'true');
-        videoElement.setAttribute('x5-playsinline', 'true');
-        videoElement.setAttribute('x5-video-player-type', 'h5');
-        videoElement.controls = false;
-        videoElement.preload = 'metadata';
-        videoElement.crossOrigin = 'anonymous';
-
-        videoPlayerTitle.textContent = `${currentSeries.title} - ${trailerVideo.title}`;
-
-        // Ocultar indicador EN VIVO para trailers
-        const liveIndicator = document.getElementById('videoLiveIndicator');
-        liveIndicator.style.display = 'none';
-
-        // Configurar fuente
-        videoElement.src = trailerVideo.videoUrl;
-
-        // Event listeners para trailer
-        const onLoadedMetadata = () => {
-            updateDuration();
-            // Auto-reproducir después del intro
-            videoElement.play().catch(e => {
-              console.warn('Autoplay blocked after intro');
-              showPlayButton();
-            });
-        };
-
-        const onPlay = () => {
-            playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
-            pauseIndicator.classList.remove('visible');
-            hidePlayButton();
-        };
-
-        const onPause = () => {
-            playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
-            pauseIndicator.classList.add('visible');
-        };
-
-        const onError = (e) => {
-            console.error('Trailer error:', e);
-            showErrorMessage('Error al cargar el trailer');
-        };
-
-        videoElement.addEventListener('loadedmetadata', onLoadedMetadata);
-        videoElement.addEventListener('play', onPlay);
-        videoElement.addEventListener('pause', onPause);
-        videoElement.addEventListener('error', onError);
-
-        startProgressUpdate();
-      }
-
-      // Función para reproducir trailer (modificada para incluir intro)
-      function playTrailer() {
-        if (!currentSeries || !currentSeries.trailer) {
-            showErrorMessage('Trailer no disponible');
-            return;
-        }
-
-        // Crear objeto de trailer para reproducir
-        const trailerVideo = {
-            id: 'trailer',
-            title: 'Trailer Oficial',
-            description: 'Trailer oficial',
-            duration: '2:30',
-            thumbnail: currentSeries.poster,
-            videoUrl: currentSeries.trailer
-        };
-
-        currentVideo = trailerVideo;
-
-        // Reproducir intro de IBTV primero, luego el trailer
-        playIBTVIntro(() => {
-          playTrailerContent(trailerVideo);
-        });
       }
 
       // Función de descarga de contenido actual
