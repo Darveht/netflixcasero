@@ -2662,6 +2662,74 @@
       }
     }
 
+    /* Animaciones estilo Twitter moderno */
+    @keyframes socialPulse {
+      0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 20px rgba(29, 155, 240, 0.3);
+      }
+      50% {
+        transform: scale(1.05);
+        box-shadow: 0 0 30px rgba(29, 155, 240, 0.5);
+      }
+    }
+
+    @keyframes tweetBadge {
+      0%, 100% {
+        transform: translateY(0px);
+        box-shadow: 0 2px 8px rgba(29, 155, 240, 0.2);
+      }
+      50% {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(29, 155, 240, 0.4);
+      }
+    }
+
+    @keyframes liveBeat {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+      50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+      }
+    }
+
+    @keyframes successPop {
+      0% {
+        transform: scale(0);
+        opacity: 0;
+      }
+      50% {
+        transform: scale(1.2);
+        opacity: 1;
+      }
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    /* Hover effects estilo Twitter */
+    .movie-tweet-card:hover {
+      background: rgba(255, 255, 255, 0.05) !important;
+      border-color: rgba(29, 155, 240, 0.3) !important;
+      transform: translateY(-1px);
+    }
+
+    #notifyButton:hover {
+      background: rgba(29, 155, 240, 0.1) !important;
+      border-color: #1d9bf0 !important;
+      transform: translateY(-1px);
+    }
+
+    #notifyButton.activated {
+      background: #10b981 !important;
+      border-color: #10b981 !important;
+      color: white !important;
+    }
+
     @media (max-width: 768px) {
       .vip-users-container {
         grid-template-columns: 1fr;
@@ -2691,82 +2759,53 @@
 
   <!-- Sección principal -->
   <div id="homeSection" class="app-container">
-    <!-- Sección de Programación en Vivo -->
-    <div class="live-programming-section" style="padding: 40px 16px; background: linear-gradient(135deg, rgba(255, 0, 0, 0.1), rgba(255, 69, 0, 0.1)); border-bottom: 2px solid rgba(255, 0, 0, 0.3); margin-bottom: 30px;">
-      <div class="live-header" style="text-align: center; margin-bottom: 30px;">
-        <h2 style="font-size: 32px; font-weight: 800; color: #ffffff; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 12px;">
-          <i class="fas fa-broadcast-tower" style="color: #ff0000; animation: livePulse 2s ease-in-out infinite;"></i>
-          PROGRAMACIÓN EN VIVO
-        </h2>
-        <p style="color: #71767b; font-size: 16px;">Próximos estrenos exclusivos en tiempo real</p>
+    <!-- Sección de Programación en Vivo estilo Twitter -->
+    <div class="live-programming-section" style="padding: 20px 16px; background: rgba(32, 35, 39, 0.5); border: 1px solid #333639; border-radius: 16px; margin: 20px 16px; backdrop-filter: blur(12px);">
+      <!-- Header minimalista -->
+      <div class="live-header" style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #333639;">
+        <div style="background: linear-gradient(45deg, #1d9bf0, #00c9ff); width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: socialPulse 2s ease-in-out infinite;">
+          <i class="fas fa-video" style="color: white; font-size: 18px;"></i>
+        </div>
+        <div>
+          <h2 style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0; line-height: 1.2;">Programación en Vivo</h2>
+          <p style="color: #71767b; font-size: 14px; margin: 0;">Próximo estreno exclusivo</p>
+        </div>
       </div>
 
-      <div class="live-content-card" style="background: rgba(0, 0, 0, 0.6); border-radius: 16px; padding: 24px; border: 2px solid rgba(255, 0, 0, 0.3); position: relative; overflow: hidden;">
-        <!-- Efecto de brillo animado -->
-        <div style="position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; background: linear-gradient(45deg, transparent, rgba(255, 0, 0, 0.3), transparent); border-radius: 18px; z-index: -1; animation: borderGlow 3s ease-in-out infinite;"></div>
-        
-        <div style="display: flex; gap: 20px; align-items: center;">
-          <div class="live-poster" style="position: relative; width: 120px; height: 160px; border-radius: 12px; overflow: hidden; flex-shrink: 0;">
-            <img src="https://i.ytimg.com/vi/i229gWn3Z5A/maxresdefault.jpg" alt="Cortometraje 17 Agosto" style="width: 100%; height: 100%; object-fit: cover;">
-            <div class="locked-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(20, 20, 20, 0.9)); display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; border-radius: 12px; backdrop-filter: blur(8px);">
-              <div class="locked-icon" style="font-size: 32px; margin-bottom: 8px; color: #ff0000; animation: lockPulse 2s ease-in-out infinite;">
-                <i class="fas fa-lock"></i>
-              </div>
-              <div style="font-size: 10px; text-align: center; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">BLOQUEADO</div>
+      <!-- Contenido de la película -->
+      <div class="movie-tweet-card" style="background: rgba(255, 255, 255, 0.03); border-radius: 12px; padding: 16px; border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.2s ease;">
+        <div style="display: flex; gap: 16px;">
+          <!-- Poster -->
+          <div class="movie-poster" style="position: relative; width: 80px; height: 120px; border-radius: 8px; overflow: hidden; flex-shrink: 0;">
+            <img src="https://i.postimg.cc/L6QqNgJd/espejo-adentro.jpg" alt="El Espejo de Adentro" style="width: 100%; height: 100%; object-fit: cover;">
+            <div style="position: absolute; top: 6px; right: 6px; background: rgba(255, 0, 0, 0.9); color: white; padding: 2px 6px; border-radius: 4px; font-size: 8px; font-weight: 700; animation: liveBeat 1.5s ease-in-out infinite;">
+              EN VIVO
             </div>
           </div>
 
-          <div class="live-info" style="flex: 1;">
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-              <span class="live-badge" style="background: linear-gradient(45deg, #ff0000, #ff4444); color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 700; text-transform: uppercase; animation: livePulse 1.5s ease-in-out infinite;">
-                <div class="live-dot" style="width: 8px; height: 8px; background: white; border-radius: 50%; display: inline-block; margin-right: 6px; animation: liveDotPulse 1s ease-in-out infinite;"></div>
-                ESTRENO EN VIVO
-              </span>
-              <span style="background: rgba(255, 255, 255, 0.1); padding: 4px 8px; border-radius: 8px; font-size: 11px; color: #71767b; font-weight: 600;">Cortometraje</span>
+          <!-- Info -->
+          <div style="flex: 1; min-width: 0;">
+            <!-- Etiqueta de estreno -->
+            <div style="display: inline-block; background: linear-gradient(45deg, #1d9bf0, #00c9ff); color: white; padding: 4px 8px; border-radius: 12px; font-size: 10px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; animation: tweetBadge 3s ease-in-out infinite;">
+              🎬 ESTRENO DE PELÍCULA
             </div>
             
-            <h3 style="font-size: 24px; font-weight: 800; color: #ffffff; margin-bottom: 8px;">CORTOMETRAJE EXCLUSIVO</h3>
+            <h3 style="font-size: 18px; font-weight: 800; color: #ffffff; margin: 0 0 8px 0; line-height: 1.3;">El Espejo de Adentro</h3>
             
-            <div class="live-date-info" style="background: rgba(255, 0, 0, 0.2); padding: 12px; border-radius: 8px; margin-bottom: 16px; border: 1px solid rgba(255, 0, 0, 0.3);">
-              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
-                <i class="fas fa-calendar-alt" style="color: #ff0000;"></i>
-                <span style="font-weight: 700; color: #ffffff;">17 DE AGOSTO 2024</span>
-              </div>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <i class="fas fa-clock" style="color: #ff0000;"></i>
-                <span style="font-size: 14px; color: #71767b;">8:00 PM (Hora Local)</span>
-              </div>
+            <!-- Fecha estilo tweet -->
+            <div style="background: rgba(29, 155, 240, 0.1); border: 1px solid rgba(29, 155, 240, 0.3); border-radius: 8px; padding: 8px; margin-bottom: 12px;">
+              <div style="color: #1d9bf0; font-size: 13px; font-weight: 700; margin-bottom: 2px;">📅 17/08/2025</div>
+              <div style="color: #71767b; font-size: 12px;">8:00 PM • Transmisión mundial</div>
             </div>
 
-            <!-- Cuenta regresiva -->
-            <div id="liveCountdown" class="live-countdown" style="display: flex; gap: 8px; margin-bottom: 16px;">
-              <div class="countdown-segment" style="background: rgba(255, 0, 0, 0.2); border-radius: 8px; padding: 8px; min-width: 35px; text-align: center; border: 1px solid rgba(255, 0, 0, 0.3);">
-                <div id="liveDays" style="font-size: 16px; font-weight: 800; color: #ffffff;">00</div>
-                <div style="font-size: 8px; color: #71767b; font-weight: 600;">DÍAS</div>
+            <!-- Botón de notificación moderno -->
+            <button id="notifyButton" onclick="toggleNotification()" style="background: transparent; border: 1px solid #1d9bf0; color: #1d9bf0; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 700; cursor: pointer; transition: all 0.2s ease; display: flex; align-items: center; gap: 8px; position: relative; overflow: hidden;">
+              <i class="fas fa-bell" id="notifyIcon" style="font-size: 12px;"></i>
+              <span id="notifyText">Avisarme</span>
+              <div id="notifySuccess" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #10b981; display: none; align-items: center; justify-content: center; border-radius: 20px; transform: scale(0); transition: all 0.3s ease;">
+                <i class="fas fa-check" style="color: white; font-size: 12px;"></i>
               </div>
-              <div class="countdown-segment" style="background: rgba(255, 0, 0, 0.2); border-radius: 8px; padding: 8px; min-width: 35px; text-align: center; border: 1px solid rgba(255, 0, 0, 0.3);">
-                <div id="liveHours" style="font-size: 16px; font-weight: 800; color: #ffffff;">00</div>
-                <div style="font-size: 8px; color: #71767b; font-weight: 600;">HRS</div>
-              </div>
-              <div class="countdown-segment" style="background: rgba(255, 0, 0, 0.2); border-radius: 8px; padding: 8px; min-width: 35px; text-align: center; border: 1px solid rgba(255, 0, 0, 0.3);">
-                <div id="liveMinutes" style="font-size: 16px; font-weight: 800; color: #ffffff;">00</div>
-                <div style="font-size: 8px; color: #71767b; font-weight: 600;">MIN</div>
-              </div>
-              <div class="countdown-segment" style="background: rgba(255, 0, 0, 0.2); border-radius: 8px; padding: 8px; min-width: 35px; text-align: center; border: 1px solid rgba(255, 0, 0, 0.3);">
-                <div id="liveSeconds" style="font-size: 16px; font-weight: 800; color: #ffffff;">00</div>
-                <div style="font-size: 8px; color: #71767b; font-weight: 600;">SEG</div>
-              </div>
-            </div>
-
-            <!-- Botón de notificación -->
-            <button id="notifyButton" onclick="toggleNotification()" style="background: linear-gradient(45deg, #ff0000, #ff4444); border: none; color: #ffffff; padding: 12px 20px; border-radius: 25px; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-              <i class="fas fa-bell" id="notifyIcon"></i>
-              <span id="notifyText">NOTIFICARME</span>
             </button>
-
-            <div style="font-size: 14px; color: #71767b; line-height: 1.4;">
-              Un cortometraje exclusivo que se transmitirá en vivo por única vez. ¡No te lo pierdas!
-            </div>
           </div>
         </div>
       </div>
@@ -4312,11 +4351,12 @@
       }
     }
 
-    // Alternar notificaciones
+    // Alternar notificaciones estilo Twitter
     function toggleNotification() {
       const button = document.getElementById('notifyButton');
       const icon = document.getElementById('notifyIcon');
       const text = document.getElementById('notifyText');
+      const successEl = document.getElementById('notifySuccess');
 
       if (!isNotificationEnabled) {
         // Activar notificaciones
@@ -4326,29 +4366,92 @@
               isNotificationEnabled = true;
               localStorage.setItem('live_notifications_enabled', 'true');
               
-              button.style.background = 'linear-gradient(45deg, #10b981, #34d399)';
-              icon.className = 'fas fa-bell';
-              text.textContent = 'NOTIFICACIONES ACTIVADAS';
+              // Animación de éxito estilo Twitter
+              successEl.style.display = 'flex';
+              successEl.style.animation = 'successPop 0.4s ease-out';
               
-              showLiveNotification('¡Notificaciones activadas! Te avisaremos cuando comience el estreno.');
+              setTimeout(() => {
+                button.classList.add('activated');
+                button.style.background = '#10b981';
+                button.style.borderColor = '#10b981';
+                button.style.color = 'white';
+                icon.className = 'fas fa-check';
+                text.textContent = 'Activado';
+                successEl.style.display = 'none';
+              }, 400);
+              
+              // Mostrar plaquita de confirmación
+              showTwitterNotification('✅ Te avisaremos cuando comience "El Espejo de Adentro"', 'success');
             } else {
-              showLiveNotification('Permiso de notificaciones denegado. Actívalas en configuración del navegador.');
+              showTwitterNotification('❌ Activa las notificaciones en tu navegador', 'error');
             }
           });
         } else {
-          showLiveNotification('Las notificaciones no están disponibles en este navegador.');
+          showTwitterNotification('❌ Las notificaciones no están disponibles', 'error');
         }
       } else {
         // Desactivar notificaciones
         isNotificationEnabled = false;
         localStorage.setItem('live_notifications_enabled', 'false');
         
-        button.style.background = 'linear-gradient(45deg, #ff0000, #ff4444)';
-        icon.className = 'fas fa-bell-slash';
-        text.textContent = 'NOTIFICARME';
+        button.classList.remove('activated');
+        button.style.background = 'transparent';
+        button.style.borderColor = '#1d9bf0';
+        button.style.color = '#1d9bf0';
+        icon.className = 'fas fa-bell';
+        text.textContent = 'Avisarme';
         
-        showLiveNotification('Notificaciones desactivadas.');
+        showTwitterNotification('🔕 Notificaciones desactivadas', 'info');
       }
+    }
+
+    // Mostrar notificación estilo Twitter
+    function showTwitterNotification(message, type = 'info') {
+      const notification = document.createElement('div');
+      
+      const bgColor = type === 'success' ? '#10b981' : 
+                     type === 'error' ? '#ef4444' : '#1d9bf0';
+      
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: ${bgColor};
+        color: white;
+        padding: 12px 16px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        z-index: 10000;
+        max-width: 280px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        animation: slideInRight 0.3s ease-out;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.2);
+      `;
+      
+      notification.innerHTML = `
+        <div style="flex: 1;">${message}</div>
+        <button onclick="this.parentElement.remove()" style="background: none; border: none; color: white; font-size: 16px; cursor: pointer; opacity: 0.8; padding: 4px;">
+          <i class="fas fa-times"></i>
+        </button>
+      `;
+
+      document.body.appendChild(notification);
+
+      // Auto-remover después de 4 segundos
+      setTimeout(() => {
+        if (notification.parentElement) {
+          notification.style.animation = 'slideOutRight 0.3s ease-out';
+          setTimeout(() => {
+            if (notification.parentElement) {
+              notification.remove();
+            }
+          }, 300);
+        }
+      }, 4000);
     }
 
     // Mostrar notificación del sistema
