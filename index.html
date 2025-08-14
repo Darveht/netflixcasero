@@ -2691,25 +2691,83 @@
 
   <!-- Sección principal -->
   <div id="homeSection" class="app-container">
-    <!-- Banner principal -->
-    <div class="hero-banner" style="background-image: linear-gradient(to bottom, rgba(0,0,0,0.3), rgba(0,0,0,0.8)), url('https://i.ytimg.com/vi/4f3hG-5grlw/maxresdefault.jpg');">
-      <div class="hero-content">
-        <h1 class="hero-title">NO TE MUEVAS</h1>
-        <p class="hero-description">Una aterradora experiencia cinematográfica que desafía los límites del horror psicológico.</p>
+    <!-- Sección de Programación en Vivo -->
+    <div class="live-programming-section" style="padding: 40px 16px; background: linear-gradient(135deg, rgba(255, 0, 0, 0.1), rgba(255, 69, 0, 0.1)); border-bottom: 2px solid rgba(255, 0, 0, 0.3); margin-bottom: 30px;">
+      <div class="live-header" style="text-align: center; margin-bottom: 30px;">
+        <h2 style="font-size: 32px; font-weight: 800; color: #ffffff; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 12px;">
+          <i class="fas fa-broadcast-tower" style="color: #ff0000; animation: livePulse 2s ease-in-out infinite;"></i>
+          PROGRAMACIÓN EN VIVO
+        </h2>
+        <p style="color: #71767b; font-size: 16px;">Próximos estrenos exclusivos en tiempo real</p>
+      </div>
 
-        <div class="hero-buttons">
-          <button class="hero-btn primary" onclick="playEpisode(1, 1)" id="heroBannerPlay">
-            <i class="fas fa-play"></i>
-            Reproducir
-          </button>
-          <button class="hero-btn secondary" onclick="playTrailer()">
-            <i class="fas fa-film"></i>
-            Ver Trailer
-          </button>
-          <button class="hero-btn secondary" onclick="showSeriesDetail('dontlookaway')">
-            <i class="fas fa-info-circle"></i>
-            Más Info
-          </button>
+      <div class="live-content-card" style="background: rgba(0, 0, 0, 0.6); border-radius: 16px; padding: 24px; border: 2px solid rgba(255, 0, 0, 0.3); position: relative; overflow: hidden;">
+        <!-- Efecto de brillo animado -->
+        <div style="position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; background: linear-gradient(45deg, transparent, rgba(255, 0, 0, 0.3), transparent); border-radius: 18px; z-index: -1; animation: borderGlow 3s ease-in-out infinite;"></div>
+        
+        <div style="display: flex; gap: 20px; align-items: center;">
+          <div class="live-poster" style="position: relative; width: 120px; height: 160px; border-radius: 12px; overflow: hidden; flex-shrink: 0;">
+            <img src="https://i.ytimg.com/vi/i229gWn3Z5A/maxresdefault.jpg" alt="Cortometraje 17 Agosto" style="width: 100%; height: 100%; object-fit: cover;">
+            <div class="locked-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(20, 20, 20, 0.9)); display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; border-radius: 12px; backdrop-filter: blur(8px);">
+              <div class="locked-icon" style="font-size: 32px; margin-bottom: 8px; color: #ff0000; animation: lockPulse 2s ease-in-out infinite;">
+                <i class="fas fa-lock"></i>
+              </div>
+              <div style="font-size: 10px; text-align: center; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">BLOQUEADO</div>
+            </div>
+          </div>
+
+          <div class="live-info" style="flex: 1;">
+            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+              <span class="live-badge" style="background: linear-gradient(45deg, #ff0000, #ff4444); color: white; padding: 4px 12px; border-radius: 12px; font-size: 12px; font-weight: 700; text-transform: uppercase; animation: livePulse 1.5s ease-in-out infinite;">
+                <div class="live-dot" style="width: 8px; height: 8px; background: white; border-radius: 50%; display: inline-block; margin-right: 6px; animation: liveDotPulse 1s ease-in-out infinite;"></div>
+                ESTRENO EN VIVO
+              </span>
+              <span style="background: rgba(255, 255, 255, 0.1); padding: 4px 8px; border-radius: 8px; font-size: 11px; color: #71767b; font-weight: 600;">Cortometraje</span>
+            </div>
+            
+            <h3 style="font-size: 24px; font-weight: 800; color: #ffffff; margin-bottom: 8px;">CORTOMETRAJE EXCLUSIVO</h3>
+            
+            <div class="live-date-info" style="background: rgba(255, 0, 0, 0.2); padding: 12px; border-radius: 8px; margin-bottom: 16px; border: 1px solid rgba(255, 0, 0, 0.3);">
+              <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 4px;">
+                <i class="fas fa-calendar-alt" style="color: #ff0000;"></i>
+                <span style="font-weight: 700; color: #ffffff;">17 DE AGOSTO 2024</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <i class="fas fa-clock" style="color: #ff0000;"></i>
+                <span style="font-size: 14px; color: #71767b;">8:00 PM (Hora Local)</span>
+              </div>
+            </div>
+
+            <!-- Cuenta regresiva -->
+            <div id="liveCountdown" class="live-countdown" style="display: flex; gap: 8px; margin-bottom: 16px;">
+              <div class="countdown-segment" style="background: rgba(255, 0, 0, 0.2); border-radius: 8px; padding: 8px; min-width: 35px; text-align: center; border: 1px solid rgba(255, 0, 0, 0.3);">
+                <div id="liveDays" style="font-size: 16px; font-weight: 800; color: #ffffff;">00</div>
+                <div style="font-size: 8px; color: #71767b; font-weight: 600;">DÍAS</div>
+              </div>
+              <div class="countdown-segment" style="background: rgba(255, 0, 0, 0.2); border-radius: 8px; padding: 8px; min-width: 35px; text-align: center; border: 1px solid rgba(255, 0, 0, 0.3);">
+                <div id="liveHours" style="font-size: 16px; font-weight: 800; color: #ffffff;">00</div>
+                <div style="font-size: 8px; color: #71767b; font-weight: 600;">HRS</div>
+              </div>
+              <div class="countdown-segment" style="background: rgba(255, 0, 0, 0.2); border-radius: 8px; padding: 8px; min-width: 35px; text-align: center; border: 1px solid rgba(255, 0, 0, 0.3);">
+                <div id="liveMinutes" style="font-size: 16px; font-weight: 800; color: #ffffff;">00</div>
+                <div style="font-size: 8px; color: #71767b; font-weight: 600;">MIN</div>
+              </div>
+              <div class="countdown-segment" style="background: rgba(255, 0, 0, 0.2); border-radius: 8px; padding: 8px; min-width: 35px; text-align: center; border: 1px solid rgba(255, 0, 0, 0.3);">
+                <div id="liveSeconds" style="font-size: 16px; font-weight: 800; color: #ffffff;">00</div>
+                <div style="font-size: 8px; color: #71767b; font-weight: 600;">SEG</div>
+              </div>
+            </div>
+
+            <!-- Botón de notificación -->
+            <button id="notifyButton" onclick="toggleNotification()" style="background: linear-gradient(45deg, #ff0000, #ff4444); border: none; color: #ffffff; padding: 12px 20px; border-radius: 25px; font-size: 14px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
+              <i class="fas fa-bell" id="notifyIcon"></i>
+              <span id="notifyText">NOTIFICARME</span>
+            </button>
+
+            <div style="font-size: 14px; color: #71767b; line-height: 1.4;">
+              Un cortometraje exclusivo que se transmitirá en vivo por única vez. ¡No te lo pierdas!
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -4168,11 +4226,267 @@
       showSettingsMessage('Idioma cambiado. Recarga la página para ver los cambios.');
     }
 
+    // Sistema de programación en vivo - 17 de agosto
+    let liveCountdownInterval = null;
+    let isNotificationEnabled = false;
+
+    // Configurar fecha del estreno en vivo (17 de agosto 2024, 8:00 PM)
+    function createLivePremierDate() {
+      const releaseDate = new Date('2024-08-17T20:00:00');
+      return releaseDate;
+    }
+
+    // Actualizar cuenta regresiva en vivo
+    function updateLiveCountdown() {
+      const now = new Date();
+      const premiereDate = createLivePremierDate();
+      const timeDiff = premiereDate.getTime() - now.getTime();
+
+      if (timeDiff <= 0) {
+        // El estreno ha comenzado
+        showLiveNow();
+        return;
+      }
+
+      const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
+
+      // Actualizar elementos de cuenta regresiva
+      document.getElementById('liveDays').textContent = days.toString().padStart(2, '0');
+      document.getElementById('liveHours').textContent = hours.toString().padStart(2, '0');
+      document.getElementById('liveMinutes').textContent = minutes.toString().padStart(2, '0');
+      document.getElementById('liveSeconds').textContent = seconds.toString().padStart(2, '0');
+
+      // Notificar cuando falten 5 minutos si está activada la notificación
+      if (isNotificationEnabled && timeDiff <= 5 * 60 * 1000 && timeDiff > 4 * 60 * 1000) {
+        showLiveNotification('¡El cortometraje en vivo comenzará en 5 minutos!');
+      }
+
+      // Notificar cuando falte 1 minuto
+      if (isNotificationEnabled && timeDiff <= 60 * 1000 && timeDiff > 59 * 1000) {
+        showLiveNotification('¡El cortometraje en vivo comenzará en 1 minuto!');
+      }
+    }
+
+    // Mostrar cuando el estreno esté en vivo
+    function showLiveNow() {
+      const liveSection = document.querySelector('.live-programming-section');
+      if (!liveSection) return;
+
+      // Cambiar toda la sección para mostrar que está en vivo
+      liveSection.innerHTML = `
+        <div class="live-header" style="text-align: center; margin-bottom: 30px;">
+          <h2 style="font-size: 32px; font-weight: 800; color: #ffffff; margin-bottom: 8px; display: flex; align-items: center; justify-content: center; gap: 12px;">
+            <i class="fas fa-broadcast-tower" style="color: #ff0000; animation: livePulse 1s ease-in-out infinite;"></i>
+            ¡EN VIVO AHORA!
+          </h2>
+          <p style="color: #71767b; font-size: 16px;">Cortometraje exclusivo transmitiéndose ahora</p>
+        </div>
+
+        <div class="live-content-card" style="background: linear-gradient(135deg, rgba(255, 0, 0, 0.2), rgba(255, 69, 0, 0.2)); border-radius: 16px; padding: 24px; border: 2px solid #ff0000; position: relative; animation: liveGlow 2s ease-in-out infinite;">
+          <div style="text-align: center;">
+            <div style="background: #ff0000; color: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; animation: livePulse 1.5s ease-in-out infinite;">
+              <i class="fas fa-play-circle" style="font-size: 48px; margin-bottom: 12px;"></i>
+              <h3 style="font-size: 24px; font-weight: 800; margin-bottom: 8px;">CORTOMETRAJE EN VIVO</h3>
+              <p style="font-size: 14px; opacity: 0.9;">Transmisión exclusiva - Una sola vez</p>
+            </div>
+            
+            <button onclick="watchLivePremiere()" style="background: linear-gradient(45deg, #ffffff, #f0f0f0); border: none; color: #000000; padding: 16px 32px; border-radius: 25px; font-size: 18px; font-weight: 800; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(255, 255, 255, 0.3);">
+              <i class="fas fa-play" style="margin-right: 8px;"></i>
+              VER EN VIVO
+            </button>
+          </div>
+        </div>
+      `;
+
+      // Mostrar notificación de que el estreno comenzó
+      if (isNotificationEnabled) {
+        showLiveNotification('¡El cortometraje exclusivo está EN VIVO ahora! Haz clic para ver.');
+      }
+
+      // Limpiar intervalo de cuenta regresiva
+      if (liveCountdownInterval) {
+        clearInterval(liveCountdownInterval);
+      }
+    }
+
+    // Alternar notificaciones
+    function toggleNotification() {
+      const button = document.getElementById('notifyButton');
+      const icon = document.getElementById('notifyIcon');
+      const text = document.getElementById('notifyText');
+
+      if (!isNotificationEnabled) {
+        // Activar notificaciones
+        if ('Notification' in window) {
+          Notification.requestPermission().then(permission => {
+            if (permission === 'granted') {
+              isNotificationEnabled = true;
+              localStorage.setItem('live_notifications_enabled', 'true');
+              
+              button.style.background = 'linear-gradient(45deg, #10b981, #34d399)';
+              icon.className = 'fas fa-bell';
+              text.textContent = 'NOTIFICACIONES ACTIVADAS';
+              
+              showLiveNotification('¡Notificaciones activadas! Te avisaremos cuando comience el estreno.');
+            } else {
+              showLiveNotification('Permiso de notificaciones denegado. Actívalas en configuración del navegador.');
+            }
+          });
+        } else {
+          showLiveNotification('Las notificaciones no están disponibles en este navegador.');
+        }
+      } else {
+        // Desactivar notificaciones
+        isNotificationEnabled = false;
+        localStorage.setItem('live_notifications_enabled', 'false');
+        
+        button.style.background = 'linear-gradient(45deg, #ff0000, #ff4444)';
+        icon.className = 'fas fa-bell-slash';
+        text.textContent = 'NOTIFICARME';
+        
+        showLiveNotification('Notificaciones desactivadas.');
+      }
+    }
+
+    // Mostrar notificación del sistema
+    function showLiveNotification(message) {
+      // Notificación del navegador
+      if (isNotificationEnabled && 'Notification' in window && Notification.permission === 'granted') {
+        new Notification('IBTV - Programación en Vivo', {
+          body: message,
+          icon: '/favicon.ico',
+          badge: '/favicon.ico',
+          tag: 'live-premiere'
+        });
+      }
+
+      // Notificación visual en la página
+      const notification = document.createElement('div');
+      notification.style.cssText = `
+        position: fixed;
+        top: 20px;
+        right: 20px;
+        background: linear-gradient(45deg, #ff0000, #ff4444);
+        color: white;
+        padding: 16px 20px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        z-index: 10000;
+        max-width: 300px;
+        box-shadow: 0 8px 32px rgba(255, 0, 0, 0.4);
+        animation: slideInRight 0.5s ease-out;
+        border: 2px solid rgba(255, 255, 255, 0.2);
+      `;
+      
+      notification.innerHTML = `
+        <div style="display: flex; align-items: center; gap: 12px;">
+          <i class="fas fa-broadcast-tower" style="font-size: 18px;"></i>
+          <div>
+            <div style="font-weight: 800; margin-bottom: 4px;">EN VIVO</div>
+            <div style="font-size: 13px; opacity: 0.9;">${message}</div>
+          </div>
+          <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; color: white; font-size: 16px; cursor: pointer; opacity: 0.7; hover: opacity: 1;">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      `;
+
+      document.body.appendChild(notification);
+
+      // Auto-remover después de 5 segundos
+      setTimeout(() => {
+        if (notification.parentElement) {
+          notification.style.animation = 'slideOutRight 0.5s ease-out';
+          setTimeout(() => {
+            if (notification.parentElement) {
+              notification.remove();
+            }
+          }, 500);
+        }
+      }, 5000);
+    }
+
+    // Ver estreno en vivo
+    function watchLivePremiere() {
+      // Aquí puedes agregar la lógica para reproducir el cortometraje en vivo
+      showLiveNotification('Conectando con la transmisión en vivo...');
+      
+      // Simular reproducción del cortometraje en vivo
+      setTimeout(() => {
+        // Aquí integrarías con tu sistema de reproducción en vivo
+        alert('¡Disfrutando el cortometraje exclusivo en vivo!');
+      }, 2000);
+    }
+
+    // Agregar estilos de animación para las notificaciones
+    const liveStyles = document.createElement('style');
+    liveStyles.innerHTML = `
+      @keyframes slideInRight {
+        from {
+          opacity: 0;
+          transform: translateX(100%);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+      
+      @keyframes slideOutRight {
+        from {
+          opacity: 1;
+          transform: translateX(0);
+        }
+        to {
+          opacity: 0;
+          transform: translateX(100%);
+        }
+      }
+    `;
+    document.head.appendChild(liveStyles);
+
+    // Inicializar sistema de programación en vivo
+    function initializeLiveProgramming() {
+      // Cargar estado de notificaciones guardado
+      const savedNotificationState = localStorage.getItem('live_notifications_enabled');
+      if (savedNotificationState === 'true') {
+        // Verificar si aún tienen permisos de notificación
+        if ('Notification' in window && Notification.permission === 'granted') {
+          isNotificationEnabled = true;
+          const button = document.getElementById('notifyButton');
+          const icon = document.getElementById('notifyIcon');
+          const text = document.getElementById('notifyText');
+          
+          if (button && icon && text) {
+            button.style.background = 'linear-gradient(45deg, #10b981, #34d399)';
+            icon.className = 'fas fa-bell';
+            text.textContent = 'NOTIFICACIONES ACTIVADAS';
+          }
+        }
+      }
+
+      // Iniciar cuenta regresiva
+      updateLiveCountdown();
+      liveCountdownInterval = setInterval(updateLiveCountdown, 1000);
+
+      // Verificar si el estreno ya comenzó
+      const now = new Date();
+      const premiereDate = createLivePremierDate();
+      if (now >= premiereDate) {
+        showLiveNow();
+      }
+    }
+
     // Inicializar el sistema cuando se carga la página
     document.addEventListener('DOMContentLoaded', async function() {
       const authenticated = await checkAuthentication();
       if (authenticated) {
         initializePremiereSystem();
+        initializeLiveProgramming(); // Nuevo: inicializar sistema en vivo
         // Ejecutar debug de usuarios exclusivos
         setTimeout(() => {
           debugExclusiveUsers();
