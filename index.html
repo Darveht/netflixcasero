@@ -2595,29 +2595,71 @@
     /* Animación especial para coronas de usuarios exclusivos */
     @keyframes crownPulse {
       0%, 100% {
-        transform: translateX(-50%) scale(1);
-        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+        transform: translateX(-50%) scale(1) rotate(-5deg);
+        text-shadow: 0 0 20px rgba(255, 215, 0, 1), 0 0 40px rgba(255, 215, 0, 0.5);
+        filter: drop-shadow(0 4px 8px rgba(0,0,0,0.8)) brightness(1);
       }
       50% {
-        transform: translateX(-50%) scale(1.1);
-        filter: drop-shadow(0 4px 8px rgba(255,215,0,0.8));
+        transform: translateX(-50%) scale(1.15) rotate(5deg);
+        text-shadow: 0 0 30px rgba(255, 215, 0, 1), 0 0 60px rgba(255, 215, 0, 0.8);
+        filter: drop-shadow(0 6px 12px rgba(255,215,0,0.6)) brightness(1.2);
       }
     }
 
-    .vip-user-card .fa-crown {
+    /* Animación para el brillo del marco del avatar exclusivo */
+    @keyframes exclusiveGlow {
+      0%, 100% {
+        box-shadow: 0 0 30px rgba(255, 215, 0, 0.8), inset 0 0 20px rgba(255, 255, 255, 0.2);
+      }
+      50% {
+        box-shadow: 0 0 50px rgba(255, 215, 0, 1), inset 0 0 30px rgba(255, 255, 255, 0.4), 0 0 80px rgba(255, 215, 0, 0.6);
+      }
+    }
+
+    /* Aplicar animaciones a elementos específicos */
+    .vip-user-card[data-user-type="exclusive"] .fa-crown {
       animation: crownPulse 3s ease-in-out infinite;
+    }
+
+    .vip-user-card[data-user-type="exclusive"] .vip-user-avatar {
+      animation: exclusiveGlow 4s ease-in-out infinite;
     }
 
     /* Efecto especial para usuarios exclusivos */
     .vip-user-card[data-user-type="exclusive"] {
-      border: 2px solid rgba(255, 215, 0, 0.3);
-      background: linear-gradient(135deg, rgba(255, 215, 0, 0.05), rgba(255, 215, 0, 0.1));
-      box-shadow: 0 4px 20px rgba(255, 215, 0, 0.2);
+      border: 3px solid rgba(255, 215, 0, 0.5);
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.08), rgba(255, 215, 0, 0.15));
+      box-shadow: 0 8px 32px rgba(255, 215, 0, 0.3);
+      position: relative;
+      overflow: visible;
     }
 
     .vip-user-card[data-user-type="exclusive"]:hover {
-      border-color: rgba(255, 215, 0, 0.6);
-      box-shadow: 0 8px 32px rgba(255, 215, 0, 0.4);
+      border-color: rgba(255, 215, 0, 0.8);
+      box-shadow: 0 12px 48px rgba(255, 215, 0, 0.5);
+      transform: translateY(-6px);
+    }
+
+    .vip-user-card[data-user-type="exclusive"]:before {
+      content: '';
+      position: absolute;
+      top: -2px;
+      left: -2px;
+      right: -2px;
+      bottom: -2px;
+      background: linear-gradient(45deg, transparent, rgba(255, 215, 0, 0.3), transparent);
+      border-radius: 14px;
+      z-index: -1;
+      animation: borderGlow 3s ease-in-out infinite;
+    }
+
+    @keyframes borderGlow {
+      0%, 100% {
+        opacity: 0.5;
+      }
+      50% {
+        opacity: 1;
+      }
     }
 
     @media (max-width: 768px) {
@@ -3699,29 +3741,29 @@
       let vipIcon, vipLabel, avatarCrown = '';
 
       if (user.vipType === 'exclusive' || user.isExclusive) {
-        vipIcon = '<i class="fas fa-certificate" style="color: #ffd700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);"></i>';
+        vipIcon = '<i class="fas fa-certificate" style="color: #ffd700; font-size: 16px; text-shadow: 0 0 10px rgba(255, 215, 0, 0.8); margin-left: 4px;"></i>';
         vipLabel = 'Embajador';
-        // Corona dorada encima del avatar para usuarios exclusivos
+        // Corona dorada como marco alrededor del avatar
         avatarCrown = `
-          <div style="position: absolute; top: -8px; left: 50%; transform: translateX(-50%); z-index: 10;">
-            <i class="fas fa-crown" style="color: #ffd700; font-size: 20px; text-shadow: 0 0 15px rgba(255, 215, 0, 0.9); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));"></i>
+          <div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); z-index: 15; pointer-events: none;">
+            <i class="fas fa-crown" style="color: #ffd700; font-size: 28px; text-shadow: 0 0 20px rgba(255, 215, 0, 1), 0 0 40px rgba(255, 215, 0, 0.5); filter: drop-shadow(0 4px 8px rgba(0,0,0,0.8)); animation: crownPulse 3s ease-in-out infinite;"></i>
           </div>
         `;
       } else if (user.vipType === 'collaborator') {
-        vipIcon = '<i class="fas fa-star" style="color: #ffd700;"></i>';
+        vipIcon = '<i class="fas fa-star" style="color: #ffd700; font-size: 16px; margin-left: 4px;"></i>';
         vipLabel = 'Colaborador';
       } else {
-        vipIcon = '<i class="fas fa-check-circle" style="color: #1d9bf0;"></i>';
+        vipIcon = '<i class="fas fa-check-circle" style="color: #1d9bf0; font-size: 16px; margin-left: 4px;"></i>';
         vipLabel = 'VIP';
       }
 
       // Crear username desde email si no existe
       const username = user.profile?.username || user.email.split('@')[0];
 
-      // Estilo especial para el avatar de usuarios exclusivos
+      // Estilo especial para el avatar de usuarios exclusivos con marco dorado
       const avatarStyle = user.vipType === 'exclusive' || user.isExclusive ? 
-        'background: linear-gradient(45deg, #ffd700, #ffed4e); border: 3px solid #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);' : 
-        'background: linear-gradient(45deg, #1d9bf0, #00c9ff);';
+        'background: linear-gradient(45deg, #ffd700, #ffed4e); border: 4px solid #ffd700; box-shadow: 0 0 30px rgba(255, 215, 0, 0.8), inset 0 0 20px rgba(255, 255, 255, 0.2);' : 
+        'background: linear-gradient(45deg, #1d9bf0, #00c9ff); border: 2px solid rgba(255, 255, 255, 0.3);';
 
       // Agregar atributo para styling especial
       if (user.vipType === 'exclusive' || user.isExclusive) {
@@ -3735,11 +3777,13 @@
         </div>
         <div class="vip-user-info">
           <div class="vip-user-name">
-            <span>@${username}</span>
+            <span style="font-weight: ${user.vipType === 'exclusive' || user.isExclusive ? '800' : '700'}; color: ${user.vipType === 'exclusive' || user.isExclusive ? '#ffd700' : '#ffffff'};">@${username}</span>
             ${vipIcon}
           </div>
           <div class="vip-followers-count" id="followers-${user.uid}">${user.followers.toLocaleString()} seguidores</div>
-          <div style="font-size: 12px; color: ${user.vipType === 'exclusive' || user.isExclusive ? '#ffd700' : '#71767b'}; margin-top: 2px; font-weight: ${user.vipType === 'exclusive' || user.isExclusive ? '700' : '400'};">${vipLabel}</div>
+          <div style="font-size: 13px; color: ${user.vipType === 'exclusive' || user.isExclusive ? '#ffd700' : '#71767b'}; margin-top: 4px; font-weight: ${user.vipType === 'exclusive' || user.isExclusive ? '800' : '500'}; text-transform: uppercase; letter-spacing: 0.5px; text-shadow: ${user.vipType === 'exclusive' || user.isExclusive ? '0 0 10px rgba(255, 215, 0, 0.5)' : 'none'};">
+            ${user.vipType === 'exclusive' || user.isExclusive ? '👑 ' : ''}${vipLabel}
+          </div>
         </div>
         <button class="vip-follow-btn" onclick="toggleFollowReal('${user.uid}')">
           <i class="fas fa-user-plus"></i>
