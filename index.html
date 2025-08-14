@@ -2592,6 +2592,34 @@
       font-size: 14px;
     }
 
+    /* Animación especial para coronas de usuarios exclusivos */
+    @keyframes crownPulse {
+      0%, 100% {
+        transform: translateX(-50%) scale(1);
+        filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));
+      }
+      50% {
+        transform: translateX(-50%) scale(1.1);
+        filter: drop-shadow(0 4px 8px rgba(255,215,0,0.8));
+      }
+    }
+
+    .vip-user-card .fa-crown {
+      animation: crownPulse 3s ease-in-out infinite;
+    }
+
+    /* Efecto especial para usuarios exclusivos */
+    .vip-user-card[data-user-type="exclusive"] {
+      border: 2px solid rgba(255, 215, 0, 0.3);
+      background: linear-gradient(135deg, rgba(255, 215, 0, 0.05), rgba(255, 215, 0, 0.1));
+      box-shadow: 0 4px 20px rgba(255, 215, 0, 0.2);
+    }
+
+    .vip-user-card[data-user-type="exclusive"]:hover {
+      border-color: rgba(255, 215, 0, 0.6);
+      box-shadow: 0 8px 32px rgba(255, 215, 0, 0.4);
+    }
+
     @media (max-width: 768px) {
       .vip-users-container {
         grid-template-columns: 1fr;
@@ -3510,20 +3538,43 @@
         const usersSnapshot = await usersRef.once('value');
         const allUsers = usersSnapshot.val();
 
+        // Obtener usuarios exclusivos desde Firebase
+        const exclusiveUsersRef = database.ref('exclusive_users');
+        const exclusiveSnapshot = await exclusiveUsersRef.once('value');
+        const exclusiveUsers = exclusiveSnapshot.val();
+
         vipLoading.classList.add('hidden');
 
-        if (!vipUsers && !allUsers) {
+        if (!vipUsers && !allUsers && !exclusiveUsers) {
           vipNoUsers.classList.remove('hidden');
           return;
         }
 
-        // Crear lista de usuarios VIP (incluye usuarios marcados como VIP y colaboradores)
+        // Crear lista de usuarios VIP (incluye usuarios marcados como VIP, colaboradores y exclusivos)
         const vipUsersList = [];
 
+        // Agregar usuarios exclusivos (máxima prioridad)
+        if (exclusiveUsers && allUsers) {
+          Object.keys(exclusiveUsers).forEach(userId => {
+            if (allUsers[userId] && exclusiveUsers[userId].exclusive === true) {
+              vipUsersList.push({
+                uid: userId,
+                ...allUsers[userId],
+                vipType: 'exclusive',
+                isExclusive: true,
+                followers: exclusiveUsers[userId].followers || 0,
+                exclusiveData: exclusiveUsers[userId]
+              });
+            }
+          });
+        }
+
         // Agregar usuarios marcados específicamente como VIP
-        if (vipUsers) {
+        if (vipUsers && allUsers) {
           Object.keys(vipUsers).forEach(userId => {
-            if (allUsers[userId] && vipUsers[userId].isVip) {
+            // Solo agregar si no es exclusivo (para evitar duplicados)
+            const isAlreadyExclusive = vipUsersList.some(user => user.uid === userId);
+            if (allUsers[userId] && vipUsers[userId].isVip && !isAlreadyExclusive) {
               vipUsersList.push({
                 uid: userId,
                 ...allUsers[userId],
@@ -3538,7 +3589,9 @@
         if (allUsers) {
           Object.keys(allUsers).forEach(userId => {
             const user = allUsers[userId];
-            if (user.subscription && user.subscription.type === 'collaborator') {
+            // Solo agregar si no es exclusivo ni VIP (para evitar duplicados)
+            const isAlreadyAdded = vipUsersList.some(vipUser => vipUser.uid === userId);
+            if (user.subscription && user.subscription.type === 'collaborator' && !isAlreadyAdded) {
               vipUsersList.push({
                 uid: userId,
                 ...user,
@@ -3549,10 +3602,34 @@
           });
         }
 
+        // Buscar usuarios marcados como exclusivos en el nodo users directamente
+        if (allUsers) {
+          Object.keys(allUsers).forEach(userId => {
+            const user = allUsers[userId];
+            // Verificar si el usuario tiene exclusivo = true en su perfil
+            const isAlreadyAdded = vipUsersList.some(vipUser => vipUser.uid === userId);
+            if (user.exclusive === true && !isAlreadyAdded) {
+              vipUsersList.push({
+                uid: userId,
+                ...user,
+                vipType: 'exclusive',
+                isExclusive: true,
+                followers: user.followers || 0
+              });
+            }
+          });
+        }
+
         if (vipUsersList.length === 0) {
           vipNoUsers.classList.remove('hidden');
           return;
         }
+
+        // Ordenar usuarios: exclusivos primero, luego VIP, luego colaboradores
+        vipUsersList.sort((a, b) => {
+          const order = { 'exclusive': 0, 'vip': 1, 'collaborator': 2 };
+          return order[a.vipType] - order[b.vipType];
+        });
 
         // Renderizar usuarios VIP
         vipUsersList.forEach(user => {
@@ -3588,18 +3665,42 @@
         avatarContent = `<span style="font-size: 20px; font-weight: bold;">${firstLetter}</span>`;
       }
 
-      // Determinar tipo de verificación
-      const vipIcon = user.vipType === 'collaborator' ? 
-        '<i class="fas fa-star" style="color: #ffd700;"></i>' : 
-        '<i class="fas fa-check-circle" style="color: #1d9bf0;"></i>';
+      // Determinar tipo de verificación e insignia según el tipo de usuario
+      let vipIcon, vipLabel, avatarCrown = '';
 
-      const vipLabel = user.vipType === 'collaborator' ? 'Colaborador' : 'VIP';
+      if (user.vipType === 'exclusive' || user.isExclusive) {
+        vipIcon = '<i class="fas fa-certificate" style="color: #ffd700; text-shadow: 0 0 10px rgba(255, 215, 0, 0.8);"></i>';
+        vipLabel = 'Embajador';
+        // Corona dorada encima del avatar para usuarios exclusivos
+        avatarCrown = `
+          <div style="position: absolute; top: -8px; left: 50%; transform: translateX(-50%); z-index: 10;">
+            <i class="fas fa-crown" style="color: #ffd700; font-size: 20px; text-shadow: 0 0 15px rgba(255, 215, 0, 0.9); filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));"></i>
+          </div>
+        `;
+      } else if (user.vipType === 'collaborator') {
+        vipIcon = '<i class="fas fa-star" style="color: #ffd700;"></i>';
+        vipLabel = 'Colaborador';
+      } else {
+        vipIcon = '<i class="fas fa-check-circle" style="color: #1d9bf0;"></i>';
+        vipLabel = 'VIP';
+      }
 
       // Crear username desde email si no existe
       const username = user.profile?.username || user.email.split('@')[0];
 
+      // Estilo especial para el avatar de usuarios exclusivos
+      const avatarStyle = user.vipType === 'exclusive' || user.isExclusive ? 
+        'background: linear-gradient(45deg, #ffd700, #ffed4e); border: 3px solid #ffd700; box-shadow: 0 0 20px rgba(255, 215, 0, 0.6);' : 
+        'background: linear-gradient(45deg, #1d9bf0, #00c9ff);';
+
+      // Agregar atributo para styling especial
+      if (user.vipType === 'exclusive' || user.isExclusive) {
+        userCard.setAttribute('data-user-type', 'exclusive');
+      }
+
       userCard.innerHTML = `
-        <div class="vip-user-avatar" style="background: linear-gradient(45deg, #1d9bf0, #00c9ff);">
+        <div class="vip-user-avatar" style="position: relative; ${avatarStyle}">
+          ${avatarCrown}
           ${avatarContent}
         </div>
         <div class="vip-user-info">
@@ -3608,7 +3709,7 @@
             ${vipIcon}
           </div>
           <div class="vip-followers-count" id="followers-${user.uid}">${user.followers.toLocaleString()} seguidores</div>
-          <div style="font-size: 12px; color: #71767b; margin-top: 2px;">${vipLabel}</div>
+          <div style="font-size: 12px; color: ${user.vipType === 'exclusive' || user.isExclusive ? '#ffd700' : '#71767b'}; margin-top: 2px; font-weight: ${user.vipType === 'exclusive' || user.isExclusive ? '700' : '400'};">${vipLabel}</div>
         </div>
         <button class="vip-follow-btn" onclick="toggleFollowReal('${user.uid}')">
           <i class="fas fa-user-plus"></i>
@@ -3704,6 +3805,52 @@
         console.log(`Usuario ${userEmail} ${isVip ? 'marcado como VIP' : 'removido de VIP'}`);
       } catch (error) {
         console.error('Error marcando usuario como VIP:', error);
+      }
+    }
+
+    // Función para marcar usuario como exclusivo (solo para admins)
+    async function markUserAsExclusive(userEmail, isExclusive = true) {
+      if (!currentFirebaseUser) return;
+
+      try {
+        // Buscar usuario por email
+        const usersRef = database.ref('users');
+        const snapshot = await usersRef.orderByChild('email').equalTo(userEmail).once('value');
+        const users = snapshot.val();
+
+        if (!users) {
+          console.error('Usuario no encontrado:', userEmail);
+          return;
+        }
+
+        const userId = Object.keys(users)[0];
+        
+        if (isExclusive) {
+          // Marcar como exclusivo en el nodo del usuario
+          await database.ref(`users/${userId}/exclusive`).set(true);
+          
+          // También crear entrada en nodo exclusive_users para seguimiento
+          await database.ref(`exclusive_users/${userId}`).set({
+            exclusive: true,
+            markedAt: firebase.database.ServerValue.TIMESTAMP,
+            markedBy: currentFirebaseUser.uid,
+            followers: 0
+          });
+        } else {
+          // Remover estado exclusivo
+          await database.ref(`users/${userId}/exclusive`).remove();
+          await database.ref(`exclusive_users/${userId}`).remove();
+        }
+
+        console.log(`Usuario ${userEmail} ${isExclusive ? 'marcado como EXCLUSIVO' : 'removido de EXCLUSIVO'}`);
+        
+        // Recargar la sección VIP para mostrar los cambios
+        if (document.getElementById('vipSection').classList.contains('active')) {
+          loadVipUsers();
+        }
+        
+      } catch (error) {
+        console.error('Error marcando usuario como exclusivo:', error);
       }
     }
 
