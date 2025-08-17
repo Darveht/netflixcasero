@@ -5561,8 +5561,9 @@
       // Habilitar pantalla completa automática y rotación
       enableVideoFullscreenAndRotation();
 
-      // Limpiar video anterior
+      // Limpiar video anterior completamente
       videoElement.removeAttribute('src');
+      videoElement.innerHTML = ''; // Limpiar sources anteriores
       videoElement.load();
 
       // Configurar video para máxima compatibilidad móvil
@@ -5589,11 +5590,16 @@
       // Configurar subtítulos si están disponibles
       configureSubtitles();
 
-      // Configurar fuente de video con mejor compatibilidad
-      const source = document.createElement('source');
-      source.src = episode.videoUrl;
-      source.type = 'video/mp4'; // Asumir mp4 por defecto
-      videoElement.appendChild(source);
+      // Log para debugging
+      console.log('Reproduciendo:', {
+        seriesId: currentSeries.id,
+        seriesTitle: currentSeries.title,
+        episodeTitle: episode.title,
+        videoUrl: episode.videoUrl
+      });
+
+      // Configurar fuente de video directamente
+      videoElement.src = episode.videoUrl;
 
       // Event listeners del contenido principal
       const onLoadedMetadata = () => {
@@ -5640,7 +5646,10 @@
 
     // Función para reproducir episodio (modificada para incluir intro)
     function playEpisode(season, episodeId) {
-      if (!currentSeries) return;
+      if (!currentSeries) {
+        console.error('No hay serie actual seleccionada');
+        return;
+      }
 
       // Verificar si la película está disponible para reproducción
       if (currentSeries.isLocked && !isMovieAvailable(currentSeries)) {
@@ -5649,9 +5658,24 @@
       }
 
       const episode = currentSeries.episodes.find(ep => ep.id === episodeId);
-      if (!episode) return;
+      if (!episode) {
+        console.error('Episodio no encontrado:', episodeId, 'en serie:', currentSeries.id);
+        return;
+      }
 
-      currentVideo = episode;
+      // Log para debugging
+      console.log('PlayEpisode llamado:', {
+        seriesId: currentSeries.id,
+        episodeId: episodeId,
+        episodeTitle: episode.title,
+        videoUrl: episode.videoUrl
+      });
+
+      currentVideo = {
+        ...episode,
+        seriesId: currentSeries.id,
+        seriesTitle: currentSeries.title
+      };
 
       // Reproducir intro de IBTV primero, luego el contenido principal
       playIBTVIntro(() => {
@@ -5666,6 +5690,9 @@
         return;
       }
 
+      // Log para debugging
+      console.log('PlayTrailer llamado para:', currentSeries.id, 'con URL:', currentSeries.trailer);
+
       // Crear objeto de trailer para reproducir
       const trailerVideo = {
         id: 'trailer',
@@ -5673,7 +5700,9 @@
         description: 'Trailer oficial',
         duration: '2:30',
         thumbnail: currentSeries.poster,
-        videoUrl: currentSeries.trailer
+        videoUrl: currentSeries.trailer,
+        seriesId: currentSeries.id,
+        seriesTitle: currentSeries.title
       };
 
       currentVideo = trailerVideo;
@@ -5687,8 +5716,9 @@
 
       // Función para reproducir contenido de trailer después del intro
       function playTrailerContent(trailerVideo) {
-        // Limpiar video anterior
+        // Limpiar video anterior completamente
         videoElement.removeAttribute('src');
+        videoElement.innerHTML = ''; // Limpiar sources anteriores
         videoElement.load();
 
         // Configurar video para máxima compatibilidad móvil
@@ -5705,6 +5735,12 @@
         // Ocultar indicador EN VIVO para trailers
         const liveIndicator = document.getElementById('videoLiveIndicator');
         liveIndicator.style.display = 'none';
+
+        // Log para debugging
+        console.log('Reproduciendo trailer:', {
+          seriesTitle: currentSeries.title,
+          trailerUrl: trailerVideo.videoUrl
+        });
 
         // Configurar fuente
         videoElement.src = trailerVideo.videoUrl;
