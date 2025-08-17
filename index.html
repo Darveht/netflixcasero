@@ -1942,14 +1942,6 @@
       }
     }
 
-    .hidden {
-      display: none;
-    }
-    .spinner {
-      margin-left: 8px;
-      color: #1d9bf0;
-    }
-
     /* Sección de búsqueda */
     .search-section {
       position: fixed;
@@ -2790,9 +2782,9 @@
               <i class="fas fa-play-circle" style="font-size: 10px;"></i>
               <span>YA DISPONIBLE</span>
             </div>
-            
+
             <h3 style="font-size: 20px; font-weight: 900; color: #ffffff; margin: 0 0 12px 0; line-height: 1.2; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);">El Espejo de Adentro</h3>
-            
+
             <!-- Descripción -->
             <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 12px; padding: 12px; margin-bottom: 16px; backdrop-filter: blur(8px);">
               <div style="color: #10b981; font-size: 14px; font-weight: 800; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
@@ -2803,7 +2795,7 @@
             </div>
 
             <!-- Botón de reproducir -->
-            <button onclick="event.stopPropagation(); showSeriesDetail('elespejoadeadentro')" style="background: linear-gradient(45deg, #10b981, #34d399); border: none; color: white; padding: 10px 18px; border-radius: 25px; font-size: 13px; font-weight: 800; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 12px rgba(16, 185, 129, 0.4);">
+            <button onclick="showSeriesDetail('elespejoadeadentro')" style="background: linear-gradient(45deg, #10b981, #34d399); border: none; color: white; padding: 10px 18px; border-radius: 25px; font-size: 13px; font-weight: 800; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 12px rgba(16, 185, 129, 0.4);">
               <i class="fas fa-play" style="font-size: 12px;"></i>
               <span>Ver Ahora</span>
             </button>
@@ -2841,14 +2833,6 @@
               <div id="notemuevas-badge" class="premiere-badge">Estreno</div>
               <div class="carousel-item-overlay">
                 <div class="carousel-item-title">NO TE MUEVAS</div>
-                <div class="carousel-item-info">2025 • Terror</div>
-              </div>
-            </div>
-            <div class="carousel-item" onclick="showSeriesDetail('doublevision')">
-              <img src="https://m.media-amazon.com/images/M/MV5BODZiOGIxZTQtZjA2My00NzY3LTlkZTktZmFlZjJkOThhN2NjXkEyXkFqcGc@._V1_QL75_UX190_CR0,2,190,281_.jpg" alt="DOUBLE VISION">
-              <div class="movie-badge">Película</div>
-              <div class="carousel-item-overlay">
-                <div class="carousel-item-title">DOUBLE VISION</div>
                 <div class="carousel-item-info">2025 • Terror</div>
               </div>
             </div>
@@ -2905,14 +2889,6 @@
                 <div class="carousel-item-info">2025 • Terror</div>
               </div>
             </div>
-            <div class="carousel-item" onclick="showSeriesDetail('doublevision')">
-              <img src="https://m.media-amazon.com/images/M/MV5BODZiOGIxZTQtZjA2My00NzY3LTlkZTktZmFlZjJkOThhN2NjXkEyXkFqcGc@._V1_QL75_UX190_CR0,2,190,281_.jpg" alt="DOUBLE VISION">
-              <div class="movie-badge">Película</div>
-              <div class="carousel-item-overlay">
-                <div class="carousel-item-title">DOUBLE VISION</div>
-                <div class="carousel-item-info">2025 • Terror</div>
-              </div>
-            </div>
             <div class="carousel-item" onclick="showSeriesDetail('dontlookaway')">
               <img src="https://i.ytimg.com/vi/4f3hG-5grlw/maxresdefault.jpg" alt="DON'T LOOK AWAY">
               <div class="movie-badge">Película</div>
@@ -2925,7 +2901,7 @@
         </div>
       </div>
 
-      
+
     </div>
   </div>
 
@@ -3867,8 +3843,8 @@
       const username = user.profile?.username || user.email.split('@')[0];
 
       // Estilo especial para el avatar de usuarios exclusivos con marco dorado
-      const avatarStyle = user.vipType === 'exclusive' || user.isExclusive ? 
-        'background: linear-gradient(45deg, #ffd700, #ffed4e); border: 4px solid #ffd700; box-shadow: 0 0 30px rgba(255, 215, 0, 0.8), inset 0 0 20px rgba(255, 255, 255, 0.2);' : 
+      const avatarStyle = user.vipType === 'exclusive' || user.isExclusive ?
+        'background: linear-gradient(45deg, #ffd700, #ffed4e); border: 4px solid #ffd700; box-shadow: 0 0 30px rgba(255, 215, 0, 0.8), inset 0 0 20px rgba(255, 255, 255, 0.2);' :
         'background: linear-gradient(45deg, #1d9bf0, #00c9ff); border: 2px solid rgba(255, 255, 255, 0.3);';
 
       // Agregar atributo para styling especial
@@ -3910,7 +3886,7 @@
       try {
         const followStateRef = database.ref(`vip_users/${userId}/followers_list/${currentFirebaseUser.uid}`);
         const followersCountRef = database.ref(`vip_users/${userId}/followers`);
-        
+
         // Verificar estado actual
         const snapshot = await followStateRef.once('value');
         const isFollowing = snapshot.exists();
@@ -4004,11 +3980,11 @@
         }
 
         const userId = Object.keys(users)[0];
-        
+
         if (isExclusive) {
           // Marcar como exclusivo en el nodo del usuario
           await database.ref(`users/${userId}/exclusive`).set(true);
-          
+
           // También crear entrada en nodo exclusive_users para seguimiento
           await database.ref(`exclusive_users/${userId}`).set({
             exclusive: true,
@@ -4023,12 +3999,12 @@
         }
 
         console.log(`Usuario ${userEmail} ${isExclusive ? 'marcado como EXCLUSIVO' : 'removido de EXCLUSIVO'}`);
-        
+
         // Recargar la sección VIP para mostrar los cambios
         if (document.getElementById('vipSection').classList.contains('active')) {
           loadVipUsers();
         }
-        
+
       } catch (error) {
         console.error('Error marcando usuario como exclusivo:', error);
       }
@@ -4038,15 +4014,15 @@
     async function debugExclusiveUsers() {
       try {
         console.log('=== DEBUG: Verificando usuarios exclusivos ===');
-        
+
         // Verificar usuarios en el nodo principal
         const usersRef = database.ref('users');
         const usersSnapshot = await usersRef.once('value');
         const allUsers = usersSnapshot.val();
-        
+
         if (allUsers) {
           console.log('Total de usuarios registrados:', Object.keys(allUsers).length);
-          
+
           Object.keys(allUsers).forEach(userId => {
             const user = allUsers[userId];
             if (user.exclusive === true) {
@@ -4059,12 +4035,12 @@
             }
           });
         }
-        
+
         // Verificar nodo exclusive_users
         const exclusiveRef = database.ref('exclusive_users');
         const exclusiveSnapshot = await exclusiveRef.once('value');
         const exclusiveUsers = exclusiveSnapshot.val();
-        
+
         if (exclusiveUsers) {
           console.log('Usuarios en nodo exclusive_users:', Object.keys(exclusiveUsers).length);
           Object.keys(exclusiveUsers).forEach(userId => {
@@ -4077,9 +4053,9 @@
         } else {
           console.log('No hay usuarios en el nodo exclusive_users');
         }
-        
+
         console.log('=== FIN DEBUG ===');
-        
+
       } catch (error) {
         console.error('Error en debug:', error);
       }
@@ -4161,11 +4137,11 @@
       // Guardar estado
       localStorage.setItem('vip_follow_state', JSON.stringify(followState));
 
-      // Mostrar feedback visual
+      // Mostrar feedback de seguimiento
       showFollowFeedback(button, !isFollowing);
     }
 
-    // Mostrar feedback de seguimiento
+    // Función para mostrar feedback de seguimiento
     function showFollowFeedback(button, isFollowing) {
       const feedback = document.createElement('div');
       feedback.textContent = isFollowing ? '¡Siguiendo!' : 'Dejaste de seguir';
@@ -4454,32 +4430,37 @@
         ]
       },
 
-      doublevision: {
-        id: 'doublevision',
-        title: "DOUBLE VISION",
-        year: '2025',
-        genre: 'Terror, Thriller, Suspenso',
-        rating: '18+',
+      elespejoadeadentro: {
+        id: 'elespejoadeadentro',
+        title: "EL ESPEJO DE ADENTRO",
+        year: '2024',
+        genre: 'Drama, Romance, Reflexión',
+        rating: '13+',
         type: 'movie',
         isLocked: false,
         isLive: false,
         hasCountdown: false,
-        description: 'Una escalofriante película de terror que te hará cuestionar lo que es real y lo que es pesadilla. Cuando la realidad se duplica, el horror se multiplica.',
-        poster: 'https://m.media-amazon.com/images/M/MV5BODZiOGIxZTQtZjA2My00NzY3LTlkZTktZmFlZjJkOThhN2NjXkEyXkFqcGc@._V1_QL75_UX190_CR0,2,190,281_.jpg',
-        trailer: 'https://dl.dropboxusercontent.com/scl/fi/knmd1rvklx9qkmzz38d5x/2968597981486262751.mp4?rlkey=hpz7w3qyd67yboabi09svgl64&st=2h4ym2d1&dl=1',
+        description: 'Una emotiva historia que explora las profundidades del corazón humano y las reflexiones internas que nos definen. Una película que te invita a mirar hacia adentro y descubrir los espejos de tu alma.',
+        poster: 'https://i.ibb.co/qFL4fq4C/IMG-0244.jpg',
+        trailer: 'https://dl.dropboxusercontent.com/scl/fi/rd0uoz4exmmojwq33j7r7/copy_A1A3BBD1-BB9F-451C-8376-D89360307C17.mov?rlkey=sc0zviiqeb11r39rmbwxn42fi&st=35tg5hc3&dl=1',
         youtubeReference: '#',
         subtitles: {
-          spanish: 'subtitles/double-vision-es.vtt',
-          english: 'subtitles/double-vision-en.vtt'
+          spanish: {
+            type: 'inline',
+            cues: [
+              { start: '00:00:30.000', end: '00:00:32.000', text: 'A veces necesitamos mirar hacia adentro...' },
+              { start: '00:01:15.000', end: '00:01:18.000', text: 'Para encontrar lo que realmente somos.' }
+            ]
+          }
         },
         episodes: [
           {
             id: 1,
-            title: "DOUBLE VISION",
-            description: 'Una escalofriante película de terror que te hará cuestionar lo que es real y lo que es pesadilla.',
+            title: "EL ESPEJO DE ADENTRO",
+            description: 'Una emotiva historia que explora las profundidades del corazón humano.',
             duration: null,
-            thumbnail: 'https://m.media-amazon.com/images/M/MV5BODZiOGIxZTQtZjA2My00NzY3LTlkZTktZmFlZjJkOThhN2NjXkEyXkFqcGc@._V1_QL75_UX190_CR0,2,190,281_.jpg',
-            videoUrl: 'https://dl.dropboxusercontent.com/scl/fi/knmd1rvklx9qkmzz38d5x/2968597981486262751.mp4?rlkey=hpz7w3qyd67yboabi09svgl64&st=2h4ym2d1&dl=1'
+            thumbnail: 'https://i.ibb.co/qFL4fq4C/IMG-0244.jpg',
+            videoUrl: 'https://dl.dropboxusercontent.com/scl/fi/rd0uoz4exmmojwq33j7r7/copy_A1A3BBD1-BB9F-451C-8376-D89360307C17.mov?rlkey=sc0zviiqeb11r39rmbwxn42fi&st=35tg5hc3&dl=1'
           }
         ]
       },
@@ -4536,41 +4517,6 @@
             duration: null,
             thumbnail: 'https://i.ytimg.com/vi/i229gWn3Z5A/maxresdefault.jpg',
             videoUrl: 'https://dl.dropboxusercontent.com/scl/fi/5ktcz9zq60w5hq2s2arde/602596538962659684.mp4?rlkey=q35ez2mg7lu30xx31s5vahxso&st=r1c3005h&dl=1'
-          }
-        ]
-      },
-
-      elespejoadeadentro: {
-        id: 'elespejoadeadentro',
-        title: "EL ESPEJO DE ADENTRO",
-        year: '2024',
-        genre: 'Drama, Romance, Reflexión',
-        rating: '13+',
-        type: 'movie',
-        isLocked: false,
-        isLive: false,
-        hasCountdown: false,
-        description: 'Una emotiva historia que explora las profundidades del corazón humano y las reflexiones internas que nos definen. Una película que te invita a mirar hacia adentro y descubrir los espejos de tu alma.',
-        poster: 'https://i.ibb.co/qFL4fq4C/IMG-0244.jpg',
-        trailer: 'https://dl.dropboxusercontent.com/scl/fi/rd0uoz4exmmojwq33j7r7/copy_A1A3BBD1-BB9F-451C-8376-D89360307C17.mov?rlkey=sc0zviiqeb11r39rmbwxn42fi&st=35tg5hc3&dl=1',
-        youtubeReference: '#',
-        subtitles: {
-          spanish: {
-            type: 'inline',
-            cues: [
-              { start: '00:00:30.000', end: '00:00:32.000', text: 'A veces necesitamos mirar hacia adentro...' },
-              { start: '00:01:15.000', end: '00:01:18.000', text: 'Para encontrar lo que realmente somos.' }
-            ]
-          }
-        },
-        episodes: [
-          {
-            id: 1,
-            title: "EL ESPEJO DE ADENTRO",
-            description: 'Una emotiva historia que explora las profundidades del corazón humano.',
-            duration: null,
-            thumbnail: 'https://i.ibb.co/qFL4fq4C/IMG-0244.jpg',
-            videoUrl: 'https://dl.dropboxusercontent.com/scl/fi/rd0uoz4exmmojwq33j7r7/copy_A1A3BBD1-BB9F-451C-8376-D89360307C17.mov?rlkey=sc0zviiqeb11r39rmbwxn42fi&st=35tg5hc3&dl=1'
           }
         ]
       },
