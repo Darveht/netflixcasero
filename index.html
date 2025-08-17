@@ -2759,79 +2759,53 @@
 
   <!-- Sección principal -->
   <div id="homeSection" class="app-container">
-    <!-- Sección de Programación en Vivo estilo Twitter -->
-    <div class="live-programming-section" id="liveProgrammingSection" style="padding: 20px 16px; background: rgba(32, 35, 39, 0.8); border: 1px solid #333639; border-radius: 16px; margin: 20px 16px; backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);">
-      <!-- Header minimalista -->
-      <div class="live-header" style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #333639;">
-        <div style="background: linear-gradient(45deg, #1d9bf0, #00c9ff); width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: socialPulse 2s ease-in-out infinite; box-shadow: 0 4px 16px rgba(29, 155, 240, 0.3);">
-          <i class="fas fa-video" style="color: white; font-size: 18px;"></i>
+    <!-- Sección de Película Destacada -->
+    <div class="featured-movie-section" style="padding: 20px 16px; background: rgba(32, 35, 39, 0.8); border: 1px solid #333639; border-radius: 16px; margin: 20px 16px; backdrop-filter: blur(12px); box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);">
+      <!-- Header -->
+      <div class="featured-header" style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 16px; border-bottom: 1px solid #333639;">
+        <div style="background: linear-gradient(45deg, #10b981, #34d399); width: 44px; height: 44px; border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: socialPulse 2s ease-in-out infinite; box-shadow: 0 4px 16px rgba(16, 185, 129, 0.3);">
+          <i class="fas fa-film" style="color: white; font-size: 18px;"></i>
         </div>
         <div>
-          <h2 style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0; line-height: 1.2;">Programación en Vivo</h2>
-          <p style="color: #71767b; font-size: 14px; margin: 0;">Próximo estreno exclusivo</p>
+          <h2 style="font-size: 20px; font-weight: 800; color: #ffffff; margin: 0; line-height: 1.2;">Película Destacada</h2>
+          <p style="color: #71767b; font-size: 14px; margin: 0;">¡Ya disponible para ver!</p>
         </div>
       </div>
 
       <!-- Contenido de la película -->
-      <div class="movie-tweet-card" style="background: rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 20px; border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);">
+      <div class="movie-card" style="background: rgba(255, 255, 255, 0.05); border-radius: 16px; padding: 20px; border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3); cursor: pointer;" onclick="showSeriesDetail('elespejoadeadentro')">
         <div style="display: flex; gap: 16px; align-items: center;">
           <!-- Poster -->
           <div class="movie-poster" style="position: relative; width: 80px; height: 120px; border-radius: 12px; overflow: hidden; flex-shrink: 0; box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);">
             <img src="https://i.ibb.co/qFL4fq4C/IMG-0244.jpg" alt="El Espejo de Adentro" style="width: 100%; height: 100%; object-fit: cover;">
-            <div id="movieStatusBadge" style="position: absolute; top: 6px; right: 6px; background: rgba(29, 155, 240, 0.9); color: white; padding: 3px 8px; border-radius: 8px; font-size: 9px; font-weight: 800; text-transform: uppercase; animation: tweetBadge 2s ease-in-out infinite; backdrop-filter: blur(8px);">
-              PRÓXIMAMENTE
+            <div style="position: absolute; top: 6px; right: 6px; background: rgba(16, 185, 129, 0.9); color: white; padding: 3px 8px; border-radius: 8px; font-size: 9px; font-weight: 800; text-transform: uppercase; animation: tweetBadge 2s ease-in-out infinite; backdrop-filter: blur(8px);">
+              DISPONIBLE
             </div>
           </div>
 
           <!-- Info -->
           <div style="flex: 1; min-width: 0;">
-            <!-- Etiqueta de estreno -->
-            <div style="display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(45deg, #1d9bf0, #00c9ff); color: white; padding: 6px 12px; border-radius: 16px; font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 12px; animation: tweetBadge 3s ease-in-out infinite; box-shadow: 0 2px 12px rgba(29, 155, 240, 0.4);">
-              <i class="fas fa-calendar-alt" style="font-size: 10px;"></i>
-              <span>ESTRENO DE PELÍCULA</span>
+            <!-- Etiqueta disponible -->
+            <div style="display: inline-flex; align-items: center; gap: 6px; background: linear-gradient(45deg, #10b981, #34d399); color: white; padding: 6px 12px; border-radius: 16px; font-size: 11px; font-weight: 800; text-transform: uppercase; margin-bottom: 12px; animation: tweetBadge 3s ease-in-out infinite; box-shadow: 0 2px 12px rgba(16, 185, 129, 0.4);">
+              <i class="fas fa-play-circle" style="font-size: 10px;"></i>
+              <span>YA DISPONIBLE</span>
             </div>
             
             <h3 style="font-size: 20px; font-weight: 900; color: #ffffff; margin: 0 0 12px 0; line-height: 1.2; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.6);">El Espejo de Adentro</h3>
             
-            <!-- Fecha estilo tweet mejorada -->
-            <div style="background: rgba(29, 155, 240, 0.1); border: 1px solid rgba(29, 155, 240, 0.4); border-radius: 12px; padding: 12px; margin-bottom: 16px; backdrop-filter: blur(8px);">
-              <div style="color: #1d9bf0; font-size: 14px; font-weight: 800; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
-                <i class="fas fa-clock" style="font-size: 12px;"></i>
-                <span id="premiereDate">17 de Agosto, 2025</span>
+            <!-- Descripción -->
+            <div style="background: rgba(16, 185, 129, 0.1); border: 1px solid rgba(16, 185, 129, 0.4); border-radius: 12px; padding: 12px; margin-bottom: 16px; backdrop-filter: blur(8px);">
+              <div style="color: #10b981; font-size: 14px; font-weight: 800; margin-bottom: 4px; display: flex; align-items: center; gap: 6px;">
+                <i class="fas fa-heart" style="font-size: 12px;"></i>
+                <span>Película Completa</span>
               </div>
-              <div style="color: #e7e9ea; font-size: 13px; font-weight: 600;">8:00 PM • Transmisión mundial simultánea</div>
+              <div style="color: #e7e9ea; font-size: 13px; font-weight: 600;">Drama • Romance • Reflexión</div>
             </div>
 
-            <!-- Cuenta regresiva -->
-            <div id="countdownContainer" style="background: rgba(0, 0, 0, 0.4); border-radius: 12px; padding: 12px; margin-bottom: 16px; border: 1px solid rgba(255, 255, 255, 0.1);">
-              <div style="color: #71767b; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; text-align: center;">FALTAN</div>
-              <div id="countdownTimer" style="display: flex; justify-content: center; gap: 8px;">
-                <div style="background: rgba(29, 155, 240, 0.2); border-radius: 8px; padding: 6px; min-width: 32px; text-align: center; border: 1px solid rgba(29, 155, 240, 0.3);">
-                  <div id="countdownDays" style="font-size: 14px; font-weight: 800; color: #ffffff;">000</div>
-                  <div style="font-size: 8px; color: #71767b; font-weight: 600;">DÍAS</div>
-                </div>
-                <div style="background: rgba(29, 155, 240, 0.2); border-radius: 8px; padding: 6px; min-width: 32px; text-align: center; border: 1px solid rgba(29, 155, 240, 0.3);">
-                  <div id="countdownHours" style="font-size: 14px; font-weight: 800; color: #ffffff;">00</div>
-                  <div style="font-size: 8px; color: #71767b; font-weight: 600;">HRS</div>
-                </div>
-                <div style="background: rgba(29, 155, 240, 0.2); border-radius: 8px; padding: 6px; min-width: 32px; text-align: center; border: 1px solid rgba(29, 155, 240, 0.3);">
-                  <div id="countdownMinutes" style="font-size: 14px; font-weight: 800; color: #ffffff;">00</div>
-                  <div style="font-size: 8px; color: #71767b; font-weight: 600;">MIN</div>
-                </div>
-                <div style="background: rgba(29, 155, 240, 0.2); border-radius: 8px; padding: 6px; min-width: 32px; text-align: center; border: 1px solid rgba(29, 155, 240, 0.3);">
-                  <div id="countdownSeconds" style="font-size: 14px; font-weight: 800; color: #ffffff;">00</div>
-                  <div style="font-size: 8px; color: #71767b; font-weight: 600;">SEG</div>
-                </div>
-              </div>
-            </div>
-
-            <!-- Botón de notificación moderno -->
-            <button id="notifyButton" onclick="toggleNotification()" style="background: transparent; border: 2px solid #1d9bf0; color: #1d9bf0; padding: 10px 18px; border-radius: 25px; font-size: 13px; font-weight: 800; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px; position: relative; overflow: hidden; box-shadow: 0 2px 12px rgba(29, 155, 240, 0.2);">
-              <i class="fas fa-bell" id="notifyIcon" style="font-size: 12px;"></i>
-              <span id="notifyText">Avisarme</span>
-              <div id="notifySuccess" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: #10b981; display: none; align-items: center; justify-content: center; border-radius: 25px; transform: scale(0); transition: all 0.4s ease;">
-                <i class="fas fa-check" style="color: white; font-size: 12px;"></i>
-              </div>
+            <!-- Botón de reproducir -->
+            <button onclick="event.stopPropagation(); showSeriesDetail('elespejoadeadentro')" style="background: linear-gradient(45deg, #10b981, #34d399); border: none; color: white; padding: 10px 18px; border-radius: 25px; font-size: 13px; font-weight: 800; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px; box-shadow: 0 2px 12px rgba(16, 185, 129, 0.4);">
+              <i class="fas fa-play" style="font-size: 12px;"></i>
+              <span>Ver Ahora</span>
             </button>
           </div>
         </div>
@@ -2845,6 +2819,14 @@
         <h2 class="section-title">Películas</h2>
         <div class="carousel-container">
           <div class="carousel" id="moviesCarousel">
+            <div class="carousel-item" onclick="showSeriesDetail('elespejoadeadentro')">
+              <img src="https://i.ibb.co/qFL4fq4C/IMG-0244.jpg" alt="EL ESPEJO DE ADENTRO">
+              <div class="movie-badge">Película</div>
+              <div class="carousel-item-overlay">
+                <div class="carousel-item-title">EL ESPEJO DE ADENTRO</div>
+                <div class="carousel-item-info">2024 • Drama • Romance</div>
+              </div>
+            </div>
             <div class="carousel-item" onclick="showSeriesDetail('dontlookaway')">
               <img src="https://i.ytimg.com/vi/4f3hG-5grlw/maxresdefault.jpg" alt="DON'T LOOK AWAY">
               <div class="movie-badge">Película</div>
@@ -4292,371 +4274,15 @@
       showSettingsMessage('Idioma cambiado. Recarga la página para ver los cambios.');
     }
 
-    // Sistema de programación en vivo - 17 de agosto
-    let liveCountdownInterval = null;
-    let isNotificationEnabled = false;
+    // Sistema de programación desactivado - El Espejo de Adentro ahora está disponible
 
-    // Configurar fecha del estreno en vivo (17 de agosto 2025, 8:00 PM)
-    function createLivePremierDate() {
-      const releaseDate = new Date('2025-08-17T20:00:00-05:00'); // 8:00 PM Central Time (Houston)
-      return releaseDate;
-    }
-
-    // Actualizar cuenta regresiva en vivo
-    function updateLiveCountdown() {
-      const now = new Date();
-      const premiereDate = createLivePremierDate();
-      const timeDiff = premiereDate.getTime() - now.getTime();
-
-      if (timeDiff <= 0) {
-        // El estreno ha comenzado
-        showLiveNow();
-        return;
-      }
-
-      const days = Math.floor(timeDiff / (1000 * 60 * 60 * 24));
-      const hours = Math.floor((timeDiff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-      const minutes = Math.floor((timeDiff % (1000 * 60 * 60)) / (1000 * 60));
-      const seconds = Math.floor((timeDiff % (1000 * 60)) / 1000);
-
-      // Actualizar elementos de cuenta regresiva con los IDs correctos
-      const daysEl = document.getElementById('countdownDays');
-      const hoursEl = document.getElementById('countdownHours');
-      const minutesEl = document.getElementById('countdownMinutes');
-      const secondsEl = document.getElementById('countdownSeconds');
-
-      if (daysEl) daysEl.textContent = days.toString().padStart(3, '0');
-      if (hoursEl) hoursEl.textContent = hours.toString().padStart(2, '0');
-      if (minutesEl) minutesEl.textContent = minutes.toString().padStart(2, '0');
-      if (secondsEl) secondsEl.textContent = seconds.toString().padStart(2, '0');
-
-      // Actualizar badge de estado
-      const statusBadge = document.getElementById('movieStatusBadge');
-      if (statusBadge) {
-        if (days > 30) {
-          statusBadge.textContent = 'PRÓXIMAMENTE';
-          statusBadge.style.background = 'rgba(29, 155, 240, 0.9)';
-        } else if (days > 7) {
-          statusBadge.textContent = 'PRONTO';
-          statusBadge.style.background = 'rgba(255, 193, 7, 0.9)';
-        } else if (days > 0) {
-          statusBadge.textContent = `EN ${days}D`;
-          statusBadge.style.background = 'rgba(255, 107, 107, 0.9)';
-        } else if (hours > 0) {
-          statusBadge.textContent = `EN ${hours}H`;
-          statusBadge.style.background = 'rgba(255, 0, 0, 0.9)';
-        } else {
-          statusBadge.textContent = 'MUY PRONTO';
-          statusBadge.style.background = 'rgba(255, 0, 0, 0.9)';
-          statusBadge.style.animation = 'liveBeat 0.5s ease-in-out infinite';
-        }
-      }
-
-      // Notificar cuando falten 5 minutos si está activada la notificación
-      if (isNotificationEnabled && timeDiff <= 5 * 60 * 1000 && timeDiff > 4 * 60 * 1000) {
-        showLiveNotification('¡El cortometraje "El Espejo de Adentro" comenzará en 5 minutos!');
-      }
-
-      // Notificar cuando falte 1 minuto
-      if (isNotificationEnabled && timeDiff <= 60 * 1000 && timeDiff > 59 * 1000) {
-        showLiveNotification('¡El cortometraje "El Espejo de Adentro" comenzará en 1 minuto!');
-      }
-    }
-
-    // Mostrar cuando el estreno esté en vivo
-    function showLiveNow() {
-      const liveSection = document.getElementById('liveProgrammingSection');
-      if (!liveSection) return;
-
-      // Cambiar toda la sección para mostrar que está en vivo con estilos Twitter mejorados
-      liveSection.innerHTML = `
-        <div class="live-header" style="text-align: center; margin-bottom: 30px; padding: 20px;">
-          <div style="background: linear-gradient(45deg, #ff0000, #ff4444); width: 60px; height: 60px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 16px auto; animation: livePulse 1s ease-in-out infinite; box-shadow: 0 8px 32px rgba(255, 0, 0, 0.4);">
-            <i class="fas fa-broadcast-tower" style="color: white; font-size: 24px;"></i>
-          </div>
-          <h2 style="font-size: 28px; font-weight: 900; color: #ffffff; margin-bottom: 8px; text-shadow: 0 2px 16px rgba(255, 0, 0, 0.6);">
-            ¡EN VIVO AHORA!
-          </h2>
-          <p style="color: #e7e9ea; font-size: 16px; font-weight: 600;">"El Espejo de Adentro" • Transmisión exclusiva mundial</p>
-        </div>
-
-        <div class="live-content-card" style="background: linear-gradient(135deg, rgba(255, 0, 0, 0.15), rgba(255, 69, 0, 0.15)); border-radius: 20px; padding: 32px; border: 2px solid #ff0000; position: relative; animation: liveGlow 2s ease-in-out infinite; backdrop-filter: blur(16px); box-shadow: 0 16px 64px rgba(255, 0, 0, 0.3);">
-          <div style="text-align: center;">
-            <div style="background: linear-gradient(45deg, #ff0000, #ff3333); color: white; padding: 24px; border-radius: 16px; margin-bottom: 24px; position: relative; overflow: hidden; box-shadow: 0 8px 32px rgba(255, 0, 0, 0.4);">
-              <div style="position: absolute; top: -2px; left: -2px; right: -2px; bottom: -2px; background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.2), transparent); animation: borderGlow 2s linear infinite; border-radius: 18px;"></div>
-              <i class="fas fa-play-circle" style="font-size: 56px; margin-bottom: 16px; text-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);"></i>
-              <h3 style="font-size: 26px; font-weight: 900; margin-bottom: 8px; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);">EL ESPEJO DE ADENTRO</h3>
-              <p style="font-size: 15px; opacity: 0.95; font-weight: 600;">Transmisión exclusiva mundial • Una sola vez</p>
-              <div style="background: rgba(255, 255, 255, 0.2); border-radius: 12px; padding: 8px 12px; margin-top: 12px; display: inline-block;">
-                <div style="font-size: 12px; font-weight: 800; display: flex; align-items: center; gap: 4px;">
-                  <div style="width: 8px; height: 8px; background: white; border-radius: 50%; animation: liveBeat 1s ease-in-out infinite;"></div>
-                  <span>TRANSMISIÓN EN VIVO</span>
-                </div>
-              </div>
-            </div>
-            
-            <button onclick="watchLivePremiere()" style="background: linear-gradient(45deg, #ffffff, #f8f9fa); border: 2px solid rgba(255, 255, 255, 0.8); color: #000000; padding: 18px 36px; border-radius: 30px; font-size: 18px; font-weight: 900; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 8px 32px rgba(255, 255, 255, 0.2); position: relative; overflow: hidden;">
-              <i class="fas fa-play" style="margin-right: 10px; font-size: 16px;"></i>
-              <span>VER EN VIVO AHORA</span>
-            </button>
-            
-            <div style="margin-top: 20px; font-size: 13px; color: #71767b; font-weight: 600;">
-              ⚠️ Esta transmisión única no se repetirá
-            </div>
-          </div>
-        </div>
-      `;
-
-      // Mostrar notificación de que el estreno comenzó
-      if (isNotificationEnabled) {
-        showLiveNotification('¡"El Espejo de Adentro" está EN VIVO ahora! Una transmisión única que no se repetirá.');
-      }
-
-      // Limpiar intervalo de cuenta regresiva
-      if (liveCountdownInterval) {
-        clearInterval(liveCountdownInterval);
-      }
-    }
-
-    // Alternar notificaciones estilo Twitter
-    function toggleNotification() {
-      const button = document.getElementById('notifyButton');
-      const icon = document.getElementById('notifyIcon');
-      const text = document.getElementById('notifyText');
-      const successEl = document.getElementById('notifySuccess');
-
-      if (!isNotificationEnabled) {
-        // Activar notificaciones
-        if ('Notification' in window) {
-          Notification.requestPermission().then(permission => {
-            if (permission === 'granted') {
-              isNotificationEnabled = true;
-              localStorage.setItem('live_notifications_enabled', 'true');
-              
-              // Animación de éxito estilo Twitter
-              successEl.style.display = 'flex';
-              successEl.style.animation = 'successPop 0.4s ease-out';
-              
-              setTimeout(() => {
-                button.classList.add('activated');
-                button.style.background = '#10b981';
-                button.style.borderColor = '#10b981';
-                button.style.color = 'white';
-                icon.className = 'fas fa-check';
-                text.textContent = 'Activado';
-                successEl.style.display = 'none';
-              }, 400);
-              
-              // Mostrar plaquita de confirmación
-              showTwitterNotification('✅ Te avisaremos cuando comience "El Espejo de Adentro"', 'success');
-            } else {
-              showTwitterNotification('❌ Activa las notificaciones en tu navegador', 'error');
-            }
-          });
-        } else {
-          showTwitterNotification('❌ Las notificaciones no están disponibles', 'error');
-        }
-      } else {
-        // Desactivar notificaciones
-        isNotificationEnabled = false;
-        localStorage.setItem('live_notifications_enabled', 'false');
-        
-        button.classList.remove('activated');
-        button.style.background = 'transparent';
-        button.style.borderColor = '#1d9bf0';
-        button.style.color = '#1d9bf0';
-        icon.className = 'fas fa-bell';
-        text.textContent = 'Avisarme';
-        
-        showTwitterNotification('🔕 Notificaciones desactivadas', 'info');
-      }
-    }
-
-    // Mostrar notificación estilo Twitter
-    function showTwitterNotification(message, type = 'info') {
-      const notification = document.createElement('div');
-      
-      const bgColor = type === 'success' ? '#10b981' : 
-                     type === 'error' ? '#ef4444' : '#1d9bf0';
-      
-      notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: ${bgColor};
-        color: white;
-        padding: 12px 16px;
-        border-radius: 12px;
-        font-size: 14px;
-        font-weight: 600;
-        z-index: 10000;
-        max-width: 280px;
-        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
-        animation: slideInRight 0.3s ease-out;
-        display: flex;
-        align-items: center;
-        gap: 8px;
-        border: 1px solid rgba(255, 255, 255, 0.2);
-      `;
-      
-      notification.innerHTML = `
-        <div style="flex: 1;">${message}</div>
-        <button onclick="this.parentElement.remove()" style="background: none; border: none; color: white; font-size: 16px; cursor: pointer; opacity: 0.8; padding: 4px;">
-          <i class="fas fa-times"></i>
-        </button>
-      `;
-
-      document.body.appendChild(notification);
-
-      // Auto-remover después de 4 segundos
-      setTimeout(() => {
-        if (notification.parentElement) {
-          notification.style.animation = 'slideOutRight 0.3s ease-out';
-          setTimeout(() => {
-            if (notification.parentElement) {
-              notification.remove();
-            }
-          }, 300);
-        }
-      }, 4000);
-    }
-
-    // Mostrar notificación del sistema
-    function showLiveNotification(message) {
-      // Notificación del navegador
-      if (isNotificationEnabled && 'Notification' in window && Notification.permission === 'granted') {
-        new Notification('IBTV - Programación en Vivo', {
-          body: message,
-          icon: '/favicon.ico',
-          badge: '/favicon.ico',
-          tag: 'live-premiere'
-        });
-      }
-
-      // Notificación visual en la página
-      const notification = document.createElement('div');
-      notification.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: linear-gradient(45deg, #ff0000, #ff4444);
-        color: white;
-        padding: 16px 20px;
-        border-radius: 12px;
-        font-size: 14px;
-        font-weight: 600;
-        z-index: 10000;
-        max-width: 300px;
-        box-shadow: 0 8px 32px rgba(255, 0, 0, 0.4);
-        animation: slideInRight 0.5s ease-out;
-        border: 2px solid rgba(255, 255, 255, 0.2);
-      `;
-      
-      notification.innerHTML = `
-        <div style="display: flex; align-items: center; gap: 12px;">
-          <i class="fas fa-broadcast-tower" style="font-size: 18px;"></i>
-          <div>
-            <div style="font-weight: 800; margin-bottom: 4px;">EN VIVO</div>
-            <div style="font-size: 13px; opacity: 0.9;">${message}</div>
-          </div>
-          <button onclick="this.parentElement.parentElement.remove()" style="background: none; border: none; color: white; font-size: 16px; cursor: pointer; opacity: 0.7; hover: opacity: 1;">
-            <i class="fas fa-times"></i>
-          </button>
-        </div>
-      `;
-
-      document.body.appendChild(notification);
-
-      // Auto-remover después de 5 segundos
-      setTimeout(() => {
-        if (notification.parentElement) {
-          notification.style.animation = 'slideOutRight 0.5s ease-out';
-          setTimeout(() => {
-            if (notification.parentElement) {
-              notification.remove();
-            }
-          }, 500);
-        }
-      }, 5000);
-    }
-
-    // Ver estreno en vivo
-    function watchLivePremiere() {
-      // Aquí puedes agregar la lógica para reproducir el cortometraje en vivo
-      showLiveNotification('Conectando con la transmisión en vivo...');
-      
-      // Simular reproducción del cortometraje en vivo
-      setTimeout(() => {
-        // Aquí integrarías con tu sistema de reproducción en vivo
-        alert('¡Disfrutando el cortometraje exclusivo en vivo!');
-      }, 2000);
-    }
-
-    // Agregar estilos de animación para las notificaciones
-    const liveStyles = document.createElement('style');
-    liveStyles.innerHTML = `
-      @keyframes slideInRight {
-        from {
-          opacity: 0;
-          transform: translateX(100%);
-        }
-        to {
-          opacity: 1;
-          transform: translateX(0);
-        }
-      }
-      
-      @keyframes slideOutRight {
-        from {
-          opacity: 1;
-          transform: translateX(0);
-        }
-        to {
-          opacity: 0;
-          transform: translateX(100%);
-        }
-      }
-    `;
-    document.head.appendChild(liveStyles);
-
-    // Inicializar sistema de programación en vivo
-    function initializeLiveProgramming() {
-      // Cargar estado de notificaciones guardado
-      const savedNotificationState = localStorage.getItem('live_notifications_enabled');
-      if (savedNotificationState === 'true') {
-        // Verificar si aún tienen permisos de notificación
-        if ('Notification' in window && Notification.permission === 'granted') {
-          isNotificationEnabled = true;
-          const button = document.getElementById('notifyButton');
-          const icon = document.getElementById('notifyIcon');
-          const text = document.getElementById('notifyText');
-          
-          if (button && icon && text) {
-            button.style.background = 'linear-gradient(45deg, #10b981, #34d399)';
-            icon.className = 'fas fa-bell';
-            text.textContent = 'NOTIFICACIONES ACTIVADAS';
-          }
-        }
-      }
-
-      // Iniciar cuenta regresiva
-      updateLiveCountdown();
-      liveCountdownInterval = setInterval(updateLiveCountdown, 1000);
-
-      // Verificar si el estreno ya comenzó
-      const now = new Date();
-      const premiereDate = createLivePremierDate();
-      if (now >= premiereDate) {
-        showLiveNow();
-      }
-    }
+    // Funciones de estreno en vivo removidas - El Espejo de Adentro ya está disponible
 
     // Inicializar el sistema cuando se carga la página
     document.addEventListener('DOMContentLoaded', async function() {
       const authenticated = await checkAuthentication();
       if (authenticated) {
         initializePremiereSystem();
-        initializeLiveProgramming(); // Nuevo: inicializar sistema en vivo
         // Ejecutar debug de usuarios exclusivos
         setTimeout(() => {
           debugExclusiveUsers();
@@ -4910,6 +4536,41 @@
             duration: null,
             thumbnail: 'https://i.ytimg.com/vi/i229gWn3Z5A/maxresdefault.jpg',
             videoUrl: 'https://www.dropbox.com/scl/fi/5ktcz9zq60w5hq2s2arde/602596538962659684.mp4?rlkey=q35ez2mg7lu30xx31s5vahxso&st=r1c3005h&dl=0' // Dropbox link converted to direct streaming
+          }
+        ]
+      },
+
+      elespejoadeadentro: {
+        id: 'elespejoadeadentro',
+        title: "EL ESPEJO DE ADENTRO",
+        year: '2024',
+        genre: 'Drama, Romance, Reflexión',
+        rating: '13+',
+        type: 'movie',
+        isLocked: false,
+        isLive: false,
+        hasCountdown: false,
+        description: 'Una emotiva historia que explora las profundidades del corazón humano y las reflexiones internas que nos definen. Una película que te invita a mirar hacia adentro y descubrir los espejos de tu alma.',
+        poster: 'https://i.ibb.co/qFL4fq4C/IMG-0244.jpg',
+        trailer: 'https://www.dropbox.com/scl/fi/rd0uoz4exmmojwq33j7r7/copy_A1A3BBD1-BB9F-451C-8376-D89360307C17.mov?rlkey=sc0zviiqeb11r39rmbwxn42fi&st=35tg5hc3&dl=1',
+        youtubeReference: '#',
+        subtitles: {
+          spanish: {
+            type: 'inline',
+            cues: [
+              { start: '00:00:30.000', end: '00:00:32.000', text: 'A veces necesitamos mirar hacia adentro...' },
+              { start: '00:01:15.000', end: '00:01:18.000', text: 'Para encontrar lo que realmente somos.' }
+            ]
+          }
+        },
+        episodes: [
+          {
+            id: 1,
+            title: "EL ESPEJO DE ADENTRO",
+            description: 'Una emotiva historia que explora las profundidades del corazón humano.',
+            duration: null,
+            thumbnail: 'https://i.ibb.co/qFL4fq4C/IMG-0244.jpg',
+            videoUrl: 'https://www.dropbox.com/scl/fi/rd0uoz4exmmojwq33j7r7/copy_A1A3BBD1-BB9F-451C-8376-D89360307C17.mov?rlkey=sc0zviiqeb11r39rmbwxn42fi&st=35tg5hc3&dl=1'
           }
         ]
       },
