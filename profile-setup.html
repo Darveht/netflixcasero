@@ -119,9 +119,10 @@
     .profile-header {
       text-align: center;
       padding: 60px 20px 40px 20px;
-      background: linear-gradient(135deg, #FF6B35, #F7931E);
+      background: linear-gradient(135deg, rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.9));
       position: relative;
       overflow: hidden;
+      border-bottom: 3px solid rgba(255, 255, 255, 0.1);
     }
 
     .profile-header::before {
@@ -154,8 +155,8 @@
       margin-bottom: 15px;
       color: #ffffff;
       text-shadow: 
-        4px 4px 0px #002040,
-        8px 8px 0px rgba(0, 32, 64, 0.3);
+        2px 2px 8px rgba(0, 0, 0, 0.8),
+        0 0 30px rgba(255, 255, 255, 0.3);
       animation: titlePulse 3s ease-in-out infinite;
       text-transform: uppercase;
       letter-spacing: 3px;
@@ -167,10 +168,10 @@
     }
 
     .profile-subtitle {
-      color: #ffffff;
+      color: #e0e0e0;
       font-size: 24px;
       font-weight: 800;
-      text-shadow: 2px 2px 0px #002040;
+      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
       text-transform: uppercase;
       letter-spacing: 2px;
     }
@@ -232,7 +233,8 @@
     .profile-form {
       display: none;
       padding: 40px;
-      background: rgba(255, 255, 255, 0.95);
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(20px);
       margin: 0;
       flex: 1;
     }
@@ -260,13 +262,13 @@
 
     .form-label {
       display: block;
-      color: #002040;
+      color: #ffffff;
       font-weight: 900;
       margin-bottom: 15px;
       font-size: 24px;
       text-transform: uppercase;
       letter-spacing: 2px;
-      text-shadow: 2px 2px 0px rgba(0, 255, 136, 0.3);
+      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
       animation: labelBounce 2s ease-in-out infinite;
     }
 

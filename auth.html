@@ -164,6 +164,11 @@
       width: 100%;
       max-width: 500px;
       animation: fadeIn 1s ease-out 0.3s both;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(20px);
+      padding: 40px;
+      border-radius: 30px;
+      border: 3px solid rgba(255, 255, 255, 0.1);
     }
 
     @keyframes fadeIn {
@@ -241,10 +246,10 @@
 
     .form-label {
       display: block;
-      color: #e7e9ea;
-      font-weight: 600;
+      color: #ffffff;
+      font-weight: 700;
       margin-bottom: 12px;
-      font-size: 15px;
+      font-size: 16px;
     }
 
     .form-input {
@@ -352,15 +357,15 @@
     }
 
     .message.error {
-      background: linear-gradient(135deg, rgba(255, 107, 53, 0.2), rgba(247, 147, 30, 0.2));
-      border: 2px solid rgba(255, 107, 53, 0.4);
+      background: rgba(239, 68, 68, 0.9);
+      border: 2px solid rgba(255, 107, 53, 0.6);
       color: #ffffff;
       backdrop-filter: blur(10px);
     }
 
     .message.success {
-      background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 212, 170, 0.2));
-      border: 2px solid rgba(0, 255, 136, 0.4);
+      background: rgba(34, 197, 94, 0.9);
+      border: 2px solid rgba(0, 255, 136, 0.6);
       color: #ffffff;
       backdrop-filter: blur(10px);
     }
