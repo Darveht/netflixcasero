@@ -4924,11 +4924,7 @@
       showSettingsMessage('Configuración de descarga guardada');
     }
 
-    // Inicializar la sección de descargas al cargar la página
-    document.addEventListener('DOMContentLoaded', () => {
-      addDownloadSectionToSettings();
-      // ... resto de la inicialización ...
-    });
+
 
     // Modificación para la función de bloqueo de pantalla
     // Reemplazar en la función lockScreen()
@@ -6048,11 +6044,7 @@
       showSettingsMessage('Configuración de descarga guardada');
     }
 
-    // Inicializar la sección de descargas al cargar la página
-    document.addEventListener('DOMContentLoaded', () => {
-      addDownloadSectionToSettings();
-      // ... resto de la inicialización ...
-    });
+
 
     // Modificación para la función de bloqueo de pantalla
     // Reemplazar en la función lockScreen()
@@ -6098,6 +6090,22 @@
       // Mostrar mensaje
       showLockMessage('Pantalla desbloqueada');
     }
+
+    // ===== INICIALIZACIÓN DE LA APLICACIÓN =====
+    document.addEventListener('DOMContentLoaded', async () => {
+      console.log('Inicializando aplicación IBTV...');
+      
+      // Agregar sección de descargas a ajustes
+      addDownloadSectionToSettings();
+      
+      // Verificar autenticación primero
+      await checkAuthentication();
+      
+      // Inicializar el sistema de estreno (navegación, búsqueda, etc.)
+      initializePremiereSystem();
+      
+      console.log('Aplicación IBTV inicializada correctamente');
+    });
 
   </script>
 </body>
