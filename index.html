@@ -2,7 +2,9 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover, shrink-to-fit=no">
+  <meta name="format-detection" content="telephone=no, date=no, email=no, address=no">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="format-detection" content="telephone=no">
@@ -24,12 +26,19 @@
       background: linear-gradient(45deg, #FF6B35 0%, #F7931E 25%, #00FF88 50%, #00D4AA 75%, #00A2FF 100%);
       background-size: 400% 400%;
       animation: gradientShift 8s ease-in-out infinite;
-      font-family: 'Comic Sans MS', 'Segoe UI', cursive, sans-serif;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Helvetica Neue', Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol';
       overscroll-behavior: contain;
       color: #ffffff;
       position: relative;
       -webkit-text-size-adjust: 100%;
+      -moz-text-size-adjust: 100%;
+      text-size-adjust: 100%;
       -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      font-feature-settings: 'kern' 1;
+      font-kerning: auto;
+      font-variant-ligatures: common-ligatures;
     }
 
     @keyframes gradientShift {
@@ -277,7 +286,7 @@
       text-shadow: 
         4px 4px 0px #002040,
         8px 8px 0px rgba(0, 32, 64, 0.3);
-      font-family: 'Comic Sans MS', cursive;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       text-transform: uppercase;
       letter-spacing: 3px;
       animation: titleBounce 4s ease-in-out infinite;
@@ -394,7 +403,7 @@
       z-index: 10;
       border: 4px solid #ffffff;
       letter-spacing: 1px;
-      font-family: 'Comic Sans MS', cursive;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
 
     @keyframes badgeBounce {
@@ -420,7 +429,7 @@
       z-index: 10;
       border: 4px solid #ffffff;
       letter-spacing: 1px;
-      font-family: 'Comic Sans MS', cursive;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
 
     @keyframes premiereSpin {
@@ -445,7 +454,7 @@
       z-index: 10;
       border: 4px solid #ffffff;
       letter-spacing: 1px;
-      font-family: 'Comic Sans MS', cursive;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
 
     @keyframes liveExplosion {
@@ -1413,7 +1422,7 @@
       box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
       text-transform: uppercase;
       letter-spacing: 1px;
-      font-family: 'Comic Sans MS', cursive;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       animation: navButtonFloat 4s ease-in-out infinite;
     }
 
@@ -1846,6 +1855,22 @@
       }
     }
 
+    /* Mejoras específicas para móviles */
+    @supports (-webkit-touch-callout: none) {
+      * {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+        text-rendering: optimizeLegibility;
+      }
+    }
+
+    /* Forzar codificación UTF-8 en todos los elementos de texto */
+    input, textarea, button, select {
+      font-family: inherit;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       .hero-title {
@@ -1989,6 +2014,14 @@
 
       ::cue(.whisper) {
         font-size: 14px;
+      }
+
+      /* Forzar fuentes del sistema en móviles */
+      * {
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif !important;
+        -webkit-text-size-adjust: 100%;
+        -webkit-font-smoothing: antialiased;
+        text-rendering: optimizeLegibility;
       }
     }
 
