@@ -430,18 +430,20 @@
       console.log('registerForm encontrado:', registerForm ? 'Sí' : 'No');
       
       if (loginForm) {
-        loginForm.addEventListener('submit', function(e) {
+        loginForm.addEventListener('submit', async function(e) {
           e.preventDefault();
-          console.log('Login form submitted');
-          handleLogin(e);
+          e.stopPropagation();
+          console.log('Login form submitted - iniciando proceso');
+          await handleLogin();
         });
       }
       
       if (registerForm) {
-        registerForm.addEventListener('submit', function(e) {
+        registerForm.addEventListener('submit', async function(e) {
           e.preventDefault();
-          console.log('Register form submitted');
-          handleRegister(e);
+          e.stopPropagation();
+          console.log('Register form submitted - iniciando proceso');
+          await handleRegister();
         });
       }
 
@@ -505,11 +507,11 @@
     }
 
     // Manejar login
-    async function handleLogin(e) {
-      console.log('handleLogin llamado');
+    async function handleLogin() {
+      console.log('=== INICIANDO LOGIN ===');
       
       if (isProcessing) {
-        console.log('Ya se está procesando, saliendo...');
+        console.log('Ya procesando, abortando');
         return;
       }
       
@@ -518,30 +520,27 @@
       const button = document.getElementById('loginButton');
       
       console.log('Email:', email);
-      console.log('Password length:', password.length);
+      console.log('Password ingresada:', password ? 'Sí' : 'No');
       
       if (!email || !password) {
         showMessage('Por favor completa todos los campos');
         return;
       }
       
+      isProcessing = true;
       setButtonLoading(button, true);
       hideMessage();
-      isProcessing = true;
 
       try {
-        console.log('Intentando iniciar sesión...');
+        console.log('Llamando a Firebase signInWithEmailAndPassword...');
         const userCredential = await auth.signInWithEmailAndPassword(email, password);
-        console.log('Inicio de sesión exitoso:', userCredential.user.email);
+        console.log('✓ Login exitoso:', userCredential.user.email);
         showMessage('¡Inicio de sesión exitoso! Redirigiendo...', 'success');
         
-        // Esperar un momento y luego verificar suscripción
-        setTimeout(async () => {
-          await checkUserSubscription(userCredential.user);
-        }, 500);
+        await checkUserSubscription(userCredential.user);
         
       } catch (error) {
-        console.error('Error en login:', error);
+        console.error('✗ Error en login:', error.code, error.message);
         showMessage(getErrorMessage(error.code));
         setButtonLoading(button, false);
         isProcessing = false;
@@ -549,11 +548,11 @@
     }
 
     // Manejar registro
-    async function handleRegister(e) {
-      console.log('handleRegister llamado');
+    async function handleRegister() {
+      console.log('=== INICIANDO REGISTRO ===');
       
       if (isProcessing) {
-        console.log('Ya se está procesando, saliendo...');
+        console.log('Ya procesando, abortando');
         return;
       }
       
@@ -563,7 +562,7 @@
       const confirmPassword = document.getElementById('confirmPassword').value;
       const button = document.getElementById('registerButton');
       
-      console.log('Datos del registro:', { name, email, passwordLength: password.length });
+      console.log('Datos:', { name, email, passwordLength: password.length });
       
       // Validaciones
       if (!name || !email || !password || !confirmPassword) {
@@ -581,22 +580,18 @@
         return;
       }
       
+      isProcessing = true;
       setButtonLoading(button, true);
       hideMessage();
-      isProcessing = true;
 
       try {
-        console.log('Creando cuenta...');
+        console.log('Llamando a Firebase createUserWithEmailAndPassword...');
         const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-        console.log('Cuenta creada:', userCredential.user.email);
+        console.log('✓ Cuenta creada:', userCredential.user.email);
         
-        // Actualizar perfil con el nombre
-        await userCredential.user.updateProfile({
-          displayName: name
-        });
-        console.log('Perfil actualizado');
+        await userCredential.user.updateProfile({ displayName: name });
+        console.log('✓ Perfil actualizado');
 
-        // Guardar información adicional en la base de datos
         await database.ref('users/' + userCredential.user.uid).set({
           name: name,
           email: email,
@@ -604,18 +599,17 @@
           subscription: null,
           profile: null
         });
-        console.log('Datos guardados en Firebase');
+        console.log('✓ Datos guardados en Firebase');
 
         showMessage('¡Cuenta creada exitosamente! Redirigiendo...', 'success');
         
-        // Redirigir directamente a subscription
         setTimeout(() => {
           console.log('Redirigiendo a subscription.html');
           window.location.href = 'subscription.html';
         }, 1500);
         
       } catch (error) {
-        console.error('Error en registro:', error);
+        console.error('✗ Error en registro:', error.code, error.message);
         showMessage(getErrorMessage(error.code));
         setButtonLoading(button, false);
         isProcessing = false;
