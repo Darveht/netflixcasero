@@ -4651,6 +4651,8 @@
     // Editar perfil
     function editProfile() {
       if (confirm('¿Deseas editar tu perfil? Serás redirigido a la configuración de perfil.')) {
+        // Guardar flag para indicar que es edición de perfil
+        localStorage.setItem('zambik_editing_profile', 'true');
         window.location.href = 'profile-setup.html';
       }
     }

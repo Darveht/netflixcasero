@@ -816,6 +816,38 @@
     // Verificar estado del usuario
     async function checkUserStatus(user) {
       try {
+        // Verificar si es edición de perfil
+        const isEditingProfile = localStorage.getItem('zambik_editing_profile');
+        if (isEditingProfile === 'true') {
+          // Limpiar flag y permitir edición
+          localStorage.removeItem('zambik_editing_profile');
+          
+          // Cargar datos del perfil existente
+          const userRef = database.ref('users/' + user.uid);
+          const snapshot = await userRef.once('value');
+          const userData = snapshot.val();
+          
+          if (userData && userData.profile) {
+            // Cargar nombre y avatar existente
+            document.getElementById('profileName').value = userData.profile.name || '';
+            
+            // Seleccionar avatar existente si existe
+            if (userData.profile.avatar && userData.profile.avatar.index !== undefined) {
+              setTimeout(() => {
+                const avatarElements = document.querySelectorAll('.avatar-option');
+                if (avatarElements[userData.profile.avatar.index]) {
+                  selectAvatar(userData.profile.avatar.index, avatarElements[userData.profile.avatar.index]);
+                }
+              }, 100);
+            }
+            
+            // Cambiar texto del botón
+            document.querySelector('.btn-primary').innerHTML = '<i class="fas fa-spinner spinner"></i>Guardar Cambios';
+            document.querySelector('.profile-title').textContent = 'Editar Perfil';
+          }
+          return;
+        }
+
         const userRef = database.ref('users/' + user.uid);
         const snapshot = await userRef.once('value');
         const userData = snapshot.val();
