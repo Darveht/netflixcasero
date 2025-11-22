@@ -411,15 +411,19 @@
     };
 
     // Inicializar Firebase
+    console.log('Inicializando Firebase...');
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const database = firebase.database();
+    console.log('Firebase inicializado correctamente');
 
     // Verificar si el usuario ya está autenticado
     let isRedirecting = false;
     auth.onAuthStateChanged((user) => {
+      console.log('onAuthStateChanged llamado, usuario:', user ? user.email : 'No autenticado');
       if (user && !isRedirecting) {
         // Usuario autenticado, verificar si tiene suscripción
+        console.log('Usuario detectado, verificando suscripción...');
         isRedirecting = true;
         checkUserSubscription(user);
       }
@@ -469,26 +473,31 @@
     // Manejar login
     document.getElementById('loginForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+      console.log('Formulario de login enviado');
       
       const email = document.getElementById('loginEmail').value;
       const password = document.getElementById('loginPassword').value;
       const button = e.target.querySelector('.auth-button');
       
+      console.log('Intentando iniciar sesión con:', email);
       setButtonLoading(button, true);
       hideMessage();
 
       try {
+        console.log('Llamando a signInWithEmailAndPassword...');
         const userCredential = await auth.signInWithEmailAndPassword(email, password);
+        console.log('Login exitoso:', userCredential.user.email);
         showMessage('¡Inicio de sesión exitoso! Redirigiendo...', 'success');
         
         // Marcar que estamos redirigiendo para evitar doble llamada de onAuthStateChanged
         isRedirecting = true;
         
         // Verificar suscripción y redirigir
+        console.log('Verificando suscripción del usuario...');
         await checkUserSubscription(userCredential.user);
         
       } catch (error) {
-        console.error('Error:', error);
+        console.error('Error en login:', error);
         showMessage(getErrorMessage(error.code));
         setButtonLoading(button, false);
         isRedirecting = false;
@@ -575,20 +584,27 @@
     // Verificar suscripción del usuario
     async function checkUserSubscription(user) {
       try {
+        console.log('checkUserSubscription llamada para usuario:', user.uid);
         const userRef = database.ref('users/' + user.uid);
         const snapshot = await userRef.once('value');
         const userData = snapshot.val();
         
+        console.log('Datos del usuario obtenidos:', userData);
+        
         if (userData && userData.subscription) {
+          console.log('Usuario tiene suscripción');
           // Tiene suscripción, verificar si tiene perfil
           if (userData.profile) {
+            console.log('Usuario tiene perfil, redirigiendo a index.html');
             // Todo completo, ir a la plataforma
             window.location.href = 'index.html';
           } else {
+            console.log('Usuario NO tiene perfil, redirigiendo a profile-setup.html');
             // Tiene suscripción pero no perfil
             window.location.href = 'profile-setup.html';
           }
         } else {
+          console.log('Usuario NO tiene suscripción, redirigiendo a subscription.html');
           // No tiene suscripción
           window.location.href = 'subscription.html';
         }
