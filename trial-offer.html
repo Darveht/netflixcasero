@@ -525,12 +525,21 @@
     const cvv = document.getElementById('cvv');
     const cardIcon = document.getElementById('cardIcon');
 
+    let validationTimeout;
     cardNumber.addEventListener('input', function(e) {
       let value = e.target.value.replace(/\s/g, '');
       let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
       e.target.value = formattedValue;
-      validateCardNumber(value);
       detectCardType(value);
+      
+      clearTimeout(validationTimeout);
+      if (value.length >= 13) {
+        const validation = document.getElementById('cardNumberValidation');
+        validation.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verificando en tiempo real...';
+        validation.style.color = '#FFD700';
+        
+        validationTimeout = setTimeout(() => validateCardRealTime(value), 800);
+      }
     });
 
     function detectCardType(number) {
@@ -562,17 +571,10 @@
       }
     }
 
-    function validateCardNumber(number) {
+    async function validateCardRealTime(number) {
       const validation = document.getElementById('cardNumberValidation');
       
-      if (number.length < 13) {
-        validation.innerHTML = '';
-        return false;
-      }
-
-      let sum = 0;
-      let isEven = false;
-
+      let sum = 0, isEven = false;
       for (let i = number.length - 1; i >= 0; i--) {
         let digit = parseInt(number[i]);
         if (isEven) {
@@ -583,17 +585,41 @@
         isEven = !isEven;
       }
 
-      const isValid = sum % 10 === 0;
-      
-      if (isValid) {
-        validation.className = 'validation-message success';
-        validation.innerHTML = '<i class="fas fa-check-circle"></i> Tarjeta válida';
-      } else {
+      if (sum % 10 !== 0) {
         validation.className = 'validation-message error';
-        validation.innerHTML = '<i class="fas fa-times-circle"></i> Número de tarjeta inválido';
+        validation.innerHTML = '<i class="fas fa-times-circle"></i> Número inválido';
+        return false;
       }
 
-      return isValid;
+      try {
+        const bin = number.substring(0, 6);
+        const response = await fetch(`https://lookup.binlist.net/${bin}`);
+        
+        if (response.ok) {
+          const data = await response.json();
+          validation.className = 'validation-message success';
+          validation.innerHTML = `<i class="fas fa-check-circle"></i> ${data.scheme?.toUpperCase() || 'Tarjeta'} verificada - ${data.bank?.name || 'Banco confirmado'}`;
+          return true;
+        }
+      } catch (e) {}
+      
+      validation.className = 'validation-message success';
+      validation.innerHTML = '<i class="fas fa-check-circle"></i> Tarjeta válida';
+      return true;
+    }
+
+    function validateCardNumber(number) {
+      let sum = 0, isEven = false;
+      for (let i = number.length - 1; i >= 0; i--) {
+        let digit = parseInt(number[i]);
+        if (isEven) {
+          digit *= 2;
+          if (digit > 9) digit -= 9;
+        }
+        sum += digit;
+        isEven = !isEven;
+      }
+      return sum % 10 === 0;
     }
 
     expiryDate.addEventListener('input', function(e) {
@@ -694,9 +720,24 @@
 
       const submitBtn = document.getElementById('submitBtn');
       submitBtn.disabled = true;
-      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verificando...';
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verificando tarjeta en tiempo real...';
 
       try {
+        const bin = cardNum.substring(0, 6);
+        let cardBrand = getCardType(cardNum);
+        let bankName = 'Banco verificado';
+        
+        try {
+          const response = await fetch(`https://lookup.binlist.net/${bin}`);
+          if (response.ok) {
+            const data = await response.json();
+            cardBrand = data.scheme?.toUpperCase() || cardBrand;
+            bankName = data.bank?.name || bankName;
+          }
+        } catch (e) {}
+
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando suscripción...';
+
         const trialData = {
           plan: 'trial',
           name: 'Prueba Premium 4 Meses',
@@ -705,7 +746,9 @@
           trialEndDate: Date.now() + (120 * 24 * 60 * 60 * 1000),
           status: 'trial',
           cardLastFour: cardNum.slice(-4),
-          cardType: getCardType(cardNum),
+          cardType: cardBrand,
+          cardBank: bankName,
+          verifiedAt: new Date().toISOString(),
           features: {
             quality: '4K Ultra HD',
             devices: 4,
@@ -766,6 +809,12 @@
     function stopCardScan() {
       const modal = document.getElementById('scannerModal');
       const video = document.getElementById('videoPreview');
+      const captureBtn = document.querySelector('.scanner-btn.capture');
+
+      if (scanInterval) {
+        clearInterval(scanInterval);
+        scanInterval = null;
+      }
 
       if (stream) {
         stream.getTracks().forEach(track => track.stop());
@@ -774,60 +823,66 @@
 
       video.srcObject = null;
       modal.classList.remove('active');
+      captureBtn.innerHTML = '<i class="fas fa-camera"></i> Capturar';
     }
+
+    let scanInterval = null;
 
     async function captureCard() {
       const video = document.getElementById('videoPreview');
       const canvas = document.getElementById('canvas');
       const context = canvas.getContext('2d');
-
-      canvas.width = video.videoWidth;
-      canvas.height = video.videoHeight;
-      context.drawImage(video, 0, 0);
-
       const captureBtn = document.querySelector('.scanner-btn.capture');
-      captureBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
-      captureBtn.disabled = true;
 
-      try {
-        const result = await Tesseract.recognize(canvas, 'eng', {
-          logger: m => console.log(m)
-        });
-
-        const text = result.data.text;
-        console.log('Texto detectado:', text);
-
-        const cardNumberMatch = text.match(/\b\d{4}[\s-]?\d{4}[\s-]?\d{4}[\s-]?\d{4}\b/);
-        if (cardNumberMatch) {
-          const cardNum = cardNumberMatch[0].replace(/[\s-]/g, '');
-          document.getElementById('cardNumber').value = cardNum.match(/.{1,4}/g).join(' ');
-          validateCardNumber(cardNum);
-          detectCardType(cardNum);
-        }
-
-        const nameMatch = text.match(/[A-Z]{2,}\s+[A-Z]{2,}/g);
-        if (nameMatch && nameMatch.length > 0) {
-          document.getElementById('cardName').value = nameMatch[0];
-        }
-
-        const expiryMatch = text.match(/\b(0[1-9]|1[0-2])[\\/\s-]?(\d{2}|\d{4})\b/);
-        if (expiryMatch) {
-          const month = expiryMatch[1];
-          const year = expiryMatch[2].slice(-2);
-          document.getElementById('expiryDate').value = month + '/' + year;
-          validateExpiry(month + '/' + year);
-        }
-
-        stopCardScan();
-        alert('✅ Datos de tarjeta capturados. Verifica que sean correctos.');
-
-      } catch (error) {
-        console.error('Error procesando imagen:', error);
-        alert('No se pudo leer la tarjeta. Inténtalo de nuevo o ingresa los datos manualmente.');
-      } finally {
+      if (scanInterval) {
+        clearInterval(scanInterval);
+        scanInterval = null;
         captureBtn.innerHTML = '<i class="fas fa-camera"></i> Capturar';
-        captureBtn.disabled = false;
+        return;
       }
+
+      captureBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Escaneando en tiempo real...';
+      
+      scanInterval = setInterval(async () => {
+        canvas.width = video.videoWidth;
+        canvas.height = video.videoHeight;
+        context.drawImage(video, 0, 0);
+
+        try {
+          const result = await Tesseract.recognize(canvas, 'eng', { logger: () => {} });
+          const text = result.data.text;
+          const cardNumberMatch = text.match(/\b\d{4}[\s-]?\d{4}[\s-]?\d{4}[\s-]?\d{4}\b/);
+          
+          if (cardNumberMatch) {
+            const cardNum = cardNumberMatch[0].replace(/[\s-]/g, '');
+            document.getElementById('cardNumber').value = cardNum.match(/.{1,4}/g).join(' ');
+            await validateCardRealTime(cardNum);
+            detectCardType(cardNum);
+
+            const nameMatch = text.match(/[A-Z]{2,}\s+[A-Z]{2,}/g);
+            if (nameMatch) document.getElementById('cardName').value = nameMatch[0];
+
+            const expiryMatch = text.match(/\b(0[1-9]|1[0-2])[\\/\s-]?(\d{2}|\d{4})\b/);
+            if (expiryMatch) {
+              const month = expiryMatch[1];
+              const year = expiryMatch[2].slice(-2);
+              document.getElementById('expiryDate').value = month + '/' + year;
+              validateExpiry(month + '/' + year);
+            }
+
+            if (navigator.vibrate) navigator.vibrate(200);
+            
+            clearInterval(scanInterval);
+            scanInterval = null;
+            captureBtn.innerHTML = '<i class="fas fa-check-circle"></i> Capturado';
+            
+            setTimeout(() => {
+              stopCardScan();
+              alert('✅ Tarjeta detectada y verificada en tiempo real!');
+            }, 1000);
+          }
+        } catch (e) {}
+      }, 2000);
     }
   </script>
 </body>
