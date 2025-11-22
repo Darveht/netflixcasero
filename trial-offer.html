@@ -1,0 +1,598 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>IBTV - Oferta Especial 4 Meses Gratis</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #00A2FF 0%, #0078D4 25%, #005A9F 50%, #003D6B 75%, #002040 100%);
+      font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
+      color: #ffffff;
+      min-height: 100vh;
+      padding: 20px;
+    }
+
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: linear-gradient(135deg, rgba(0, 120, 212, 0.3), rgba(0, 90, 159, 0.3));
+      border: 3px solid rgba(0, 255, 136, 0.4);
+      border-radius: 30px;
+      padding: 40px;
+      backdrop-filter: blur(25px);
+      box-shadow: 0 25px 70px rgba(0, 162, 255, 0.4);
+    }
+
+    .offer-badge {
+      background: linear-gradient(45deg, #FF6B35, #F7931E);
+      color: white;
+      padding: 15px 30px;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 900;
+      text-align: center;
+      margin-bottom: 30px;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      animation: pulse 2s infinite;
+      border: 3px solid rgba(255, 255, 255, 0.4);
+    }
+
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+    }
+
+    h1 {
+      font-size: 48px;
+      font-weight: 900;
+      text-align: center;
+      margin-bottom: 20px;
+      background: linear-gradient(45deg, #00FF88, #00D4AA);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 20px;
+      margin-bottom: 40px;
+      color: rgba(255, 255, 255, 0.9);
+    }
+
+    .benefits {
+      background: rgba(0, 162, 255, 0.1);
+      border-radius: 20px;
+      padding: 25px;
+      margin-bottom: 40px;
+      border: 2px solid rgba(0, 162, 255, 0.3);
+    }
+
+    .benefits h3 {
+      font-size: 22px;
+      margin-bottom: 20px;
+      color: #00FF88;
+    }
+
+    .benefits ul {
+      list-style: none;
+    }
+
+    .benefits li {
+      padding: 12px 0;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      font-size: 16px;
+    }
+
+    .benefits li i {
+      color: #10b981;
+      font-size: 18px;
+    }
+
+    .form-section {
+      margin-top: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 25px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 10px;
+      font-weight: 700;
+      font-size: 15px;
+      color: #00FF88;
+    }
+
+    input {
+      width: 100%;
+      padding: 16px;
+      border: 2px solid rgba(0, 162, 255, 0.4);
+      border-radius: 12px;
+      background: rgba(0, 32, 64, 0.5);
+      color: #ffffff;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      backdrop-filter: blur(10px);
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #00FF88;
+      box-shadow: 0 0 0 3px rgba(0, 255, 136, 0.2);
+    }
+
+    input::placeholder {
+      color: rgba(255, 255, 255, 0.5);
+    }
+
+    .card-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+
+    .card-icon {
+      position: absolute;
+      right: 15px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 32px;
+      opacity: 0.3;
+    }
+
+    .card-number-group {
+      position: relative;
+    }
+
+    .validation-message {
+      margin-top: 8px;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .validation-message.error {
+      color: #ef4444;
+    }
+
+    .validation-message.success {
+      color: #10b981;
+    }
+
+    .submit-btn {
+      width: 100%;
+      padding: 20px;
+      border: none;
+      border-radius: 15px;
+      font-size: 18px;
+      font-weight: 900;
+      cursor: pointer;
+      background: linear-gradient(45deg, #00FF88, #00D4AA);
+      color: #002040;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      transition: all 0.3s ease;
+      margin-top: 30px;
+      border: 3px solid rgba(255, 255, 255, 0.3);
+    }
+
+    .submit-btn:hover:not(:disabled) {
+      transform: translateY(-4px);
+      box-shadow: 0 15px 35px rgba(0, 255, 136, 0.6);
+    }
+
+    .submit-btn:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .security-note {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .security-note i {
+      color: #10b981;
+    }
+
+    .terms {
+      margin-top: 20px;
+      padding: 20px;
+      background: rgba(0, 162, 255, 0.1);
+      border-radius: 12px;
+      font-size: 13px;
+      color: rgba(255, 255, 255, 0.8);
+      line-height: 1.6;
+    }
+
+    @media (max-width: 768px) {
+      .container {
+        padding: 25px;
+      }
+
+      h1 {
+        font-size: 36px;
+      }
+
+      .card-row {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="offer-badge">
+      🎉 OFERTA ESPECIAL - TIEMPO LIMITADO
+    </div>
+
+    <h1>4 Meses GRATIS</h1>
+    <p class="subtitle">Prueba Premium sin costo - Solo verifica tu tarjeta</p>
+
+    <div class="benefits">
+      <h3>✨ Lo que obtienes:</h3>
+      <ul>
+        <li><i class="fas fa-check-circle"></i> 4 meses de acceso Premium totalmente gratis</li>
+        <li><i class="fas fa-check-circle"></i> Calidad 4K Ultra HD</li>
+        <li><i class="fas fa-check-circle"></i> Sin anuncios</li>
+        <li><i class="fas fa-check-circle"></i> Contenido exclusivo</li>
+        <li><i class="fas fa-check-circle"></i> Cancela cuando quieras</li>
+        <li><i class="fas fa-check-circle"></i> No se te cobrará hasta después de 4 meses</li>
+      </ul>
+    </div>
+
+    <form id="cardForm" class="form-section">
+      <h3 style="margin-bottom: 25px; color: #00FF88;">Verifica tu tarjeta</h3>
+
+      <div class="form-group card-number-group">
+        <label for="cardNumber">Número de Tarjeta</label>
+        <input 
+          type="text" 
+          id="cardNumber" 
+          placeholder="1234 5678 9012 3456"
+          maxlength="19"
+          required
+        >
+        <i id="cardIcon" class="card-icon"></i>
+        <div id="cardNumberValidation" class="validation-message"></div>
+      </div>
+
+      <div class="form-group">
+        <label for="cardName">Nombre en la Tarjeta</label>
+        <input 
+          type="text" 
+          id="cardName" 
+          placeholder="JUAN PÉREZ"
+          required
+        >
+      </div>
+
+      <div class="card-row">
+        <div class="form-group">
+          <label for="expiryDate">Fecha de Vencimiento</label>
+          <input 
+            type="text" 
+            id="expiryDate" 
+            placeholder="MM/AA"
+            maxlength="5"
+            required
+          >
+          <div id="expiryValidation" class="validation-message"></div>
+        </div>
+
+        <div class="form-group">
+          <label for="cvv">CVV</label>
+          <input 
+            type="text" 
+            id="cvv" 
+            placeholder="123"
+            maxlength="4"
+            required
+          >
+          <div id="cvvValidation" class="validation-message"></div>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn" id="submitBtn">
+        <i class="fas fa-lock"></i> Activar Prueba Gratuita
+      </button>
+
+      <div class="security-note">
+        <i class="fas fa-shield-alt"></i>
+        Tus datos están protegidos con encriptación SSL de 256 bits
+      </div>
+    </form>
+
+    <div class="terms">
+      <strong>Términos de la oferta:</strong> Esta prueba gratuita de 4 meses es válida solo para nuevos usuarios. 
+      Se requiere una tarjeta válida para verificación. No se realizará ningún cargo durante los primeros 4 meses. 
+      Después del período de prueba, se cobrará automáticamente $9.99/mes a menos que canceles antes. 
+      Puedes cancelar en cualquier momento sin penalización.
+    </div>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCFQ_geG0HIv2EZ-bfKc97TJNtf2sdqPzc",
+      authDomain: "clack-koder.firebaseapp.com",
+      databaseURL: "https://clack-koder-default-rtdb.firebaseio.com",
+      projectId: "clack-koder",
+      storageBucket: "clack-koder.firebasestorage.app",
+      messagingSenderId: "478151254938",
+      appId: "1:478151254938:web:e2c00e3a5426bd192b9023"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const database = firebase.database();
+
+    let currentUser = null;
+
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        currentUser = user;
+      } else {
+        window.location.href = 'auth.html';
+      }
+    });
+
+    // Validación de tarjeta en tiempo real
+    const cardNumber = document.getElementById('cardNumber');
+    const cardName = document.getElementById('cardName');
+    const expiryDate = document.getElementById('expiryDate');
+    const cvv = document.getElementById('cvv');
+    const cardIcon = document.getElementById('cardIcon');
+
+    // Formatear número de tarjeta
+    cardNumber.addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\s/g, '');
+      let formattedValue = value.match(/.{1,4}/g)?.join(' ') || value;
+      e.target.value = formattedValue;
+      
+      validateCardNumber(value);
+      detectCardType(value);
+    });
+
+    // Detectar tipo de tarjeta
+    function detectCardType(number) {
+      const patterns = {
+        visa: /^4/,
+        mastercard: /^5[1-5]/,
+        amex: /^3[47]/,
+        discover: /^6(?:011|5)/
+      };
+
+      cardIcon.className = 'card-icon';
+      
+      if (patterns.visa.test(number)) {
+        cardIcon.className = 'card-icon fab fa-cc-visa';
+        cardIcon.style.color = '#1A1F71';
+        cardIcon.style.opacity = '1';
+      } else if (patterns.mastercard.test(number)) {
+        cardIcon.className = 'card-icon fab fa-cc-mastercard';
+        cardIcon.style.color = '#EB001B';
+        cardIcon.style.opacity = '1';
+      } else if (patterns.amex.test(number)) {
+        cardIcon.className = 'card-icon fab fa-cc-amex';
+        cardIcon.style.color = '#006FCF';
+        cardIcon.style.opacity = '1';
+      } else if (patterns.discover.test(number)) {
+        cardIcon.className = 'card-icon fab fa-cc-discover';
+        cardIcon.style.color = '#FF6000';
+        cardIcon.style.opacity = '1';
+      }
+    }
+
+    // Algoritmo de Luhn para validar tarjeta
+    function validateCardNumber(number) {
+      const validation = document.getElementById('cardNumberValidation');
+      
+      if (number.length < 13) {
+        validation.innerHTML = '';
+        return false;
+      }
+
+      let sum = 0;
+      let isEven = false;
+
+      for (let i = number.length - 1; i >= 0; i--) {
+        let digit = parseInt(number[i]);
+
+        if (isEven) {
+          digit *= 2;
+          if (digit > 9) digit -= 9;
+        }
+
+        sum += digit;
+        isEven = !isEven;
+      }
+
+      const isValid = sum % 10 === 0;
+      
+      if (isValid) {
+        validation.className = 'validation-message success';
+        validation.innerHTML = '<i class="fas fa-check-circle"></i> Tarjeta válida';
+      } else {
+        validation.className = 'validation-message error';
+        validation.innerHTML = '<i class="fas fa-times-circle"></i> Número de tarjeta inválido';
+      }
+
+      return isValid;
+    }
+
+    // Formatear fecha de vencimiento
+    expiryDate.addEventListener('input', function(e) {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length >= 2) {
+        value = value.slice(0, 2) + '/' + value.slice(2, 4);
+      }
+      e.target.value = value;
+      validateExpiry(value);
+    });
+
+    // Validar fecha de vencimiento
+    function validateExpiry(value) {
+      const validation = document.getElementById('expiryValidation');
+      
+      if (value.length < 5) {
+        validation.innerHTML = '';
+        return false;
+      }
+
+      const [month, year] = value.split('/');
+      const currentDate = new Date();
+      const currentYear = currentDate.getFullYear() % 100;
+      const currentMonth = currentDate.getMonth() + 1;
+
+      const expMonth = parseInt(month);
+      const expYear = parseInt(year);
+
+      if (expMonth < 1 || expMonth > 12) {
+        validation.className = 'validation-message error';
+        validation.innerHTML = '<i class="fas fa-times-circle"></i> Mes inválido';
+        return false;
+      }
+
+      if (expYear < currentYear || (expYear === currentYear && expMonth < currentMonth)) {
+        validation.className = 'validation-message error';
+        validation.innerHTML = '<i class="fas fa-times-circle"></i> Tarjeta vencida';
+        return false;
+      }
+
+      validation.className = 'validation-message success';
+      validation.innerHTML = '<i class="fas fa-check-circle"></i> Fecha válida';
+      return true;
+    }
+
+    // Validar CVV
+    cvv.addEventListener('input', function(e) {
+      e.target.value = e.target.value.replace(/\D/g, '');
+      validateCVV(e.target.value);
+    });
+
+    function validateCVV(value) {
+      const validation = document.getElementById('cvvValidation');
+      
+      if (value.length < 3) {
+        validation.innerHTML = '';
+        return false;
+      }
+
+      if (value.length >= 3 && value.length <= 4) {
+        validation.className = 'validation-message success';
+        validation.innerHTML = '<i class="fas fa-check-circle"></i> CVV válido';
+        return true;
+      }
+
+      return false;
+    }
+
+    // Convertir nombre a mayúsculas
+    cardName.addEventListener('input', function(e) {
+      e.target.value = e.target.value.toUpperCase();
+    });
+
+    // Enviar formulario
+    document.getElementById('cardForm').addEventListener('submit', async function(e) {
+      e.preventDefault();
+
+      const cardNum = cardNumber.value.replace(/\s/g, '');
+      const name = cardName.value.trim();
+      const expiry = expiryDate.value;
+      const cvvValue = cvv.value;
+
+      // Validaciones finales
+      if (!validateCardNumber(cardNum)) {
+        alert('Por favor, ingresa un número de tarjeta válido');
+        return;
+      }
+
+      if (!validateExpiry(expiry)) {
+        alert('Por favor, ingresa una fecha de vencimiento válida');
+        return;
+      }
+
+      if (!validateCVV(cvvValue)) {
+        alert('Por favor, ingresa un CVV válido');
+        return;
+      }
+
+      if (name.length < 3) {
+        alert('Por favor, ingresa el nombre como aparece en la tarjeta');
+        return;
+      }
+
+      const submitBtn = document.getElementById('submitBtn');
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Verificando...';
+
+      try {
+        // Guardar información de la prueba gratuita
+        const trialData = {
+          plan: 'trial',
+          name: 'Prueba Premium 4 Meses',
+          price: '$0.00',
+          startDate: firebase.database.ServerValue.TIMESTAMP,
+          trialEndDate: Date.now() + (120 * 24 * 60 * 60 * 1000), // 4 meses
+          status: 'trial',
+          cardLastFour: cardNum.slice(-4),
+          cardType: getCardType(cardNum),
+          features: {
+            quality: '4K Ultra HD',
+            devices: 4,
+            downloads: true,
+            ads: false,
+            exclusive: true
+          }
+        };
+
+        await database.ref('users/' + currentUser.uid + '/subscription').set(trialData);
+
+        // Mostrar éxito
+        submitBtn.innerHTML = '<i class="fas fa-check-circle"></i> ¡Activado!';
+        submitBtn.style.background = 'linear-gradient(45deg, #10b981, #34d399)';
+
+        setTimeout(() => {
+          window.location.href = 'profile-setup.html';
+        }, 2000);
+
+      } catch (error) {
+        console.error('Error:', error);
+        alert('Error al procesar la verificación. Intenta nuevamente.');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = '<i class="fas fa-lock"></i> Activar Prueba Gratuita';
+      }
+    });
+
+    function getCardType(number) {
+      if (/^4/.test(number)) return 'Visa';
+      if (/^5[1-5]/.test(number)) return 'Mastercard';
+      if (/^3[47]/.test(number)) return 'American Express';
+      if (/^6(?:011|5)/.test(number)) return 'Discover';
+      return 'Unknown';
+    }
+  </script>
+</body>
+</html>
