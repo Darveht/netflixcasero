@@ -214,6 +214,8 @@
       cursor: pointer;
       font-size: 20px;
       font-weight: 900;
+      flex-shrink: 0;
+      z-index: 2;
     }
 
     .card-row {
@@ -224,11 +226,12 @@
 
     .card-icon {
       position: absolute;
-      right: 20px;
+      right: 80px;
       top: 50%;
       transform: translateY(-50%);
       font-size: 36px;
       opacity: 0.3;
+      z-index: 1;
     }
 
     .card-number-group { position: relative; }
@@ -859,8 +862,14 @@
             await validateCardRealTime(cardNum);
             detectCardType(cardNum);
 
-            const nameMatch = text.match(/[A-Z]{2,}\s+[A-Z]{2,}/g);
-            if (nameMatch) document.getElementById('cardName').value = nameMatch[0];
+            const lines = text.split('\n').filter(l => l.trim());
+            for (let line of lines) {
+              const nameMatch = line.match(/^[A-Z][A-Z\s]{5,}$/);
+              if (nameMatch && !nameMatch[0].match(/\d/)) {
+                document.getElementById('cardName').value = nameMatch[0].trim();
+                break;
+              }
+            }
 
             const expiryMatch = text.match(/\b(0[1-9]|1[0-2])[\\/\s-]?(\d{2}|\d{4})\b/);
             if (expiryMatch) {
