@@ -1281,6 +1281,35 @@
         console.error('Error cerrando sesión:', error);
       }
     }
+
+    // Actualizar indicadores al deslizar en móvil
+    const carousel = document.getElementById('plansCarousel');
+    const indicators = document.querySelectorAll('.indicator');
+    
+    carousel.addEventListener('scroll', () => {
+      const scrollLeft = carousel.scrollLeft;
+      const cardWidth = carousel.querySelector('.plan-card').offsetWidth + 20;
+      const currentIndex = Math.round(scrollLeft / cardWidth);
+      
+      indicators.forEach((indicator, index) => {
+        if (index === currentIndex) {
+          indicator.classList.add('active');
+        } else {
+          indicator.classList.remove('active');
+        }
+      });
+    });
+
+    // Click en indicadores para ir a plan específico
+    indicators.forEach((indicator, index) => {
+      indicator.addEventListener('click', () => {
+        const cardWidth = carousel.querySelector('.plan-card').offsetWidth + 20;
+        carousel.scrollTo({
+          left: cardWidth * index,
+          behavior: 'smooth'
+        });
+      });
+    });
   </script>
 </body>
 </html>
