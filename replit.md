@@ -187,6 +187,16 @@ Las credenciales están configuradas en todos los archivos: `index.html`, `auth.
 
 ## Cambios Recientes
 
+**22 de noviembre de 2025 - Sesión 3 (Corrección de Event Listeners)**
+- ✅ Corregido bug crítico: event listeners no se añadían a los formularios de login y registro
+- ✅ Envuelto código de inicialización en `DOMContentLoaded` para garantizar que el DOM esté listo
+- ✅ Convertidos event listeners inline a funciones `handleLogin()` y `handleRegister()`
+- ✅ Agregados logs de depuración para verificar que los formularios se detectan correctamente
+- ✅ Reinstalado Python 3.11 para servidor HTTP
+- ✅ Actualizado .gitignore con archivos de Python
+- ✅ Credenciales de Firebase movidas a variables de entorno para mayor seguridad
+- ✅ Verificado que los formularios ahora se detectan: "loginForm encontrado: Sí", "registerForm encontrado: Sí"
+
 **22 de noviembre de 2025 - Sesión 2 (Corrección de Autenticación)**
 - ✅ Instalado Python 3.11 para servidor HTTP
 - ✅ Corregido error crítico en auth.html: eliminada condición de carrera entre `onAuthStateChanged` y llamadas manuales a `checkUserSubscription`
