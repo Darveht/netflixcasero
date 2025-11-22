@@ -1895,6 +1895,135 @@
       font-weight: 400 !important;
     }
 
+    /* Estilos para tabs de información */
+    .series-info-section {
+      padding: 0 16px 40px 16px;
+    }
+
+    .info-tabs {
+      display: flex;
+      gap: 12px;
+      margin-bottom: 24px;
+      border-bottom: 2px solid rgba(0, 162, 255, 0.3);
+      padding-bottom: 12px;
+    }
+
+    .info-tab {
+      background: transparent;
+      border: none;
+      color: #71767b;
+      padding: 12px 20px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-radius: 8px 8px 0 0;
+      position: relative;
+    }
+
+    .info-tab.active {
+      color: #ffffff;
+      background: linear-gradient(135deg, rgba(0, 162, 255, 0.2), rgba(0, 120, 212, 0.2));
+    }
+
+    .info-tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -14px;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, #00FF88, #00D4AA);
+      border-radius: 3px;
+    }
+
+    .info-tab:hover:not(.active) {
+      color: #ffffff;
+      background: rgba(0, 162, 255, 0.1);
+    }
+
+    .info-tab-content {
+      display: none;
+      animation: fadeIn 0.3s ease;
+    }
+
+    .info-tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Estilos para detalles */
+    .details-content {
+      padding: 20px;
+      background: linear-gradient(135deg, rgba(0, 120, 212, 0.1), rgba(0, 90, 159, 0.1));
+      border-radius: 12px;
+      border: 2px solid rgba(0, 162, 255, 0.2);
+    }
+
+    .detail-row {
+      display: flex;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(0, 162, 255, 0.1);
+    }
+
+    .detail-row:last-child {
+      border-bottom: none;
+    }
+
+    .detail-label {
+      font-weight: 700;
+      color: #00FF88;
+      min-width: 120px;
+      font-size: 15px;
+    }
+
+    .detail-value {
+      color: #ffffff;
+      flex: 1;
+      font-size: 15px;
+    }
+
+    /* Estilos para contenido similar */
+    .similar-content {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 16px;
+      padding: 20px 0;
+    }
+
+    .similar-item {
+      border-radius: 12px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border: 2px solid rgba(0, 162, 255, 0.3);
+      background: linear-gradient(135deg, rgba(0, 120, 212, 0.2), rgba(0, 90, 159, 0.2));
+    }
+
+    .similar-item:hover {
+      transform: translateY(-8px);
+      border-color: #00FF88;
+      box-shadow: 0 12px 30px rgba(0, 255, 136, 0.4);
+    }
+
+    .similar-item img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+    }
+
+    .similar-item-title {
+      padding: 12px;
+      font-size: 14px;
+      font-weight: 700;
+      color: #ffffff;
+      text-align: center;
+    }
+
     /* Responsive */
     @media (max-width: 768px) {
       .hero-title {
@@ -2038,6 +2167,40 @@
 
       ::cue(.whisper) {
         font-size: 14px;
+      }
+
+      /* Tabs responsive */
+      .info-tabs {
+        overflow-x: auto;
+        scrollbar-width: none;
+      }
+
+      .info-tabs::-webkit-scrollbar {
+        display: none;
+      }
+
+      .info-tab {
+        padding: 10px 16px;
+        font-size: 14px;
+        white-space: nowrap;
+      }
+
+      .similar-content {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 12px;
+      }
+
+      .similar-item img {
+        height: 160px;
+      }
+
+      .detail-row {
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .detail-label {
+        min-width: auto;
       }
 
       /* Forzar fuentes del sistema en móviles pero preservar Font Awesome */
@@ -3034,12 +3197,62 @@
         <i class="fas fa-film"></i>
         Trailer
       </button>
+      <button class="series-btn secondary" onclick="addToMyList()">
+        <i class="fas fa-plus"></i>
+        Mi Lista
+      </button>
+      <button class="series-btn secondary" onclick="shareContent()">
+        <i class="fas fa-share-alt"></i>
+        Compartir
+      </button>
     </div>
 
-    <div class="episodes-section">
-      <h3 class="episodes-title">Película</h3>
-      <div id="episodesList">
-        <!-- Los episodios se cargarán dinámicamente -->
+    <!-- Información adicional -->
+    <div class="series-info-section">
+      <div class="info-tabs">
+        <button class="info-tab active" onclick="showInfoTab('episodes')">Episodios</button>
+        <button class="info-tab" onclick="showInfoTab('details')">Detalles</button>
+        <button class="info-tab" onclick="showInfoTab('similar')">Similares</button>
+      </div>
+      
+      <div id="episodesTab" class="info-tab-content active">
+        <div class="episodes-section">
+          <h3 class="episodes-title">Película</h3>
+          <div id="episodesList">
+            <!-- Los episodios se cargarán dinámicamente -->
+          </div>
+        </div>
+      </div>
+      
+      <div id="detailsTab" class="info-tab-content">
+        <div class="details-content">
+          <div class="detail-row">
+            <span class="detail-label">Director:</span>
+            <span class="detail-value" id="directorInfo">-</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Reparto:</span>
+            <span class="detail-value" id="castInfo">-</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Género:</span>
+            <span class="detail-value" id="genreInfo">-</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Duración:</span>
+            <span class="detail-value" id="durationInfo">-</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Calificación:</span>
+            <span class="detail-value" id="ratingInfo">-</span>
+          </div>
+        </div>
+      </div>
+      
+      <div id="similarTab" class="info-tab-content">
+        <div class="similar-content" id="similarContent">
+          <!-- Contenido similar se cargará aquí -->
+        </div>
       </div>
     </div>
 
@@ -3316,6 +3529,100 @@
 
       <div class="settings-group">
         <h3 class="settings-group-title">
+          <i class="fas fa-download"></i>
+          Descargas
+        </h3>
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-name">Descargas automáticas</div>
+            <div class="setting-description">Descargar contenido para ver sin conexión</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="autoDownloadToggle">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-name">Calidad de descarga</div>
+            <div class="setting-description">Calidad para contenido descargado</div>
+          </div>
+          <select class="setting-select" id="downloadQuality">
+            <option value="high">Alta</option>
+            <option value="medium">Media</option>
+            <option value="low">Baja</option>
+          </select>
+        </div>
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-name">Eliminar descargas</div>
+            <div class="setting-description">Liberar espacio de almacenamiento</div>
+          </div>
+          <button class="settings-btn secondary" onclick="clearDownloads()" style="width: auto; padding: 8px 16px; font-size: 14px;">
+            <i class="fas fa-trash"></i>
+            Limpiar
+          </button>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <h3 class="settings-group-title">
+          <i class="fas fa-palette"></i>
+          Apariencia
+        </h3>
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-name">Tema</div>
+            <div class="setting-description">Cambiar tema de la aplicación</div>
+          </div>
+          <select class="setting-select" id="themeSelect">
+            <option value="default">Predeterminado</option>
+            <option value="dark">Oscuro</option>
+            <option value="light">Claro</option>
+          </select>
+        </div>
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-name">Tamaño de texto</div>
+            <div class="setting-description">Ajustar tamaño de fuente</div>
+          </div>
+          <select class="setting-select" id="textSize">
+            <option value="small">Pequeño</option>
+            <option value="medium">Mediano</option>
+            <option value="large">Grande</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <h3 class="settings-group-title">
+          <i class="fas fa-wifi"></i>
+          Red y Datos
+        </h3>
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-name">Reproducir solo con WiFi</div>
+            <div class="setting-description">Evitar uso de datos móviles</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="wifiOnlyToggle">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-name">Ahorro de datos</div>
+            <div class="setting-description">Reducir calidad para ahorrar datos</div>
+          </div>
+          <label class="toggle-switch">
+            <input type="checkbox" id="dataSaverToggle">
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <h3 class="settings-group-title">
           <i class="fas fa-user"></i>
           Cuenta
         </h3>
@@ -3325,6 +3632,16 @@
             <div class="setting-description" id="currentProfileName">Cargando...</div>
           </div>
           <div id="userAvatar" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px;"></div>
+        </div>
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-name">Historial de reproducción</div>
+            <div class="setting-description">Ver y gestionar tu historial</div>
+          </div>
+          <button class="settings-btn secondary" onclick="viewHistory()" style="width: auto; padding: 8px 16px; font-size: 14px;">
+            <i class="fas fa-history"></i>
+            Ver
+          </button>
         </div>
         <div class="setting-item">
           <div class="setting-info">
@@ -4270,6 +4587,129 @@
       }, 2000);
     }
 
+    // Funciones para tabs de información
+    function showInfoTab(tabName) {
+      // Ocultar todos los tabs
+      document.querySelectorAll('.info-tab').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.info-tab-content').forEach(content => content.classList.remove('active'));
+
+      // Mostrar tab seleccionado
+      event.target.classList.add('active');
+      document.getElementById(tabName + 'Tab').classList.add('active');
+
+      // Cargar contenido según el tab
+      if (tabName === 'details') {
+        loadDetailsInfo();
+      } else if (tabName === 'similar') {
+        loadSimilarContent();
+      }
+    }
+
+    // Cargar información de detalles
+    function loadDetailsInfo() {
+      if (!currentSeries) return;
+
+      document.getElementById('directorInfo').textContent = currentSeries.director || 'Información no disponible';
+      document.getElementById('castInfo').textContent = currentSeries.cast || 'Información no disponible';
+      document.getElementById('genreInfo').textContent = currentSeries.genre || 'Terror';
+      document.getElementById('durationInfo').textContent = currentSeries.duration || 'Variable';
+      document.getElementById('ratingInfo').textContent = currentSeries.rating || '18+';
+    }
+
+    // Cargar contenido similar
+    function loadSimilarContent() {
+      const similarContainer = document.getElementById('similarContent');
+      similarContainer.innerHTML = '';
+
+      // Obtener contenido similar basado en género
+      const similarItems = Object.values(seriesDatabase).filter(item => 
+        item.id !== currentSeries.id && 
+        item.genre.includes(currentSeries.genre.split(',')[0])
+      ).slice(0, 6);
+
+      if (similarItems.length === 0) {
+        similarContainer.innerHTML = '<p style="color: #71767b; text-align: center; padding: 40px;">No hay contenido similar disponible</p>';
+        return;
+      }
+
+      similarItems.forEach(item => {
+        const similarItem = document.createElement('div');
+        similarItem.className = 'similar-item';
+        similarItem.onclick = () => showSeriesDetail(item.id);
+        similarItem.innerHTML = `
+          <img src="${item.poster}" alt="${item.title}">
+          <div class="similar-item-title">${item.title}</div>
+        `;
+        similarContainer.appendChild(similarItem);
+      });
+    }
+
+    // Agregar a mi lista
+    function addToMyList() {
+      if (!currentSeries) return;
+
+      const myList = JSON.parse(localStorage.getItem('ibtv_my_list') || '[]');
+      const index = myList.findIndex(item => item.id === currentSeries.id);
+
+      if (index === -1) {
+        myList.push({ id: currentSeries.id, addedAt: new Date().toISOString() });
+        localStorage.setItem('ibtv_my_list', JSON.stringify(myList));
+        showSettingsMessage('✅ Añadido a Mi Lista');
+      } else {
+        myList.splice(index, 1);
+        localStorage.setItem('ibtv_my_list', JSON.stringify(myList));
+        showSettingsMessage('❌ Eliminado de Mi Lista');
+      }
+    }
+
+    // Compartir contenido
+    function shareContent() {
+      if (!currentSeries) return;
+
+      const shareData = {
+        title: currentSeries.title,
+        text: `¡Mira ${currentSeries.title} en IBTV!`,
+        url: window.location.href
+      };
+
+      if (navigator.share) {
+        navigator.share(shareData).catch(() => {
+          copyToClipboard(window.location.href);
+        });
+      } else {
+        copyToClipboard(window.location.href);
+      }
+    }
+
+    // Copiar al portapapeles
+    function copyToClipboard(text) {
+      const textarea = document.createElement('textarea');
+      textarea.value = text;
+      document.body.appendChild(textarea);
+      textarea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textarea);
+      showSettingsMessage('🔗 Enlace copiado al portapapeles');
+    }
+
+    // Limpiar descargas
+    function clearDownloads() {
+      if (confirm('¿Estás seguro de que quieres eliminar todas las descargas?')) {
+        localStorage.removeItem('ibtv_downloads');
+        showSettingsMessage('🗑️ Descargas eliminadas');
+      }
+    }
+
+    // Ver historial
+    function viewHistory() {
+      const history = JSON.parse(localStorage.getItem('ibtv_history') || '[]');
+      if (history.length === 0) {
+        showSettingsMessage('No hay historial de reproducción');
+        return;
+      }
+      showSettingsMessage(`Tienes ${history.length} elementos en tu historial`);
+    }
+
     // Cargar configuraciones actuales
     function loadCurrentSettings() {
       // Cargar perfil del usuario
@@ -4288,6 +4728,14 @@
       document.getElementById('releaseNotifications').checked = settings.releaseNotifications !== false;
       document.getElementById('reminderNotifications').checked = settings.reminderNotifications !== false;
       document.getElementById('parentalControl').value = settings.parentalControl || 'all';
+      
+      // Cargar nuevas configuraciones
+      document.getElementById('autoDownloadToggle').checked = settings.autoDownload || false;
+      document.getElementById('downloadQuality').value = settings.downloadQuality || 'medium';
+      document.getElementById('themeSelect').value = settings.theme || 'default';
+      document.getElementById('textSize').value = settings.textSize || 'medium';
+      document.getElementById('wifiOnlyToggle').checked = settings.wifiOnly || false;
+      document.getElementById('dataSaverToggle').checked = settings.dataSaver || false;
     }
 
     // Guardar ajustes
@@ -4300,7 +4748,13 @@
         defaultSubtitles: document.getElementById('defaultSubtitles').checked,
         releaseNotifications: document.getElementById('releaseNotifications').checked,
         reminderNotifications: document.getElementById('reminderNotifications').checked,
-        parentalControl: document.getElementById('parentalControl').value
+        parentalControl: document.getElementById('parentalControl').value,
+        autoDownload: document.getElementById('autoDownloadToggle').checked,
+        downloadQuality: document.getElementById('downloadQuality').value,
+        theme: document.getElementById('themeSelect').value,
+        textSize: document.getElementById('textSize').value,
+        wifiOnly: document.getElementById('wifiOnlyToggle').checked,
+        dataSaver: document.getElementById('dataSaverToggle').checked
       };
 
       localStorage.setItem('ibtv_settings', JSON.stringify(settings));
@@ -4742,6 +5196,9 @@
         poster: 'https://i.ibb.co/DDh79krZ/image.png',
         trailer: 'https://dl.dropboxusercontent.com/scl/fi/h5ekhsy1045o93jdnp6ff/copy_426DEAF5-2226-49A9-9851-729E4CF8A1AB.mov?rlkey=ar8anbypid3bm3fxosbet22fb&st=embhl2dy&dl=1',
         youtubeReference: '#',
+        director: 'Desconocido',
+        cast: 'Elenco por confirmar',
+        duration: '1h 45min',
         subtitles: {
           spanish: {
             type: 'inline',
@@ -4794,6 +5251,9 @@
         poster: 'https://m.media-amazon.com/images/M/MV5BODZiOGIxZTQtZjA2My00NzY3LTlkZTktZmFlZjJkOThhN2NjXkEyXkFqcGc@._V1_QL75_UX190_CR0,2,190,281_.jpg',
         trailer: 'https://dl.dropboxusercontent.com/scl/fi/knmd1rvklx9qkmzz38d5x/2968597981486262751.mp4?rlkey=hpz7w3qyd67yboabi09svgl64&st=2h4ym2d1',
         youtubeReference: '#',
+        director: 'Desconocido',
+        cast: 'Elenco por confirmar',
+        duration: '1h 30min',
         subtitles: {
           spanish: 'subtitles/double-vision-es.vtt',
           english: 'subtitles/double-vision-en.vtt'
@@ -4821,6 +5281,9 @@
         poster: 'https://i.ytimg.com/vi/4f3hG-5grlw/maxresdefault.jpg',
         trailer: 'https://dl.dropboxusercontent.com/scl/fi/1kpsf3351raocgyiwb1rd/3984583787530253122.mp4?rlkey=ac3xzejk67taj2odw9q94rc07&st=y2152ek3',
         youtubeReference: 'https://youtu.be/4f3hG-5grlw?si=adowKM2_Y8GX4G99',
+        director: 'Desconocido',
+        cast: 'Elenco por confirmar',
+        duration: '2h 10min',
         audioTracks: {
           original: 'https://dl.dropboxusercontent.com/scl/fi/1kpsf3351raocgyiwb1rd/3984583787530253122.mp4?rlkey=ac3xzejk67taj2odw9q94rc07&st=y2152ek3',
           spanish: 'https://dl.dropboxusercontent.com/scl/fi/1kpsf3351raocgyiwb1rd/3984583787530253122.mp4?rlkey=ac3xzejk67taj2odw9q94rc07&st=y2152ek3',
@@ -4853,6 +5316,9 @@
         poster: 'https://i.ytimg.com/vi/i229gWn3Z5A/maxresdefault.jpg',
         trailer: 'https://www.dropbox.com/scl/fi/5ktcz9zq60w5hq2s2arde/602596538962659684.mp4?rlkey=q35ez2mg7lu30xx31s5vahxso&st=r1c3005h&dl=0', // Dropbox link converted to direct streaming
         youtubeReference: '#',
+        director: 'Desconocido',
+        cast: 'Actor principal',
+        duration: '15min',
         subtitles: {}, // No subtitles provided for this short film
         episodes: [
           {
@@ -5041,6 +5507,15 @@
 
       // Mostrar cuenta regresiva en detalles si es necesario
       showCountdownInDetails(series);
+
+      // Cargar información de detalles por defecto
+      loadDetailsInfo();
+
+      // Resetear tabs a episodios
+      document.querySelectorAll('.info-tab').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.info-tab-content').forEach(content => content.classList.remove('active'));
+      document.querySelector('.info-tab').classList.add('active');
+      document.getElementById('episodesTab').classList.add('active');
 
       // Mostrar vista detallada
       document.getElementById('seriesDetail').classList.add('active');
