@@ -4774,6 +4774,22 @@
         }
       }
 
+      // Mostrar botón de play
+      function showPlayButton() {
+        const playBtn = document.querySelector('.netflix-play-btn');
+        if (playBtn) {
+          playBtn.style.display = 'flex';
+        }
+      }
+
+      // Ocultar botón de play
+      function hidePlayButton() {
+        const playBtn = document.querySelector('.netflix-play-btn');
+        if (playBtn) {
+          playBtn.style.display = 'none';
+        }
+      }
+
       // Función de descarga de contenido actual
       function downloadCurrentContent() {
         if (!currentVideo || !currentVideo.videoUrl) {
@@ -5879,6 +5895,22 @@
               '<i class="fas fa-volume-mute"></i>' : 
               '<i class="fas fa-volume-up"></i>';
           }
+        }
+      }
+
+      // Mostrar botón de play
+      function showPlayButton() {
+        const playBtn = document.querySelector('.netflix-play-btn');
+        if (playBtn) {
+          playBtn.style.display = 'flex';
+        }
+      }
+
+      // Ocultar botón de play
+      function hidePlayButton() {
+        const playBtn = document.querySelector('.netflix-play-btn');
+        if (playBtn) {
+          playBtn.style.display = 'none';
         }
       }
 
