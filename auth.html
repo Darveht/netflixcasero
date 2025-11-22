@@ -416,9 +416,11 @@
     const database = firebase.database();
 
     // Verificar si el usuario ya está autenticado
+    let isRedirecting = false;
     auth.onAuthStateChanged((user) => {
-      if (user) {
+      if (user && !isRedirecting) {
         // Usuario autenticado, verificar si tiene suscripción
+        isRedirecting = true;
         checkUserSubscription(user);
       }
     });
@@ -477,18 +479,19 @@
 
       try {
         const userCredential = await auth.signInWithEmailAndPassword(email, password);
-        showMessage('¡Inicio de sesión exitoso!', 'success');
+        showMessage('¡Inicio de sesión exitoso! Redirigiendo...', 'success');
         
-        // Verificar suscripción
-        setTimeout(() => {
-          checkUserSubscription(userCredential.user);
-        }, 1000);
+        // Marcar que estamos redirigiendo para evitar doble llamada de onAuthStateChanged
+        isRedirecting = true;
+        
+        // Verificar suscripción y redirigir
+        await checkUserSubscription(userCredential.user);
         
       } catch (error) {
         console.error('Error:', error);
         showMessage(getErrorMessage(error.code));
-      } finally {
         setButtonLoading(button, false);
+        isRedirecting = false;
       }
     });
 
@@ -517,6 +520,9 @@
       hideMessage();
 
       try {
+        // Marcar que estamos redirigiendo
+        isRedirecting = true;
+        
         const userCredential = await auth.createUserWithEmailAndPassword(email, password);
         
         // Actualizar perfil con el nombre
@@ -533,9 +539,9 @@
           profile: null
         });
 
-        showMessage('¡Cuenta creada exitosamente!', 'success');
+        showMessage('¡Cuenta creada exitosamente! Redirigiendo...', 'success');
         
-        // Redirigir a selección de plan
+        // Redirigir a selección de plan (usuarios nuevos siempre van a subscription)
         setTimeout(() => {
           window.location.href = 'subscription.html';
         }, 1000);
@@ -543,8 +549,8 @@
       } catch (error) {
         console.error('Error:', error);
         showMessage(getErrorMessage(error.code));
-      } finally {
         setButtonLoading(button, false);
+        isRedirecting = false;
       }
     });
 
