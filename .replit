@@ -1,4 +1,4 @@
-modules = ["web", "python-3.11"]
+modules = ["web"]
 
 [nix]
 channel = "stable-25_05"
@@ -65,5 +65,21 @@ localPort = 41177
 externalPort = 3002
 
 [[ports]]
+localPort = 41701
+externalPort = 4200
+
+[[ports]]
 localPort = 45237
 externalPort = 3003
+
+[userenv]
+
+[userenv.shared]
+FIREBASE_API_KEY = "AIzaSyCFQ_geG0HIv2EZ-bfKc97TJNtf2sdqPzc"
+FIREBASE_AUTH_DOMAIN = "clack-koder.firebaseapp.com"
+FIREBASE_DATABASE_URL = "https://clack-koder-default-rtdb.firebaseio.com"
+FIREBASE_PROJECT_ID = "clack-koder"
+FIREBASE_STORAGE_BUCKET = "clack-koder.firebasestorage.app"
+FIREBASE_MESSAGING_SENDER_ID = "478151254938"
+FIREBASE_APP_ID = "1:478151254938:web:e2c00e3a5426bd192b9023"
+FIREBASE_MEASUREMENT_ID = "G-P29ME5Z3S1"
