@@ -356,13 +356,13 @@
           <input type="password" class="form-input" id="loginPassword" placeholder="••••••••" required>
         </div>
 
-        <button type="submit" class="auth-button">
+        <button type="submit" class="auth-button" id="loginButton">
           <i class="fas fa-spinner spinner"></i>
           Iniciar Sesión
         </button>
 
         <div class="auth-link">
-          <a href="#" onclick="resetPassword()">¿Olvidaste tu contraseña?</a>
+          <a href="#" id="resetPasswordLink">¿Olvidaste tu contraseña?</a>
         </div>
       </form>
 
@@ -388,7 +388,7 @@
           <input type="password" class="form-input" id="confirmPassword" placeholder="Repite tu contraseña" required>
         </div>
 
-        <button type="submit" class="auth-button">
+        <button type="submit" class="auth-button" id="registerButton">
           <i class="fas fa-spinner spinner"></i>
           Crear Cuenta
         </button>
@@ -419,21 +419,44 @@
 
     // Esperar a que el DOM esté listo
     document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM listo, configurando event listeners...');
+      
       // Configurar event listeners de los formularios
       const loginForm = document.getElementById('loginForm');
       const registerForm = document.getElementById('registerForm');
+      const resetPasswordLink = document.getElementById('resetPasswordLink');
+      
+      console.log('loginForm encontrado:', loginForm ? 'Sí' : 'No');
+      console.log('registerForm encontrado:', registerForm ? 'Sí' : 'No');
       
       if (loginForm) {
-        loginForm.addEventListener('submit', handleLogin);
+        loginForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          console.log('Login form submitted');
+          handleLogin(e);
+        });
       }
       
       if (registerForm) {
-        registerForm.addEventListener('submit', handleRegister);
+        registerForm.addEventListener('submit', function(e) {
+          e.preventDefault();
+          console.log('Register form submitted');
+          handleRegister(e);
+        });
+      }
+
+      if (resetPasswordLink) {
+        resetPasswordLink.addEventListener('click', function(e) {
+          e.preventDefault();
+          resetPassword();
+        });
       }
 
       // Verificar autenticación solo una vez al cargar
       auth.onAuthStateChanged((user) => {
+        console.log('onAuthStateChanged llamado, usuario:', user ? user.email : 'No autenticado');
         if (user && !isProcessing) {
+          console.log('Usuario autenticado, verificando suscripción...');
           isProcessing = true;
           checkUserSubscription(user);
         }
@@ -483,13 +506,19 @@
 
     // Manejar login
     async function handleLogin(e) {
-      e.preventDefault();
+      console.log('handleLogin llamado');
       
-      if (isProcessing) return;
+      if (isProcessing) {
+        console.log('Ya se está procesando, saliendo...');
+        return;
+      }
       
       const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value;
-      const button = e.target.querySelector('.auth-button');
+      const button = document.getElementById('loginButton');
+      
+      console.log('Email:', email);
+      console.log('Password length:', password.length);
       
       if (!email || !password) {
         showMessage('Por favor completa todos los campos');
@@ -501,7 +530,9 @@
       isProcessing = true;
 
       try {
+        console.log('Intentando iniciar sesión...');
         const userCredential = await auth.signInWithEmailAndPassword(email, password);
+        console.log('Inicio de sesión exitoso:', userCredential.user.email);
         showMessage('¡Inicio de sesión exitoso! Redirigiendo...', 'success');
         
         // Esperar un momento y luego verificar suscripción
@@ -519,15 +550,20 @@
 
     // Manejar registro
     async function handleRegister(e) {
-      e.preventDefault();
+      console.log('handleRegister llamado');
       
-      if (isProcessing) return;
+      if (isProcessing) {
+        console.log('Ya se está procesando, saliendo...');
+        return;
+      }
       
       const name = document.getElementById('registerName').value.trim();
       const email = document.getElementById('registerEmail').value.trim();
       const password = document.getElementById('registerPassword').value;
       const confirmPassword = document.getElementById('confirmPassword').value;
-      const button = e.target.querySelector('.auth-button');
+      const button = document.getElementById('registerButton');
+      
+      console.log('Datos del registro:', { name, email, passwordLength: password.length });
       
       // Validaciones
       if (!name || !email || !password || !confirmPassword) {
@@ -550,12 +586,15 @@
       isProcessing = true;
 
       try {
+        console.log('Creando cuenta...');
         const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        console.log('Cuenta creada:', userCredential.user.email);
         
         // Actualizar perfil con el nombre
         await userCredential.user.updateProfile({
           displayName: name
         });
+        console.log('Perfil actualizado');
 
         // Guardar información adicional en la base de datos
         await database.ref('users/' + userCredential.user.uid).set({
@@ -565,16 +604,18 @@
           subscription: null,
           profile: null
         });
+        console.log('Datos guardados en Firebase');
 
         showMessage('¡Cuenta creada exitosamente! Redirigiendo...', 'success');
         
         // Redirigir directamente a subscription
         setTimeout(() => {
+          console.log('Redirigiendo a subscription.html');
           window.location.href = 'subscription.html';
         }, 1500);
         
       } catch (error) {
-        console.error('Error:', error);
+        console.error('Error en registro:', error);
         showMessage(getErrorMessage(error.code));
         setButtonLoading(button, false);
         isProcessing = false;
