@@ -11,7 +11,7 @@
   <meta name="screen-orientation" content="portrait">
   <meta name="mobile-web-app-capable" content="yes">
   <meta name="theme-color" content="#000000">
-  <title>IBTV</title>
+  <title>Zambik</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin="anonymous">
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
@@ -3646,7 +3646,7 @@
         <div class="setting-item">
           <div class="setting-info">
             <div class="setting-name">Cerrar Sesión</div>
-            <div class="setting-description">Salir de tu cuenta de IBTV</div>
+            <div class="setting-description">Salir de tu cuenta de Zambik</div>
           </div>
           <button class="settings-btn secondary" onclick="logoutFirebase()" style="width: auto; padding: 8px 16px; font-size: 14px;">
             <i class="fas fa-sign-out-alt"></i>
@@ -3826,8 +3826,8 @@
         }
 
         // Guardar datos en localStorage para compatibilidad
-        localStorage.setItem('ibtv_user_profile', JSON.stringify(userProfile));
-        localStorage.setItem('ibtv_subscription', 'active');
+        localStorage.setItem('zambik_user_profile', JSON.stringify(userProfile));
+        localStorage.setItem('zambik_subscription', 'active');
       }
     }
 
@@ -3846,7 +3846,7 @@
     let isPlayingIntro = false;
     let controlsTimeout = null;
 
-    // URL del intro de IBTV
+    // URL del intro de Zambik
     const introVideoUrl = 'https://dl.dropboxusercontent.com/scl/fi/h5ekhsy1045o93jdnp6ff/video_BAACAgEAAxkBAAIBimg_Hd9a9bpAMm37Sz-eBpNb-0gZAAKnBgAC_aH4RQ4rFHrAoNZHNgQ.mp4?rlkey=hpz7w3qyd67yboabi09svgl64&st=embhl2dy';
 
     // Función para manejar clics de películas especiales
@@ -4648,16 +4648,16 @@
     function addToMyList() {
       if (!currentSeries) return;
 
-      const myList = JSON.parse(localStorage.getItem('ibtv_my_list') || '[]');
+      const myList = JSON.parse(localStorage.getItem('zambik_my_list') || '[]');
       const index = myList.findIndex(item => item.id === currentSeries.id);
 
       if (index === -1) {
         myList.push({ id: currentSeries.id, addedAt: new Date().toISOString() });
-        localStorage.setItem('ibtv_my_list', JSON.stringify(myList));
+        localStorage.setItem('zambik_my_list', JSON.stringify(myList));
         showSettingsMessage('✅ Añadido a Mi Lista');
       } else {
         myList.splice(index, 1);
-        localStorage.setItem('ibtv_my_list', JSON.stringify(myList));
+        localStorage.setItem('zambik_my_list', JSON.stringify(myList));
         showSettingsMessage('❌ Eliminado de Mi Lista');
       }
     }
@@ -4668,7 +4668,7 @@
 
       const shareData = {
         title: currentSeries.title,
-        text: `¡Mira ${currentSeries.title} en IBTV!`,
+        text: `¡Mira ${currentSeries.title} en Zambik!`,
         url: window.location.href
       };
 
@@ -4695,14 +4695,14 @@
     // Limpiar descargas
     function clearDownloads() {
       if (confirm('¿Estás seguro de que quieres eliminar todas las descargas?')) {
-        localStorage.removeItem('ibtv_downloads');
+        localStorage.removeItem('zambik_downloads');
         showSettingsMessage('🗑️ Descargas eliminadas');
       }
     }
 
     // Ver historial
     function viewHistory() {
-      const history = JSON.parse(localStorage.getItem('ibtv_history') || '[]');
+      const history = JSON.parse(localStorage.getItem('zambik_history') || '[]');
       if (history.length === 0) {
         showSettingsMessage('No hay historial de reproducción');
         return;
@@ -4718,7 +4718,7 @@
       }
 
       // Cargar configuraciones guardadas
-      const settings = JSON.parse(localStorage.getItem('ibtv_settings') || '{}');
+      const settings = JSON.parse(localStorage.getItem('zambik_settings') || '{}');
 
       document.getElementById('autoplayToggle').checked = settings.autoplay !== false;
       document.getElementById('videoQuality').value = settings.videoQuality || 'auto';
@@ -4757,13 +4757,13 @@
         dataSaver: document.getElementById('dataSaverToggle').checked
       };
 
-      localStorage.setItem('ibtv_settings', JSON.stringify(settings));
+      localStorage.setItem('zambik_settings', JSON.stringify(settings));
       showSettingsMessage('Configuración guardada correctamente');
     }
 
     // Restablecer ajustes
     function resetSettings() {
-      localStorage.removeItem('ibtv_settings');
+      localStorage.removeItem('zambik_settings');
       loadCurrentSettings();
       showSettingsMessage('Configuración restablecida a valores predeterminados');
     }
@@ -4798,7 +4798,7 @@
 
     // Manejar cambio de idioma
     function handleLanguageChange(language) {
-      localStorage.setItem('ibtv_language', language);
+      localStorage.setItem('zambik_language', language);
       showSettingsMessage('Idioma cambiado. Recarga la página para ver los cambios.');
     }
 
@@ -4931,7 +4931,7 @@
     function showLiveNotification(message) {
       // Notificación del navegador
       if (isNotificationEnabled && 'Notification' in window && Notification.permission === 'granted') {
-        new Notification('IBTV - Programación en Vivo', {
+        new Notification('Zambik - Programación en Vivo', {
           body: message,
           icon: '/favicon.ico',
           badge: '/favicon.ico',
@@ -5073,7 +5073,7 @@
 
   <script>
     // Sistema de traducción
-    let currentLanguage = localStorage.getItem('ibtv_language') || 'es';
+    let currentLanguage = localStorage.getItem('zambik_language') || 'es';
     let translations = {};
     let isTranslating = false;
 
@@ -6107,8 +6107,8 @@
       });
     }
 
-    // Función para reproducir intro de IBTV
-    function playIBTVIntro(callback) {
+    // Función para reproducir intro de Zambik
+    function playZambikIntro(callback) {
       isPlayingIntro = true;
 
       // Limpiar video anterior
@@ -6125,7 +6125,7 @@
       videoElement.crossOrigin = 'anonymous';
 
       // Configurar título para el intro
-      videoPlayerTitle.textContent = 'IBTV';
+      videoPlayerTitle.textContent = 'Zambik';
 
       // Ocultar indicador EN VIVO durante el intro
       const liveIndicator = document.getElementById('videoLiveIndicator');
@@ -6302,8 +6302,8 @@
 
       currentVideo = episode;
 
-      // Reproducir intro de IBTV primero, luego el contenido principal
-      playIBTVIntro(() => {
+      // Reproducir intro de Zambik primero, luego el contenido principal
+      playZambikIntro(() => {
         playMainContent(episode);
       });
     }
@@ -6327,8 +6327,8 @@
 
       currentVideo = trailerVideo;
 
-      // Reproducir intro de IBTV primero, luego el trailer
-      playIBTVIntro(() => {
+      // Reproducir intro de Zambik primero, luego el trailer
+      playZambikIntro(() => {
         playTrailerContent(trailerVideo);
       });
     }
@@ -6514,7 +6514,7 @@
 
       // Cargar configuraciones dedescarga
     function loadDownloadSettings() {
-      const settings = JSON.parse(localStorage.getItem('ibtv_download_settings') || '{}');
+      const settings = JSON.parse(localStorage.getItem('zambik_download_settings') || '{}');
 
       document.getElementById('autoDownloadToggle').checked = settings.autoDownload !== false;
       document.getElementById('downloadQuality').value = settings.downloadQuality || 'auto';
@@ -6526,7 +6526,7 @@
         autoDownload: document.getElementById('autoDownloadToggle').checked,
         downloadQuality: document.getElementById('downloadQuality').value
       };
-      localStorage.setItem('ibtv_download_settings', JSON.stringify(settings));
+      localStorage.setItem('zambik_download_settings', JSON.stringify(settings));
       showSettingsMessage('Configuración de descarga guardada');
     }
 
