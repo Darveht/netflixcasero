@@ -182,12 +182,14 @@
       border: 3px solid rgba(0, 162, 255, 0.3);
       border-radius: 30px;
       padding: 45px 40px;
+      padding-top: 60px;
       text-align: center;
       position: relative;
-      overflow: hidden;
+      overflow: visible;
       transition: all 0.4s ease;
       animation: fadeInScale 0.8s ease-out;
       backdrop-filter: blur(25px);
+      margin-top: 30px;
     }
 
     .plan-card:hover {
@@ -200,27 +202,31 @@
     .plan-card.popular {
       border-color: #00FF88;
       background: linear-gradient(135deg, rgba(0, 255, 136, 0.2), rgba(0, 212, 170, 0.2));
-      transform: scale(1.1);
+      transform: scale(1.05);
       box-shadow: 0 25px 70px rgba(0, 255, 136, 0.4);
+      margin-top: 30px;
     }
 
     .plan-card.popular:hover {
-      transform: scale(1.08) translateY(-15px);
+      transform: scale(1.05) translateY(-15px);
     }
 
     .plan-card.popular::before {
       content: 'MÁS POPULAR';
       position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
       background: linear-gradient(45deg, #00FF88, #00D4AA);
       color: #002040;
-      padding: 15px;
+      padding: 12px 30px;
       font-size: 14px;
       font-weight: 900;
       letter-spacing: 2px;
-      box-shadow: 0 3px 12px rgba(0, 255, 136, 0.4);
+      box-shadow: 0 5px 20px rgba(0, 255, 136, 0.6);
+      border-radius: 25px;
+      border: 3px solid #ffffff;
+      white-space: nowrap;
     }
 
     .plan-name {
@@ -451,12 +457,13 @@
       background: linear-gradient(135deg, #FF6B35, #F7931E);
       border: 4px solid rgba(255, 255, 255, 0.4);
       border-radius: 25px;
-      padding: 30px;
-      margin: 40px auto;
-      max-width: 800px;
+      padding: 25px 30px;
+      margin: 30px auto 50px auto;
+      max-width: 700px;
       display: flex;
       align-items: center;
-      gap: 25px;
+      justify-content: center;
+      gap: 20px;
       cursor: pointer;
       transition: all 0.4s ease;
       animation: offerPulse 3s infinite;
@@ -492,18 +499,19 @@
     }
 
     .offer-title {
-      font-size: 24px;
+      font-size: 22px;
       font-weight: 900;
       color: #ffffff;
-      margin-bottom: 8px;
+      margin-bottom: 6px;
       letter-spacing: 2px;
       text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
     }
 
     .offer-text {
-      font-size: 16px;
+      font-size: 15px;
       color: rgba(255, 255, 255, 0.95);
       font-weight: 600;
+      line-height: 1.4;
     }
 
     .offer-arrow {
