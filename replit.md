@@ -187,7 +187,18 @@ Las credenciales están configuradas en todos los archivos: `index.html`, `auth.
 
 ## Cambios Recientes
 
-**22 de noviembre de 2025**
+**22 de noviembre de 2025 - Sesión 2 (Corrección de Autenticación)**
+- ✅ Instalado Python 3.11 para servidor HTTP
+- ✅ Corregido error crítico en auth.html: eliminada condición de carrera entre `onAuthStateChanged` y llamadas manuales a `checkUserSubscription`
+- ✅ Agregado flag `isRedirecting` para prevenir redirecciones duplicadas
+- ✅ Mejorado flujo de login para esperar verificación antes de redirigir
+- ✅ Mejorado flujo de registro con mejor gestión de banderas de redirección
+- ✅ Mejorados mensajes de retroalimentación con estado "Redirigiendo..."
+- ✅ Verificado flujo completo: auth.html → subscription.html → profile-setup.html → index.html
+- ✅ Confirmada protección de autenticación en index.html
+- ✅ Servidor HTTP corriendo correctamente en puerto 5000
+
+**22 de noviembre de 2025 - Sesión 1**
 - ✅ Eliminados atributos de integridad incorrectos de scripts Firebase que bloqueaban la carga
 - ✅ Actualizadas credenciales de Firebase con valores reales del proyecto
 - ✅ Corregida inicialización de la aplicación (initializeIBTVApp) para habilitar navegación
