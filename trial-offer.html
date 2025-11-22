@@ -818,16 +818,22 @@
         stream = await navigator.mediaDevices.getUserMedia({ 
           video: { 
             facingMode: 'environment',
-            width: { ideal: 1280 },
-            height: { ideal: 720 }
+            width: { ideal: 1920 },
+            height: { ideal: 1080 }
           } 
         });
         
         video.srcObject = stream;
+        await video.play();
         modal.classList.add('active');
+        
+        // Iniciar escaneo automático
+        setTimeout(() => {
+          captureCard();
+        }, 1000);
       } catch (error) {
         console.error('Error accediendo a la cámara:', error);
-        alert('No se pudo acceder a la cámara. Por favor, ingresa los datos manualmente.');
+        alert('No se pudo acceder a la cámara. Verifica los permisos e intenta nuevamente.');
       }
     }
 
@@ -848,11 +854,12 @@
 
       video.srcObject = null;
       modal.classList.remove('active');
-      captureBtn.style.display = 'block';
+      isScanning = false;
       captureBtn.innerHTML = '<i class="fas fa-camera"></i> Capturar';
     }
 
     let scanInterval = null;
+    let isScanning = false;
 
     async function captureCard() {
       const video = document.getElementById('videoPreview');
@@ -860,23 +867,32 @@
       const context = canvas.getContext('2d');
       const captureBtn = document.querySelector('.scanner-btn.capture');
 
-      if (scanInterval) {
+      if (isScanning) {
         clearInterval(scanInterval);
         scanInterval = null;
-        captureBtn.innerHTML = '<i class="fas fa-camera"></i> Capturar';
+        isScanning = false;
+        captureBtn.innerHTML = '<i class="fas fa-camera"></i> Iniciar Escaneo';
         return;
       }
 
-      captureBtn.style.display = 'none';
+      isScanning = true;
+      captureBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Escaneando...';
       
       scanInterval = setInterval(async () => {
+        if (!video.videoWidth || !video.videoHeight) return;
+        
         canvas.width = video.videoWidth;
         canvas.height = video.videoHeight;
         context.drawImage(video, 0, 0);
 
         try {
-          const result = await Tesseract.recognize(canvas, 'eng', { logger: () => {} });
+          const result = await Tesseract.recognize(canvas, 'eng', { 
+            logger: m => console.log(m.status, m.progress)
+          });
+          
           const text = result.data.text;
+          console.log('Texto detectado:', text);
+          
           const cardNumberMatch = text.match(/\b\d{4}[\s-]?\d{4}[\s-]?\d{4}[\s-]?\d{4}\b/);
           
           if (cardNumberMatch) {
@@ -902,18 +918,22 @@
               validateExpiry(month + '/' + year);
             }
 
-            if (navigator.vibrate) navigator.vibrate(200);
+            if (navigator.vibrate) navigator.vibrate([200, 100, 200]);
             
             clearInterval(scanInterval);
             scanInterval = null;
-            captureBtn.style.display = 'block';
-            captureBtn.innerHTML = '<i class="fas fa-camera"></i> Capturar';
+            isScanning = false;
+            captureBtn.innerHTML = '<i class="fas fa-check-circle"></i> Detectado';
             
-            stopCardScan();
-            alert('Tarjeta detectada y verificada en tiempo real');
+            setTimeout(() => {
+              stopCardScan();
+              alert('Tarjeta detectada y verificada en tiempo real');
+            }, 500);
           }
-        } catch (e) {}
-      }, 2000);
+        } catch (e) {
+          console.error('Error en OCR:', e);
+        }
+      }, 3000);
     }
   </script>
 </body>
