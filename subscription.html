@@ -1,5 +1,5 @@
 
-<!DOCTYPE html>
+<DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8">
@@ -7,7 +7,7 @@
   <title>Zambik - Selecciona tu Plan</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 
-  <!-- Firebase SDKs -->
+  <-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
@@ -28,12 +28,11 @@
     }
 
     body {
-      background: linear-gradient(135deg, #00A2FF 0%, #0078D4 25%, #005A9F 50%, #003D6B 75%, #002040 100%);
+      background: #0a0e27;
       font-family: 'Segoe UI', 'Roboto', 'Arial', sans-serif;
       color: #ffffff;
       min-height: 100vh;
       position: relative;
-      background-attachment: fixed;
     }
 
     /* Fondo animado estilo Roblox */
@@ -153,20 +152,18 @@
       font-size: 68px;
       font-weight: 900;
       margin-bottom: 25px;
-      background: linear-gradient(45deg, #00FF88, #00D4AA, #00A2FF);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
+      color: #ffffff;
       letter-spacing: 3px;
-      text-shadow: 3px 3px 6px rgba(0, 32, 64, 0.4);
+      text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.8);
     }
 
     .subscription-subtitle {
       font-size: 24px;
-      color: rgba(255, 255, 255, 0.9);
+      color: #FFD700;
       margin-bottom: 45px;
-      font-weight: 600;
+      font-weight: 700;
       line-height: 1.5;
-      text-shadow: 2px 2px 4px rgba(0, 32, 64, 0.5);
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
     }
 
     /* Grid de planes */
@@ -227,10 +224,11 @@
     }
 
     .plan-name {
-      font-size: 28px;
-      font-weight: 800;
+      font-size: 32px;
+      font-weight: 900;
       margin-bottom: 20px;
-      color: #ffffff;
+      color: #FFD700;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
     }
 
     .plan-price {
@@ -261,9 +259,9 @@
       display: flex;
       align-items: center;
       gap: 15px;
-      font-size: 17px;
-      color: #e7e9ea;
-      font-weight: 400;
+      font-size: 18px;
+      color: #ffffff;
+      font-weight: 600;
     }
 
     .plan-features li i {
@@ -554,7 +552,7 @@
   </style>
 </head>
 <body>
-  <!-- Header -->
+  <-- Header -->
   <header class="header">
     <div class="logo">Zambik</div>
     <div class="user-info">
@@ -565,27 +563,26 @@
     </div>
   </header>
 
-  <!-- Contenedor principal -->
+  <-- Contenedor principal -->
   <main class="main-container">
-    <!-- Header de suscripción -->
+    <-- Header de suscripción -->
     <section class="subscription-header">
       <h1 class="subscription-title">Elige tu Plan</h1>
       <p class="subscription-subtitle">Selecciona el plan perfecto para ti y comienza a disfrutar del mejor contenido de streaming</p>
       
-      <!-- Banner de oferta especial -->
+      <-- Banner de oferta especial -->
       <div class="special-offer-banner" onclick="window.location.href='trial-offer.html'">
-        <div class="offer-icon">🎁</div>
         <div class="offer-content">
-          <div class="offer-title">¡OFERTA ESPECIAL!</div>
+          <div class="offer-title">OFERTA ESPECIAL</div>
           <div class="offer-text">Prueba Premium GRATIS por 4 meses - Solo verifica tu tarjeta</div>
         </div>
         <div class="offer-arrow">→</div>
       </div>
     </section>
 
-    <!-- Grid de planes -->
+    <-- Grid de planes -->
     <div class="plans-grid">
-      <!-- Plan Básico -->
+      <-- Plan Básico -->
       <div class="plan-card">
         <h3 class="plan-name">Básico</h3>
         <div class="plan-price">$4.99</div>
@@ -603,7 +600,7 @@
         </button>
       </div>
 
-      <!-- Plan Premium (Más Popular) -->
+      <-- Plan Premium (Más Popular) -->
       <div class="plan-card popular">
         <h3 class="plan-name">Premium</h3>
         <div class="plan-price">$9.99</div>
@@ -623,7 +620,7 @@
         </button>
       </div>
 
-      <!-- Plan Familiar -->
+      <-- Plan Familiar -->
       <div class="plan-card">
         <h3 class="plan-name">Familiar</h3>
         <div class="plan-price">$14.99</div>
@@ -646,12 +643,12 @@
     </div>
   </main>
 
-  <!-- Mensaje de éxito -->
+  <-- Mensaje de éxito -->
   <div id="successMessage" class="success-message">
     <div style="margin-bottom: 15px;">
       <i class="fas fa-check-circle" style="font-size: 36px; margin-bottom: 10px;"></i>
     </div>
-    <div id="successText">¡Plan seleccionado!</div>
+    <div id="successText">Plan seleccionado</div>
     <div style="font-size: 16px; margin-top: 15px; opacity: 0.9;">Configurando tu perfil...</div>
   </div>
 
@@ -711,7 +708,7 @@
 
     // Seleccionar plan
     async function selectPlan(planType, planName, planPrice) {
-      if (!currentUser) {
+      if (currentUser) {
         alert('Error: Usuario no autenticado');
         return;
       }
@@ -786,7 +783,7 @@
       const successMessage = document.getElementById('successMessage');
       const successText = document.getElementById('successText');
 
-      successText.textContent = `¡${planName} seleccionado!`;
+      successText.textContent = `${planName} seleccionado`;
       successMessage.style.display = 'block';
 
       setTimeout(() => {
