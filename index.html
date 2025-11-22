@@ -2790,18 +2790,36 @@
       }
     }
 
-    /* Sección VIP estilo Roblox */
+    /* Sección VIP estilo Cartoon Network */
     .vip-section {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: linear-gradient(135deg, #002040 0%, #003D6B 50%, #005A9F 100%);
+      background: linear-gradient(135deg, #1a0033 0%, #330066 25%, #000033 50%, #660033 75%, #1a0033 100%);
+      background-size: 400% 400%;
+      animation: cartoonGradient 20s ease-in-out infinite;
       z-index: 2000;
       display: none;
       overflow-y: auto;
       padding-top: 80px;
+      background-attachment: fixed;
+    }
+
+    .vip-section::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="30" cy="30" r="8" fill="%23FFD700" opacity="0.9"/><circle cx="170" cy="50" r="6" fill="%23FF1493" opacity="0.8"/><circle cx="100" cy="150" r="10" fill="%2300FF88" opacity="0.9"/><circle cx="50" cy="120" r="7" fill="%239D4EDD" opacity="0.8"/><circle cx="150" cy="180" r="9" fill="%23FF6B35" opacity="0.9"/><polygon points="80,20 85,30 75,30" fill="%23FFD700" opacity="0.7"/><polygon points="160,100 170,115 150,115" fill="%23FF1493" opacity="0.7"/></svg>');
+      background-size: 200px 200px;
+      animation: cartoonShapes 25s ease-in-out infinite;
+      z-index: -1;
+      pointer-events: none;
     }
 
     .vip-section.active {
@@ -2812,25 +2830,29 @@
       position: fixed;
       top: 20px;
       right: 20px;
-      background: rgba(0,0,0,0.75);
-      border: none;
+      background: linear-gradient(45deg, #FF6B35, #F7931E);
+      border: 5px solid #ffffff;
       color: #ffffff;
-      width: 40px;
-      height: 40px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 20px;
+      font-size: 28px;
       cursor: pointer;
-      transition: all 0.2s ease;
-      backdrop-filter: blur(12px);
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      backdrop-filter: blur(15px);
       z-index: 10;
+      box-shadow: 0 8px 25px rgba(255, 107, 53, 0.6);
+      animation: buttonBreathe 3s ease-in-out infinite;
     }
 
     .vip-close-btn:hover {
-      background: rgba(255,255,255,0.2);
-      transform: scale(1.1);
+      background: linear-gradient(45deg, #F7931E, #FF6B35);
+      transform: scale(1.2) rotate(90deg);
+      box-shadow: 0 15px 40px rgba(255, 107, 53, 0.8);
+      animation: buttonWobble 0.6s ease-in-out;
     }
 
     .vip-header {
@@ -2840,24 +2862,35 @@
     }
 
     .vip-title {
-      font-size: 28px;
-      font-weight: 800;
-      color: #ffffff;
-      margin-bottom: 8px;
+      font-size: 64px;
+      font-weight: 900;
+      color: #FFD700;
+      margin-bottom: 15px;
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 12px;
+      gap: 20px;
+      text-shadow: 
+        5px 5px 0px #FF1493,
+        10px 10px 0px #9D4EDD,
+        15px 15px 0px rgba(0, 0, 0, 0.3);
+      animation: logoWobble 3s ease-in-out infinite;
+      text-transform: uppercase;
+      letter-spacing: 4px;
     }
 
     .vip-title i {
-      color: #ffd700;
-      font-size: 32px;
+      color: #FFD700;
+      font-size: 64px;
+      animation: crownPulse 3s ease-in-out infinite;
+      filter: drop-shadow(0 0 20px rgba(255, 215, 0, 1));
     }
 
     .vip-subtitle {
-      font-size: 16px;
-      color: #71767b;
+      font-size: 20px;
+      color: #ffffff;
+      font-weight: 700;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
     }
 
     .vip-loading {
@@ -2906,29 +2939,32 @@
     /* Estilos para la sección VIP */
     .vip-users-container {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
-      padding: 20px 16px;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 25px;
+      padding: 30px 20px;
     }
 
     .vip-user-card {
-      background: linear-gradient(135deg, rgba(0, 120, 212, 0.2), rgba(0, 90, 159, 0.2));
-      border-radius: 15px;
-      padding: 25px;
-      border: 2px solid rgba(0, 162, 255, 0.3);
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 25px;
+      padding: 30px;
+      border: 6px solid #00A2FF;
       display: flex;
       align-items: center;
       gap: 20px;
-      transition: all 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
       cursor: pointer;
-      backdrop-filter: blur(10px);
+      backdrop-filter: blur(20px);
+      box-shadow: 0 8px 25px rgba(0, 162, 255, 0.4);
+      animation: itemFloat 5s ease-in-out infinite;
     }
 
     .vip-user-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 12px 40px rgba(0, 162, 255, 0.4);
+      transform: scale(1.05) translateY(-10px) rotate(2deg);
+      box-shadow: 0 20px 50px rgba(0, 255, 136, 0.6);
       border-color: #00FF88;
-      background: linear-gradient(135deg, rgba(0, 162, 255, 0.3), rgba(0, 120, 212, 0.3));
+      background: rgba(0, 255, 136, 0.1);
+      animation: itemWobble 0.6s ease-in-out;
     }
 
     .vip-user-avatar {
@@ -2972,37 +3008,42 @@
     }
 
     .vip-follow-btn {
-      background: linear-gradient(45deg, #00FF88, #00D4AA);
-      color: #002040;
-      border: 2px solid rgba(255, 255, 255, 0.3);
-      padding: 12px 20px;
-      border-radius: 25px;
-      font-size: 14px;
-      font-weight: 800;
+      background: linear-gradient(45deg, #FFD700, #FFA500);
+      color: #000000;
+      border: 4px solid #ffffff;
+      padding: 15px 25px;
+      border-radius: 50px;
+      font-size: 16px;
+      font-weight: 900;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
       display: flex;
       align-items: center;
-      gap: 8px;
+      gap: 10px;
       white-space: nowrap;
-      box-shadow: 0 3px 12px rgba(0, 255, 136, 0.3);
+      box-shadow: 0 6px 20px rgba(255, 215, 0, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-shadow: 1px 1px 0px rgba(255, 255, 255, 0.5);
+      animation: buttonBreathe 3s ease-in-out infinite;
     }
 
     .vip-follow-btn:hover {
-      background: linear-gradient(45deg, #00D4AA, #00B894);
-      transform: translateY(-2px);
-      box-shadow: 0 5px 18px rgba(0, 255, 136, 0.5);
+      background: linear-gradient(45deg, #FFA500, #FFD700);
+      transform: translateY(-5px) scale(1.05);
+      box-shadow: 0 10px 30px rgba(255, 215, 0, 0.7);
+      animation: buttonWobble 0.6s ease-in-out;
     }
 
     .vip-follow-btn.following {
-      background: #333639;
-      color: #ffffff;
-      border: 1px solid #71767b;
+      background: linear-gradient(45deg, #00FF88, #00D4AA);
+      color: #002040;
+      border: 4px solid #ffffff;
     }
 
     .vip-follow-btn.following:hover {
-      background: #44474a;
-      border-color: #909497;
+      background: linear-gradient(45deg, #00D4AA, #00B894);
+      transform: translateY(-5px) scale(1.05);
     }
 
     .vip-follow-btn i {
@@ -3044,17 +3085,19 @@
 
     /* Efecto especial para usuarios exclusivos */
     .vip-user-card[data-user-type="exclusive"] {
-      border: 3px solid rgba(255, 215, 0, 0.5);
-      background: linear-gradient(135deg, rgba(255, 215, 0, 0.08), rgba(255, 215, 0, 0.15));
-      box-shadow: 0 8px 32px rgba(255, 215, 0, 0.3);
+      border: 6px solid #FFD700;
+      background: rgba(255, 215, 0, 0.15);
+      box-shadow: 0 10px 40px rgba(255, 215, 0, 0.6);
       position: relative;
       overflow: visible;
+      animation: exclusiveGlow 4s ease-in-out infinite;
     }
 
     .vip-user-card[data-user-type="exclusive"]:hover {
-      border-color: rgba(255, 215, 0, 0.8);
-      box-shadow: 0 12px 48px rgba(255, 215, 0, 0.5);
-      transform: translateY(-6px);
+      border-color: #FFD700;
+      box-shadow: 0 20px 60px rgba(255, 215, 0, 0.8);
+      transform: scale(1.1) translateY(-15px) rotate(3deg);
+      animation: itemWobble 0.6s ease-in-out;
     }
 
     .vip-user-card[data-user-type="exclusive"]:before {
