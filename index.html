@@ -4485,14 +4485,14 @@
         localStorage.setItem('zambik_my_list', JSON.stringify(myList));
         notification.innerHTML = `
           <i class="fas fa-check-circle" style="font-size: 48px; margin-bottom: 10px; display: block; color: #00FF88;"></i>
-          ✅ ¡Añadido a Mi Lista!
+          ¡Añadido a Mi Lista!
         `;
       } else {
         myList.splice(index, 1);
         localStorage.setItem('zambik_my_list', JSON.stringify(myList));
         notification.innerHTML = `
           <i class="fas fa-times-circle" style="font-size: 48px; margin-bottom: 10px; display: block; color: #FF3838;"></i>
-          ❌ Eliminado de Mi Lista
+          Eliminado de Mi Lista
         `;
         notification.style.background = 'linear-gradient(45deg, #FF6B35, #F7931E)';
       }
@@ -4577,13 +4577,13 @@
         });
 
         // Mostrar mensaje de confirmación
-        alert('✅ Tu cuenta ha sido desactivada exitosamente.\n\nPara reactivarla, contacta con soporte o vuelve a iniciar sesión.');
+        alert('Tu cuenta ha sido desactivada exitosamente.\n\nPara reactivarla, contacta con soporte o vuelve a iniciar sesión.');
 
         // Cerrar sesión
         logoutFirebase();
       } catch (error) {
         console.error('Error desactivando cuenta:', error);
-        alert('❌ Error al desactivar la cuenta. Por favor, inténtalo de nuevo.');
+        alert('Error al desactivar la cuenta. Por favor, inténtalo de nuevo.');
       }
     }
 
@@ -4689,7 +4689,7 @@
       if (confirm('¿Estás seguro de que quieres eliminar todo el historial?')) {
         localStorage.removeItem('zambik_history');
         loadHistoryContent();
-        showSettingsMessage('🗑️ Historial eliminado');
+        showSettingsMessage('Historial eliminado');
       }
     }
 
@@ -4935,7 +4935,7 @@
           }
         }
         
-        showSettingsMessage(this.checked ? '✅ Subtítulos activados' : '❌ Subtítulos desactivados');
+        showSettingsMessage(this.checked ? 'Subtítulos activados' : 'Subtítulos desactivados');
       });
 
       // Idioma de interfaz - Cambio en tiempo real
@@ -4963,7 +4963,7 @@
           'en': 'English'
         };
         
-        showSettingsMessage(`🎙️ Audio: ${audioNames[this.value] || this.value}`);
+        showSettingsMessage(`Audio: ${audioNames[this.value] || this.value}`);
       });
 
       // Tema
