@@ -86,15 +86,16 @@
       width: 100%;
     }
 
-    /* Logo */
+    /* Logo con estilos cartoon */
     .logo {
       text-align: center;
       margin-bottom: 60px;
       animation: slideInUp 0.8s ease-out;
+      position: relative;
     }
 
     .logo h1 {
-      font-size: 64px;
+      font-size: 72px;
       font-weight: 900;
       color: #FFD700;
       letter-spacing: 4px;
@@ -103,14 +104,15 @@
         5px 5px 0px #FF1493,
         10px 10px 0px #9D4EDD,
         15px 15px 0px rgba(0, 0, 0, 0.3);
-      animation: logoWobble 3s ease-in-out infinite;
+      animation: cartoonTitleBounce 2s ease-in-out infinite;
+      text-transform: uppercase;
     }
 
-    @keyframes logoWobble {
+    @keyframes cartoonTitleBounce {
       0%, 100% { transform: scale(1) rotate(-2deg); }
-      25% { transform: scale(1.05) rotate(2deg); }
-      50% { transform: scale(1.02) rotate(-1deg); }
-      75% { transform: scale(1.08) rotate(1deg); }
+      25% { transform: scale(1.08) rotate(2deg); }
+      50% { transform: scale(1.05) rotate(-1deg); }
+      75% { transform: scale(1.1) rotate(3deg); }
     }
 
     @keyframes starSpin {
@@ -120,10 +122,16 @@
     }
 
     .logo p {
-      color: rgba(255, 255, 255, 0.8);
-      font-size: 18px;
-      font-weight: 600;
-      text-shadow: 1px 1px 2px rgba(0, 32, 64, 0.5);
+      color: #ffffff;
+      font-size: 20px;
+      font-weight: 800;
+      text-shadow: 2px 2px 8px rgba(0, 0, 0, 0.8);
+      animation: subtitleFloat 4s ease-in-out infinite;
+    }
+
+    @keyframes subtitleFloat {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-5px); }
     }
 
     @keyframes slideInUp {
@@ -333,7 +341,7 @@
     /* Links */
     .auth-link {
       text-align: center;
-      margin-top: 30px;
+      margin-top: 20px;
     }
 
     .auth-link a {
@@ -349,6 +357,33 @@
       text-decoration: underline;
       color: #00D4AA;
       text-shadow: 2px 2px 4px rgba(0, 255, 136, 0.5);
+    }
+
+    .switch-form-link {
+      text-align: center;
+      margin-top: 25px;
+      padding-top: 25px;
+      border-top: 2px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .switch-form-link p {
+      color: rgba(255, 255, 255, 0.7);
+      font-size: 14px;
+      margin-bottom: 10px;
+    }
+
+    .switch-form-link a {
+      color: #FFD700;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 16px;
+      transition: all 0.3s ease;
+      text-shadow: 2px 2px 4px rgba(255, 215, 0, 0.3);
+    }
+
+    .switch-form-link a:hover {
+      color: #FFA500;
+      text-shadow: 2px 2px 8px rgba(255, 215, 0, 0.6);
     }
 
     /* Responsive */
@@ -437,6 +472,11 @@
         <div class="auth-link">
           <a href="#" onclick="resetPassword()">¿Olvidaste tu contraseña?</a>
         </div>
+
+        <div class="switch-form-link">
+          <p>¿No tienes cuenta?</p>
+          <a href="#" onclick="switchTab('register'); return false;">Crear cuenta nueva</a>
+        </div>
       </form>
 
       <!-- Formulario de Registro -->
@@ -465,6 +505,11 @@
           <i class="fas fa-spinner spinner"></i>
           Crear Cuenta
         </button>
+
+        <div class="switch-form-link">
+          <p>¿Ya tienes una cuenta?</p>
+          <a href="#" onclick="switchTab('login'); return false;">Iniciar sesión</a>
+        </div>
       </form>
     </div>
   </div>
