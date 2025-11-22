@@ -4599,32 +4599,47 @@
 
         if (userData) {
           // Nombre completo
-          document.getElementById('userFullName').textContent = userData.name || userData.profile?.name || 'No especificado';
+          const userFullNameEl = document.getElementById('userFullName');
+          if (userFullNameEl) {
+            userFullNameEl.textContent = userData.name || userData.profile?.name || 'No especificado';
+          }
           
           // Correo electrónico
-          document.getElementById('userEmail').textContent = currentFirebaseUser.email || 'No especificado';
+          const userEmailEl = document.getElementById('userEmail');
+          if (userEmailEl) {
+            userEmailEl.textContent = currentFirebaseUser.email || 'No especificado';
+          }
           
           // ID de usuario
-          document.getElementById('userId').textContent = currentFirebaseUser.uid;
+          const userIdEl = document.getElementById('userId');
+          if (userIdEl) {
+            userIdEl.textContent = currentFirebaseUser.uid;
+          }
           
           // Plan actual
-          if (userData.subscription) {
-            const planName = userData.subscription.name || 'Plan ' + userData.subscription.plan;
-            document.getElementById('currentPlan').textContent = planName + ' - ' + userData.subscription.price;
-          } else {
-            document.getElementById('currentPlan').textContent = 'Sin plan activo';
+          const currentPlanEl = document.getElementById('currentPlan');
+          if (currentPlanEl) {
+            if (userData.subscription) {
+              const planName = userData.subscription.name || 'Plan ' + userData.subscription.plan;
+              currentPlanEl.textContent = planName + ' - ' + userData.subscription.price;
+            } else {
+              currentPlanEl.textContent = 'Sin plan activo';
+            }
           }
           
           // Fecha de registro
-          if (currentFirebaseUser.metadata && currentFirebaseUser.metadata.creationTime) {
-            const creationDate = new Date(currentFirebaseUser.metadata.creationTime);
-            document.getElementById('registrationDate').textContent = creationDate.toLocaleDateString('es-ES', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric'
-            });
-          } else {
-            document.getElementById('registrationDate').textContent = 'No disponible';
+          const registrationDateEl = document.getElementById('registrationDate');
+          if (registrationDateEl) {
+            if (currentFirebaseUser.metadata && currentFirebaseUser.metadata.creationTime) {
+              const creationDate = new Date(currentFirebaseUser.metadata.creationTime);
+              registrationDateEl.textContent = creationDate.toLocaleDateString('es-ES', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+              });
+            } else {
+              registrationDateEl.textContent = 'No disponible';
+            }
           }
         }
 
@@ -4633,12 +4648,16 @@
           const updatedData = snapshot.val();
           if (updatedData) {
             // Actualizar nombre
-            document.getElementById('userFullName').textContent = updatedData.name || updatedData.profile?.name || 'No especificado';
+            const userFullNameEl = document.getElementById('userFullName');
+            if (userFullNameEl) {
+              userFullNameEl.textContent = updatedData.name || updatedData.profile?.name || 'No especificado';
+            }
             
             // Actualizar plan
-            if (updatedData.subscription) {
+            const currentPlanEl = document.getElementById('currentPlan');
+            if (currentPlanEl && updatedData.subscription) {
               const planName = updatedData.subscription.name || 'Plan ' + updatedData.subscription.plan;
-              document.getElementById('currentPlan').textContent = planName + ' - ' + updatedData.subscription.price;
+              currentPlanEl.textContent = planName + ' - ' + updatedData.subscription.price;
             }
           }
         });
