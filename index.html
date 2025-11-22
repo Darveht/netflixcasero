@@ -4109,6 +4109,97 @@
       ensureFontAwesome();
     }
 
+    // Verificar si el usuario viene de la página de inicio
+    function checkIfFromLanding() {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('from') === 'landing') {
+        // Mostrar mensaje de bienvenida
+        setTimeout(() => {
+          showWelcomeMessage();
+        }, 1000);
+      }
+    }
+
+    // Mostrar mensaje de bienvenida
+    function showWelcomeMessage() {
+      const welcomeMessage = document.createElement('div');
+      welcomeMessage.style.cssText = `
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: linear-gradient(45deg, #FFD700, #FFA500);
+        color: #000000;
+        padding: 30px 40px;
+        border-radius: 25px;
+        font-size: 24px;
+        font-weight: 900;
+        z-index: 10000;
+        text-align: center;
+        box-shadow: 0 15px 50px rgba(255, 215, 0, 0.8);
+        border: 6px solid #FF1493;
+        animation: welcomeAnimation 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        text-shadow: 2px 2px 0px rgba(255, 255, 255, 0.5);
+      `;
+      
+      welcomeMessage.innerHTML = `
+        <div style="margin-bottom: 15px;">
+          <i class="fas fa-star" style="font-size: 48px; color: #FF1493; animation: spin 2s linear infinite;"></i>
+        </div>
+        <div>¡Bienvenido a Zambik!</div>
+        <div style="font-size: 16px; margin-top: 10px; opacity: 0.9; font-weight: 700;">Tu plataforma de streaming favorita</div>
+      `;
+      
+      document.body.appendChild(welcomeMessage);
+      
+      // Remover después de 3 segundos
+      setTimeout(() => {
+        welcomeMessage.style.animation = 'welcomeOut 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards';
+        setTimeout(() => {
+          if (welcomeMessage.parentNode) {
+            welcomeMessage.remove();
+          }
+        }, 400);
+      }, 3000);
+    }
+
+    // Agregar estilos de animación
+    const welcomeStyles = document.createElement('style');
+    welcomeStyles.innerHTML = `
+      @keyframes welcomeAnimation {
+        0% {
+          transform: translate(-50%, -50%) scale(0) rotate(-180deg);
+          opacity: 0;
+        }
+        50% {
+          transform: translate(-50%, -50%) scale(1.2) rotate(10deg);
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(1) rotate(0deg);
+          opacity: 1;
+        }
+      }
+      
+      @keyframes welcomeOut {
+        0% {
+          transform: translate(-50%, -50%) scale(1) rotate(0deg);
+          opacity: 1;
+        }
+        100% {
+          transform: translate(-50%, -50%) scale(0) rotate(180deg);
+          opacity: 0;
+        }
+      }
+      
+      @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+      }
+    `;
+    document.head.appendChild(welcomeStyles);
+
     // Configuración de Firebase
     const firebaseConfig = {
       apiKey: "AIzaSyCFQ_geG0HIv2EZ-bfKc97TJNtf2sdqPzc",
@@ -5449,6 +5540,9 @@
         initializePremiereSystem();
         initializeLiveProgramming(); // Nuevo: inicializar sistema en vivo
         setupRealtimeSettings(); // Configurar ajustes en tiempo real
+        
+        // Verificar si viene de la página de inicio
+        checkIfFromLanding();
         
         // Inicializar Google Translate
         setTimeout(() => {
