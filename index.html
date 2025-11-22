@@ -2946,6 +2946,271 @@
       }
     }
 
+    /* Sección de Historial estilo Cartoon Network */
+    .history-section {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(135deg, #1a0033 0%, #330066 25%, #000033 50%, #660033 75%, #1a0033 100%);
+      background-size: 400% 400%;
+      animation: cartoonGradient 20s ease-in-out infinite;
+      z-index: 2000;
+      display: none;
+      overflow-y: auto;
+      padding-top: 80px;
+      padding-bottom: 100px;
+      background-attachment: fixed;
+    }
+
+    .history-section::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="30" cy="30" r="8" fill="%23FFD700" opacity="0.9"/><circle cx="170" cy="50" r="6" fill="%23FF1493" opacity="0.8"/><circle cx="100" cy="150" r="10" fill="%2300FF88" opacity="0.9"/><circle cx="50" cy="120" r="7" fill="%239D4EDD" opacity="0.8"/><circle cx="150" cy="180" r="9" fill="%23FF6B35" opacity="0.9"/><polygon points="80,20 85,30 75,30" fill="%23FFD700" opacity="0.7"/><polygon points="160,100 170,115 150,115" fill="%23FF1493" opacity="0.7"/></svg>');
+      background-size: 200px 200px;
+      animation: cartoonShapes 25s ease-in-out infinite;
+      z-index: -1;
+      pointer-events: none;
+    }
+
+    .history-section.active {
+      display: block;
+    }
+
+    .history-close-btn {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: linear-gradient(45deg, #FF6B35, #F7931E);
+      border: 5px solid #ffffff;
+      color: #ffffff;
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      backdrop-filter: blur(15px);
+      z-index: 2100;
+      box-shadow: 0 8px 25px rgba(255, 107, 53, 0.6);
+      animation: buttonBreathe 3s ease-in-out infinite;
+    }
+
+    .history-close-btn:hover {
+      background: linear-gradient(45deg, #F7931E, #FF6B35);
+      transform: scale(1.2) rotate(90deg);
+      box-shadow: 0 15px 40px rgba(255, 107, 53, 0.8);
+    }
+
+    .history-header {
+      padding: 25px 20px;
+      border-bottom: 3px solid rgba(255, 215, 0, 0.3);
+      text-align: center;
+    }
+
+    .history-title {
+      font-size: 42px;
+      font-weight: 900;
+      color: #FFD700;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      text-shadow: 
+        3px 3px 0px #FF1493,
+        6px 6px 0px #9D4EDD,
+        9px 9px 0px rgba(0, 0, 0, 0.3);
+      animation: logoWobble 3s ease-in-out infinite;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+    }
+
+    .history-subtitle {
+      font-size: 16px;
+      color: #ffffff;
+      font-weight: 700;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    }
+
+    .history-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 16px;
+      text-align: center;
+    }
+
+    .history-loading.hidden {
+      display: none !important;
+    }
+
+    .history-loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(255, 215, 0, 0.2);
+      border-top: 3px solid #ffd700;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 16px;
+    }
+
+    .history-loading-text {
+      color: #71767b;
+      font-size: 16px;
+    }
+
+    .history-content {
+      padding: 30px 20px;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 25px;
+    }
+
+    .history-item {
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 25px;
+      overflow: hidden;
+      border: 6px solid #00A2FF;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 8px 25px rgba(0, 162, 255, 0.4);
+      animation: itemFloat 5s ease-in-out infinite;
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      cursor: pointer;
+    }
+
+    .history-item:hover {
+      transform: scale(1.05) translateY(-10px) rotate(2deg);
+      box-shadow: 0 20px 50px rgba(0, 255, 136, 0.6);
+      border-color: #00FF88;
+    }
+
+    .history-item-poster {
+      width: 100%;
+      height: 200px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .history-item-poster img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .history-progress-overlay {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      height: 8px;
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    .history-progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #FFD700, #FFA500);
+      transition: width 0.3s ease;
+      box-shadow: 0 0 10px rgba(255, 215, 0, 0.8);
+    }
+
+    .history-item-content {
+      padding: 20px;
+    }
+
+    .history-item-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #FFD700;
+      margin-bottom: 8px;
+      text-shadow: 2px 2px 0px #FF1493;
+    }
+
+    .history-item-meta {
+      font-size: 14px;
+      color: #71767b;
+      margin-bottom: 8px;
+    }
+
+    .history-item-time {
+      font-size: 13px;
+      color: #00FF88;
+      font-weight: 700;
+    }
+
+    .history-empty {
+      text-align: center;
+      padding: 60px 16px;
+      color: #71767b;
+    }
+
+    .history-empty.hidden {
+      display: none;
+    }
+
+    .history-empty i {
+      font-size: 48px;
+      margin-bottom: 16px;
+      display: block;
+      color: #ffd700;
+    }
+
+    .history-empty h3 {
+      font-size: 20px;
+      margin-bottom: 8px;
+      color: #ffffff;
+    }
+
+    .history-actions {
+      padding: 20px;
+      text-align: center;
+      border-top: 2px solid rgba(255, 215, 0, 0.3);
+    }
+
+    .history-btn {
+      padding: 15px 30px;
+      border: 4px solid #ffffff;
+      border-radius: 50px;
+      font-weight: 900;
+      font-size: 16px;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      background: linear-gradient(45deg, #FF6B35, #F7931E);
+      color: #ffffff;
+      box-shadow: 0 8px 25px rgba(255, 107, 53, 0.4);
+    }
+
+    .history-btn:hover {
+      transform: translateY(-8px) scale(1.05);
+      box-shadow: 0 15px 40px rgba(255, 107, 53, 0.6);
+    }
+
+    @media (max-width: 768px) {
+      .history-content {
+        grid-template-columns: 1fr;
+        padding: 20px 15px;
+      }
+
+      .history-title {
+        font-size: 32px;
+      }
+    }
+
     /* Sección VIP estilo Cartoon Network */
     .vip-section {
       position: fixed;
@@ -4009,6 +4274,43 @@
     </div>
   </div>
 
+  <!-- Sección de Historial -->
+  <div id="historySection" class="history-section">
+    <button class="history-close-btn" onclick="closeHistorySection()">
+      <i class="fas fa-times"></i>
+    </button>
+
+    <div class="history-header">
+      <h2 class="history-title">
+        <i class="fas fa-history"></i>
+        Historial de Reproducción
+      </h2>
+      <p class="history-subtitle">Continúa viendo donde lo dejaste</p>
+    </div>
+
+    <div id="historyLoading" class="history-loading hidden">
+      <div class="history-loading-spinner"></div>
+      <div class="history-loading-text">Cargando historial...</div>
+    </div>
+
+    <div id="historyContent" class="history-content">
+      <!-- El historial se cargará aquí -->
+    </div>
+
+    <div id="historyEmpty" class="history-empty hidden">
+      <i class="fas fa-film"></i>
+      <h3>No hay historial aún</h3>
+      <p>Empieza a ver contenido y aparecerá aquí</p>
+    </div>
+
+    <div class="history-actions">
+      <button class="history-btn secondary" onclick="clearHistory()">
+        <i class="fas fa-trash"></i>
+        Limpiar Historial
+      </button>
+    </div>
+  </div>
+
   <!-- Navegación inferior -->
   <nav class="bottom-nav">
     <button id="navHome" class="active">
@@ -4281,6 +4583,7 @@
       document.getElementById('searchSection').classList.remove('active');
       document.getElementById('vipSection').classList.remove('active');
       document.getElementById('settingsSection').classList.remove('active');
+      document.getElementById('historySection').classList.remove('active');
     }
 
     // Cerrar sección de búsqueda
@@ -5152,14 +5455,144 @@
       }
     }
 
-    // Ver historial
+    // Ver historial - Abrir sección
     function viewHistory() {
-      const history = JSON.parse(localStorage.getItem('zambik_history') || '[]');
-      if (history.length === 0) {
-        showSettingsMessage('No hay historial de reproducción');
-        return;
+      showHistorySection();
+    }
+
+    // Mostrar sección de historial
+    function showHistorySection() {
+      hideAllSections();
+      document.getElementById('historySection').classList.add('active');
+      loadHistoryContent();
+    }
+
+    // Cerrar sección de historial
+    function closeHistorySection() {
+      document.getElementById('historySection').classList.remove('active');
+      showHomeSection();
+      
+      // Activar botón home
+      document.querySelectorAll('.bottom-nav button').forEach(btn => btn.classList.remove('active'));
+      document.getElementById('navHome').classList.add('active');
+    }
+
+    // Cargar contenido del historial
+    function loadHistoryContent() {
+      const historyContent = document.getElementById('historyContent');
+      const historyEmpty = document.getElementById('historyEmpty');
+      const historyLoading = document.getElementById('historyLoading');
+      
+      // Mostrar loading
+      historyLoading.classList.remove('hidden');
+      historyContent.innerHTML = '';
+      historyEmpty.classList.add('hidden');
+      
+      setTimeout(() => {
+        const history = JSON.parse(localStorage.getItem('zambik_history') || '[]');
+        historyLoading.classList.add('hidden');
+        
+        if (history.length === 0) {
+          historyEmpty.classList.remove('hidden');
+          return;
+        }
+        
+        // Ordenar por fecha más reciente
+        history.sort((a, b) => new Date(b.watchedAt) - new Date(a.watchedAt));
+        
+        // Renderizar items
+        history.forEach(item => {
+          const series = seriesDatabase[item.seriesId];
+          if (!series) return;
+          
+          const historyItem = createHistoryItem(item, series);
+          historyContent.appendChild(historyItem);
+        });
+      }, 500);
+    }
+
+    // Crear item de historial
+    function createHistoryItem(historyData, series) {
+      const item = document.createElement('div');
+      item.className = 'history-item';
+      item.onclick = () => {
+        closeHistorySection();
+        showSeriesDetail(series.id);
+      };
+      
+      const progress = historyData.progress || 0;
+      const watchedDate = new Date(historyData.watchedAt);
+      const timeAgo = getTimeAgo(watchedDate);
+      
+      item.innerHTML = `
+        <div class="history-item-poster">
+          <img src="${series.poster}" alt="${series.title}">
+          <div class="history-progress-overlay">
+            <div class="history-progress-bar" style="width: ${progress}%"></div>
+          </div>
+        </div>
+        <div class="history-item-content">
+          <div class="history-item-title">${series.title}</div>
+          <div class="history-item-meta">${series.year} • ${series.type === 'movie' ? 'Película' : 'Serie'}</div>
+          <div class="history-item-time">
+            <i class="fas fa-clock"></i> ${timeAgo} • ${Math.round(progress)}% visto
+          </div>
+        </div>
+      `;
+      
+      return item;
+    }
+
+    // Calcular tiempo transcurrido
+    function getTimeAgo(date) {
+      const now = new Date();
+      const diff = now - date;
+      const minutes = Math.floor(diff / 60000);
+      const hours = Math.floor(minutes / 60);
+      const days = Math.floor(hours / 24);
+      
+      if (days > 0) return `Hace ${days} día${days > 1 ? 's' : ''}`;
+      if (hours > 0) return `Hace ${hours} hora${hours > 1 ? 's' : ''}`;
+      if (minutes > 0) return `Hace ${minutes} minuto${minutes > 1 ? 's' : ''}`;
+      return 'Hace un momento';
+    }
+
+    // Limpiar historial
+    function clearHistory() {
+      if (confirm('¿Estás seguro de que quieres eliminar todo el historial?')) {
+        localStorage.removeItem('zambik_history');
+        loadHistoryContent();
+        showSettingsMessage('🗑️ Historial eliminado');
       }
-      showSettingsMessage(`Tienes ${history.length} elementos en tu historial`);
+    }
+
+    // Guardar en historial cuando se reproduce
+    function saveToHistory(seriesId, progress) {
+      const history = JSON.parse(localStorage.getItem('zambik_history') || '[]');
+      
+      // Buscar si ya existe
+      const existingIndex = history.findIndex(item => item.seriesId === seriesId);
+      
+      const historyItem = {
+        seriesId: seriesId,
+        progress: progress,
+        watchedAt: new Date().toISOString()
+      };
+      
+      if (existingIndex !== -1) {
+        // Actualizar existente
+        history[existingIndex] = historyItem;
+      } else {
+        // Agregar nuevo
+        history.push(historyItem);
+      }
+      
+      // Limitar a 50 items
+      if (history.length > 50) {
+        history.shift();
+      }
+      
+      localStorage.setItem('zambik_history', JSON.stringify(history));
     }
 
     // Cargar configuraciones actuales
@@ -6698,6 +7131,11 @@
           const progress = (videoElement.currentTime / videoElement.duration) * 100;
           videoProgressFill.style.width = `${progress}%`;
           currentTimeElement.textContent = formatTime(videoElement.currentTime);
+          
+          // Guardar en historial cada 10 segundos
+          if (currentSeries && Math.floor(videoElement.currentTime) % 10 === 0) {
+            saveToHistory(currentSeries.id, progress);
+          }
         }
       }, 1000);
     }
