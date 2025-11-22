@@ -1181,44 +1181,22 @@
       }
     }
 
-    // Seleccionar plan (sin Stripe por ahora)
-    async function selectPlan(planType, planName, planPrice) {
+    // Seleccionar plan y redirigir a pago
+    function selectPlan(planType, planName, planPrice) {
       if (!currentUser) {
         alert('Error: Usuario no autenticado');
         return;
       }
 
-      const button = event.target;
-      setButtonLoading(button, true);
+      // Guardar plan seleccionado
+      localStorage.setItem('zambik_selected_plan', JSON.stringify({
+        plan: planType,
+        name: planName,
+        price: planPrice
+      }));
 
-      try {
-        // Crear objeto de suscripción
-        const subscription = {
-          plan: planType,
-          name: planName,
-          price: planPrice,
-          startDate: firebase.database.ServerValue.TIMESTAMP,
-          status: 'active',
-          features: getPlanFeatures(planType)
-        };
-
-        // Guardar suscripción en Firebase
-        await database.ref('users/' + currentUser.uid + '/subscription').set(subscription);
-
-        // Mostrar mensaje de éxito
-        showSuccessMessage(planName);
-
-        // Redirigir a configuración de perfil después de 3 segundos
-        setTimeout(() => {
-          window.location.href = 'profile-setup.html';
-        }, 3500);
-
-      } catch (error) {
-        console.error('Error seleccionando plan:', error);
-        alert('Error al seleccionar el plan. Intenta nuevamente.');
-      } finally {
-        setButtonLoading(button, false);
-      }
+      // Redirigir a página de pago
+      window.location.href = 'payment.html';
     }
 
     // Obtener características del plan

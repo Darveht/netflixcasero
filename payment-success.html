@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pago Exitoso - Zambik</title>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #1a0033 0%, #330066 25%, #000033 50%, #660033 75%, #1a0033 100%);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .success-container {
+      max-width: 500px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 30px;
+      padding: 50px 40px;
+      text-align: center;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .checkmark {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: #00FF88;
+      margin: 0 auto 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 50px;
+      color: #fff;
+      animation: scaleIn 0.5s ease-out;
+    }
+
+    @keyframes scaleIn {
+      0% { transform: scale(0); }
+      50% { transform: scale(1.1); }
+      100% { transform: scale(1); }
+    }
+
+    h1 {
+      font-size: 32px;
+      color: #000;
+      margin-bottom: 15px;
+    }
+
+    p {
+      font-size: 16px;
+      color: #666;
+      margin-bottom: 30px;
+    }
+
+    .button {
+      display: inline-block;
+      padding: 15px 40px;
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      border: 5px solid #FF1493;
+      border-radius: 15px;
+      color: #000;
+      font-size: 18px;
+      font-weight: 900;
+      text-decoration: none;
+      transition: all 0.3s;
+    }
+
+    .button:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(255, 215, 0, 0.6);
+    }
+  </style>
+</head>
+<body>
+  <div class="success-container">
+    <div class="checkmark">✓</div>
+    <h1>¡Pago Exitoso!</h1>
+    <p>Tu suscripción ha sido activada. Redirigiendo...</p>
+  </div>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyCFQ_geG0HIv2EZ-bfKc97TJNtf2sdqPzc",
+      authDomain: "clack-koder.firebaseapp.com",
+      databaseURL: "https://clack-koder-default-rtdb.firebaseio.com",
+      projectId: "clack-koder",
+      storageBucket: "clack-koder.firebasestorage.app",
+      messagingSenderId: "478151254938",
+      appId: "1:478151254938:web:e2c00e3a5426bd192b9023"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const database = firebase.database();
+
+    auth.onAuthStateChanged(async (user) => {
+      if (user) {
+        const planData = JSON.parse(localStorage.getItem('zambik_selected_plan') || '{}');
+        
+        if (planData.plan) {
+          await database.ref('users/' + user.uid + '/subscription').set({
+            plan: planData.plan,
+            name: planData.name,
+            price: planData.price,
+            startDate: firebase.database.ServerValue.TIMESTAMP,
+            status: 'active',
+            features: getPlanFeatures(planData.plan)
+          });
+
+          localStorage.removeItem('zambik_selected_plan');
+        }
+
+        setTimeout(() => {
+          window.location.href = 'profile-setup.html';
+        }, 2000);
+      }
+    });
+
+    function getPlanFeatures(planType) {
+      const features = {
+        basic: { quality: 'HD (720p)', devices: 1, downloads: true, ads: true },
+        premium: { quality: '4K Ultra HD', devices: 4, downloads: true, ads: false, exclusive: true },
+        family: { quality: '4K Ultra HD', devices: 6, downloads: true, ads: false, exclusive: true, profiles: true }
+      };
+      return features[planType] || features.basic;
+    }
+  </script>
+</body>
+</html>

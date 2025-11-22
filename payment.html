@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zambik - Pago Seguro</title>
+  <script src="https://js.stripe.com/v3/"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      background: linear-gradient(135deg, #1a0033 0%, #330066 25%, #000033 50%, #660033 75%, #1a0033 100%);
+      background-size: 400% 400%;
+      animation: cartoonGradient 20s ease-in-out infinite;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    @keyframes cartoonGradient {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+
+    .payment-container {
+      max-width: 500px;
+      width: 100%;
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 30px;
+      padding: 40px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    }
+
+    .logo {
+      text-align: center;
+      font-size: 48px;
+      font-weight: 900;
+      color: #FFD700;
+      text-shadow: 3px 3px 0px #FF1493;
+      margin-bottom: 30px;
+    }
+
+    .plan-summary {
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      padding: 20px;
+      border-radius: 15px;
+      margin-bottom: 30px;
+      text-align: center;
+    }
+
+    .plan-name {
+      font-size: 24px;
+      font-weight: 900;
+      color: #000;
+      margin-bottom: 10px;
+    }
+
+    .plan-price {
+      font-size: 36px;
+      font-weight: 900;
+      color: #000;
+    }
+
+    #payment-element {
+      margin-bottom: 20px;
+    }
+
+    #payment-message {
+      color: #ef4444;
+      font-size: 14px;
+      margin-bottom: 15px;
+      text-align: center;
+    }
+
+    #submit {
+      width: 100%;
+      padding: 18px;
+      background: linear-gradient(135deg, #FFD700, #FFA500);
+      border: 5px solid #FF1493;
+      border-radius: 15px;
+      color: #000;
+      font-size: 18px;
+      font-weight: 900;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    #submit:hover:not(:disabled) {
+      transform: translateY(-3px);
+      box-shadow: 0 10px 30px rgba(255, 215, 0, 0.6);
+    }
+
+    #submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+
+    .spinner {
+      display: none;
+      border: 3px solid rgba(0, 0, 0, 0.1);
+      border-top: 3px solid #000;
+      border-radius: 50%;
+      width: 20px;
+      height: 20px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto;
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+
+    .loading .spinner {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <div class="payment-container">
+    <div class="logo">Zambik</div>
+    
+    <div class="plan-summary">
+      <div class="plan-name" id="planName">Cargando...</div>
+      <div class="plan-price" id="planPrice">$0.00</div>
+      <div style="color: #000; font-size: 14px; margin-top: 5px;">por mes</div>
+    </div>
+
+    <form id="payment-form">
+      <div id="payment-element"></div>
+      <div id="payment-message"></div>
+      <button id="submit">
+        <span id="button-text">Pagar Ahora</span>
+        <div class="spinner"></div>
+      </button>
+    </form>
+  </div>
+
+  <script>
+    // Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyCFQ_geG0HIv2EZ-bfKc97TJNtf2sdqPzc",
+      authDomain: "clack-koder.firebaseapp.com",
+      databaseURL: "https://clack-koder-default-rtdb.firebaseio.com",
+      projectId: "clack-koder",
+      storageBucket: "clack-koder.firebasestorage.app",
+      messagingSenderId: "478151254938",
+      appId: "1:478151254938:web:e2c00e3a5426bd192b9023"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const database = firebase.database();
+
+    // Stripe - Reemplaza con tu clave pública
+    const stripe = Stripe('pk_live_TU_CLAVE_PUBLICA');
+
+    let elements;
+    let currentUser;
+    let planData;
+
+    // Verificar autenticación
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        currentUser = user;
+        initializePayment();
+      } else {
+        window.location.href = 'login.html';
+      }
+    });
+
+    async function initializePayment() {
+      // Obtener datos del plan
+      planData = JSON.parse(localStorage.getItem('zambik_selected_plan') || '{}');
+      
+      if (!planData.plan) {
+        window.location.href = 'subscription.html';
+        return;
+      }
+
+      // Mostrar resumen
+      document.getElementById('planName').textContent = planData.name;
+      document.getElementById('planPrice').textContent = planData.price;
+
+      // NOTA: En producción, esto debe hacerse desde un servidor backend
+      // Por ahora, simular el client_secret (reemplazar con llamada a tu backend)
+      const client_secret = 'pi_test_secret_' + Math.random().toString(36);
+
+      // Inicializar Stripe Elements
+      elements = stripe.elements({ clientSecret: client_secret });
+      
+      const paymentElement = elements.create('payment', {
+        layout: 'tabs'
+      });
+      
+      paymentElement.mount('#payment-element');
+    }
+
+    function getPlanAmount(plan) {
+      const amounts = {
+        basic: 499,
+        premium: 999,
+        family: 1499
+      };
+      return amounts[plan] || 499;
+    }
+
+    // Manejar envío del formulario
+    document.getElementById('payment-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      setLoading(true);
+
+      const { error } = await stripe.confirmPayment({
+        elements,
+        confirmParams: {
+          return_url: window.location.origin + '/payment-success.html'
+        }
+      });
+
+      if (error) {
+        showMessage(error.message);
+        setLoading(false);
+      }
+    });
+
+    function showMessage(messageText) {
+      const messageContainer = document.getElementById('payment-message');
+      messageContainer.textContent = messageText;
+    }
+
+    function setLoading(isLoading) {
+      const submitButton = document.getElementById('submit');
+      const buttonText = document.getElementById('button-text');
+      
+      if (isLoading) {
+        submitButton.disabled = true;
+        submitButton.classList.add('loading');
+        buttonText.style.display = 'none';
+      } else {
+        submitButton.disabled = false;
+        submitButton.classList.remove('loading');
+        buttonText.style.display = 'block';
+      }
+    }
+  </script>
+</body>
+</html>
