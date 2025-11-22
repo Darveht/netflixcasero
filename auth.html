@@ -542,8 +542,8 @@
       } catch (error) {
         console.error('✗ Error en login:', error.code, error.message);
         showMessage(getErrorMessage(error.code));
-        setButtonLoading(button, false);
         isProcessing = false;
+        setButtonLoading(button, false);
       }
     }
 
@@ -611,8 +611,8 @@
       } catch (error) {
         console.error('✗ Error en registro:', error.code, error.message);
         showMessage(getErrorMessage(error.code));
-        setButtonLoading(button, false);
         isProcessing = false;
+        setButtonLoading(button, false);
       }
     }
 
