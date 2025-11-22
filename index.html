@@ -12,12 +12,6 @@
   <title>IBTV</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
   <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-  
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-  
   <style>
     /* Reinicio básico */
     * {
@@ -4405,6 +4399,50 @@
       };
     }
 
+    // Función para mostrar detalles de serie
+    function showSeriesDetail(seriesId) {
+      const series = seriesDatabase[seriesId];
+      if (!series) {
+        console.error('Serie no encontrada:', seriesId);
+        return;
+      }
+
+      currentSeries = series;
+
+      // Actualizar información de la serie
+      document.getElementById('seriesDetailTitle').textContent = series.title;
+      document.getElementById('seriesDetailDescription').textContent = series.description;
+
+      // Actualizar meta información
+      const metaEl = document.getElementById('seriesDetailMeta');
+      if (metaEl) {
+        const typeText = series.type === 'movie' ? 'Película' : (series.type === 'shortfilm' ? 'Cortometraje' : 'Serie');
+        metaEl.innerHTML = `
+          <span>${series.year}</span>
+          <span>${typeText}</span>
+          <span>${series.genre}</span>
+          <span>${series.rating}</span>
+        `;
+      }
+
+      // Actualizar fondo
+      const backgroundEl = document.getElementById('seriesDetailBackground');
+      if (backgroundEl) {
+        backgroundEl.style.backgroundImage = `url('${series.poster}')`;
+      }
+
+      // Cargar contenido (episodios o película)
+      loadContent(series);
+
+      // Mostrar cuenta regresiva si es necesario
+      if (series.hasCountdown) {
+        showCountdownInDetails(series);
+      }
+
+      // Mostrar panel de detalles
+      document.getElementById('seriesDetail').classList.add('active');
+    }
+
     // Función para cerrar detalles de serie
     function closeSeriesDetail() {
       document.getElementById('seriesDetail').classList.remove('active');
@@ -4608,6 +4646,132 @@
         videoElement.addEventListener('error', onError);
 
         startProgressUpdate();
+      }
+
+      // Función para reproducir contenido principal (episodios/películas)
+      function playMainContent(episode) {
+        if (!episode || !episode.videoUrl) {
+          showErrorMessage('Contenido no disponible');
+          return;
+        }
+
+        // Limpiar video anterior
+        videoElement.removeAttribute('src');
+        videoElement.innerHTML = '';
+        videoElement.load();
+
+        // Configurar video para compatibilidad móvil
+        videoElement.setAttribute('playsinline', 'true');
+        videoElement.setAttribute('webkit-playsinline', 'true');
+        videoElement.controls = false;
+        videoElement.preload = 'metadata';
+
+        videoPlayerTitle.textContent = episode.title || currentSeries.title;
+
+        // Configurar fuente
+        videoElement.src = episode.videoUrl;
+
+        // Abrir reproductor de video
+        openVideoPlayer();
+
+        // Auto-reproducir
+        const playPromise = videoElement.play();
+        if (playPromise !== undefined) {
+          playPromise.then(() => {
+            console.log('Contenido reproduciéndose');
+          }).catch(e => {
+            console.log('Autoplay prevented:', e);
+            showPlayButton();
+          });
+        }
+      }
+
+      // Función para reproducir la película principal desde el botón hero
+      function playMainMovie() {
+        if (!currentSeries) {
+          console.error('No hay serie/película seleccionada');
+          return;
+        }
+
+        // Si es una película completa
+        if (currentSeries.episodes && currentSeries.episodes.length > 0) {
+          playEpisode(1, currentSeries.episodes[0].id);
+        } else if (currentSeries.trailer) {
+          playTrailer();
+        }
+      }
+
+      // Actualizar duración del video
+      function updateDuration() {
+        if (videoElement && videoElement.duration) {
+          const duration = formatTime(videoElement.duration);
+          const durationEl = document.getElementById('videoDuration');
+          if (durationEl) {
+            durationEl.textContent = duration;
+          }
+        }
+      }
+
+      // Iniciar actualización de progreso del video
+      function startProgressUpdate() {
+        if (window.progressInterval) {
+          clearInterval(window.progressInterval);
+        }
+
+        window.progressInterval = setInterval(() => {
+          if (videoElement && !isNaN(videoElement.duration)) {
+            const progress = (videoElement.currentTime / videoElement.duration) * 100;
+            const progressBar = document.getElementById('videoProgress');
+            if (progressBar) {
+              progressBar.style.width = progress + '%';
+            }
+
+            const currentTimeEl = document.getElementById('videoCurrentTime');
+            if (currentTimeEl) {
+              currentTimeEl.textContent = formatTime(videoElement.currentTime);
+            }
+          }
+        }, 100);
+      }
+
+      // Formatear tiempo en formato MM:SS o HH:MM:SS
+      function formatTime(seconds) {
+        if (isNaN(seconds) || seconds === null) {
+          return '0:00';
+        }
+
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secs = Math.floor(seconds % 60);
+
+        if (hours > 0) {
+          return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        } else {
+          return `${minutes}:${secs.toString().padStart(2, '0')}`;
+        }
+      }
+
+      // Abrir el reproductor de video
+      function openVideoPlayer() {
+        const videoPlayerModal = document.getElementById('videoPlayerModal');
+        if (videoPlayerModal) {
+          videoPlayerModal.classList.add('active');
+          videoPlayerModal.style.display = 'flex';
+          document.body.style.overflow = 'hidden';
+        }
+      }
+
+      // Alternar sonido del trailer
+      function toggleTrailerSound() {
+        if (videoElement) {
+          videoElement.muted = !videoElement.muted;
+          const soundBtn = document.getElementById('trailerSoundBtn');
+          if (soundBtn) {
+            soundBtn.innerHTML = videoElement.muted ? 
+              '<i class="fas fa-volume-mute"></i>' : 
+              '<i class="fas fa-volume-up"></i>';
+          }
+        }
       }
 
       // Función de descarga de contenido actual
@@ -5343,6 +5507,50 @@
       };
     }
 
+    // Función para mostrar detalles de serie
+    function showSeriesDetail(seriesId) {
+      const series = seriesDatabase[seriesId];
+      if (!series) {
+        console.error('Serie no encontrada:', seriesId);
+        return;
+      }
+
+      currentSeries = series;
+
+      // Actualizar información de la serie
+      document.getElementById('seriesDetailTitle').textContent = series.title;
+      document.getElementById('seriesDetailDescription').textContent = series.description;
+
+      // Actualizar meta información
+      const metaEl = document.getElementById('seriesDetailMeta');
+      if (metaEl) {
+        const typeText = series.type === 'movie' ? 'Película' : (series.type === 'shortfilm' ? 'Cortometraje' : 'Serie');
+        metaEl.innerHTML = `
+          <span>${series.year}</span>
+          <span>${typeText}</span>
+          <span>${series.genre}</span>
+          <span>${series.rating}</span>
+        `;
+      }
+
+      // Actualizar fondo
+      const backgroundEl = document.getElementById('seriesDetailBackground');
+      if (backgroundEl) {
+        backgroundEl.style.backgroundImage = `url('${series.poster}')`;
+      }
+
+      // Cargar contenido (episodios o película)
+      loadContent(series);
+
+      // Mostrar cuenta regresiva si es necesario
+      if (series.hasCountdown) {
+        showCountdownInDetails(series);
+      }
+
+      // Mostrar panel de detalles
+      document.getElementById('seriesDetail').classList.add('active');
+    }
+
     // Función para cerrar detalles de serie
     function closeSeriesDetail() {
       document.getElementById('seriesDetail').classList.remove('active');
@@ -5546,6 +5754,132 @@
         videoElement.addEventListener('error', onError);
 
         startProgressUpdate();
+      }
+
+      // Función para reproducir contenido principal (episodios/películas)
+      function playMainContent(episode) {
+        if (!episode || !episode.videoUrl) {
+          showErrorMessage('Contenido no disponible');
+          return;
+        }
+
+        // Limpiar video anterior
+        videoElement.removeAttribute('src');
+        videoElement.innerHTML = '';
+        videoElement.load();
+
+        // Configurar video para compatibilidad móvil
+        videoElement.setAttribute('playsinline', 'true');
+        videoElement.setAttribute('webkit-playsinline', 'true');
+        videoElement.controls = false;
+        videoElement.preload = 'metadata';
+
+        videoPlayerTitle.textContent = episode.title || currentSeries.title;
+
+        // Configurar fuente
+        videoElement.src = episode.videoUrl;
+
+        // Abrir reproductor de video
+        openVideoPlayer();
+
+        // Auto-reproducir
+        const playPromise = videoElement.play();
+        if (playPromise !== undefined) {
+          playPromise.then(() => {
+            console.log('Contenido reproduciéndose');
+          }).catch(e => {
+            console.log('Autoplay prevented:', e);
+            showPlayButton();
+          });
+        }
+      }
+
+      // Función para reproducir la película principal desde el botón hero
+      function playMainMovie() {
+        if (!currentSeries) {
+          console.error('No hay serie/película seleccionada');
+          return;
+        }
+
+        // Si es una película completa
+        if (currentSeries.episodes && currentSeries.episodes.length > 0) {
+          playEpisode(1, currentSeries.episodes[0].id);
+        } else if (currentSeries.trailer) {
+          playTrailer();
+        }
+      }
+
+      // Actualizar duración del video
+      function updateDuration() {
+        if (videoElement && videoElement.duration) {
+          const duration = formatTime(videoElement.duration);
+          const durationEl = document.getElementById('videoDuration');
+          if (durationEl) {
+            durationEl.textContent = duration;
+          }
+        }
+      }
+
+      // Iniciar actualización de progreso del video
+      function startProgressUpdate() {
+        if (window.progressInterval) {
+          clearInterval(window.progressInterval);
+        }
+
+        window.progressInterval = setInterval(() => {
+          if (videoElement && !isNaN(videoElement.duration)) {
+            const progress = (videoElement.currentTime / videoElement.duration) * 100;
+            const progressBar = document.getElementById('videoProgress');
+            if (progressBar) {
+              progressBar.style.width = progress + '%';
+            }
+
+            const currentTimeEl = document.getElementById('videoCurrentTime');
+            if (currentTimeEl) {
+              currentTimeEl.textContent = formatTime(videoElement.currentTime);
+            }
+          }
+        }, 100);
+      }
+
+      // Formatear tiempo en formato MM:SS o HH:MM:SS
+      function formatTime(seconds) {
+        if (isNaN(seconds) || seconds === null) {
+          return '0:00';
+        }
+
+        const hours = Math.floor(seconds / 3600);
+        const minutes = Math.floor((seconds % 3600) / 60);
+        const secs = Math.floor(seconds % 60);
+
+        if (hours > 0) {
+          return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
+        } else {
+          return `${minutes}:${secs.toString().padStart(2, '0')}`;
+        }
+      }
+
+      // Abrir el reproductor de video
+      function openVideoPlayer() {
+        const videoPlayerModal = document.getElementById('videoPlayerModal');
+        if (videoPlayerModal) {
+          videoPlayerModal.classList.add('active');
+          videoPlayerModal.style.display = 'flex';
+          document.body.style.overflow = 'hidden';
+        }
+      }
+
+      // Alternar sonido del trailer
+      function toggleTrailerSound() {
+        if (videoElement) {
+          videoElement.muted = !videoElement.muted;
+          const soundBtn = document.getElementById('trailerSoundBtn');
+          if (soundBtn) {
+            soundBtn.innerHTML = videoElement.muted ? 
+              '<i class="fas fa-volume-mute"></i>' : 
+              '<i class="fas fa-volume-up"></i>';
+          }
+        }
       }
 
       // Función de descarga de contenido actual
