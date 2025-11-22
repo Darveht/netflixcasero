@@ -20,8 +20,8 @@
     }
 
     html, body {
-      height: 100vh;
-      width: 100vw;
+      height: 100%;
+      width: 100%;
       margin: 0;
       padding: 0;
       overflow-x: hidden;
@@ -31,11 +31,11 @@
       background: linear-gradient(135deg, #FF1493 0%, #FF6B35 15%, #FFD700 30%, #00FF88 50%, #00D4FF 70%, #9D4EDD 85%, #FF1493 100%);
       background-size: 600% 600%;
       animation: cartoonGradient 12s ease-in-out infinite;
-      font-family: 'Comic Sans MS', 'Segoe UI', cursive, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
       color: #ffffff;
       min-height: 100vh;
       position: relative;
-      overflow-x: hidden;
+      background-attachment: fixed;
     }
 
     @keyframes cartoonGradient {
@@ -178,7 +178,6 @@
         10px 10px 0px #9D4EDD,
         15px 15px 0px rgba(0, 0, 0, 0.3);
       animation: cartoonTitleBounce 2s ease-in-out infinite;
-      font-family: 'Comic Sans MS', cursive;
       text-transform: uppercase;
       position: relative;
     }
@@ -231,32 +230,99 @@
       50% { transform: translateY(-5px); }
     }
 
-    /* Grid de planes */
-    .plans-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-      gap: 40px;
-      margin-bottom: 60px;
-      max-width: 1200px;
-      margin-left: auto;
-      margin-right: auto;
+    /* Carrusel 3D de planes */
+    .plans-carousel-container {
+      position: relative;
+      width: 100%;
+      max-width: 1400px;
+      margin: 0 auto 60px auto;
+      padding: 80px 20px;
+      perspective: 2000px;
+    }
+
+    .plans-carousel {
+      position: relative;
+      width: 100%;
+      height: 650px;
+      transform-style: preserve-3d;
+      transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    }
+
+    .carousel-nav {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: linear-gradient(45deg, #FFD700, #FFA500);
+      border: 5px solid #FF1493;
+      color: #000000;
+      width: 70px;
+      height: 70px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      z-index: 100;
+      font-size: 28px;
+      font-weight: 900;
+      box-shadow: 0 10px 40px rgba(255, 215, 0, 0.7);
+      transition: all 0.3s ease;
+    }
+
+    .carousel-nav:hover {
+      transform: translateY(-50%) scale(1.2) rotate(15deg);
+      box-shadow: 0 15px 50px rgba(255, 215, 0, 0.9);
+    }
+
+    .carousel-nav.prev { left: -35px; }
+    .carousel-nav.next { right: -35px; }
+
+    .carousel-indicators {
+      position: absolute;
+      bottom: -50px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 15px;
+      z-index: 100;
+    }
+
+    .indicator {
+      width: 15px;
+      height: 15px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.4);
+      border: 3px solid #FF1493;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .indicator.active {
+      background: #FFD700;
+      transform: scale(1.5);
+      box-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
     }
 
     .plan-card {
+      position: absolute;
+      width: 380px;
       background: linear-gradient(135deg, #FFFFFF 0%, #FFF5E1 50%, #FFFFFF 100%);
       border: 8px solid #FF1493;
       border-radius: 40px;
       padding: 45px 40px;
       padding-top: 60px;
       text-align: center;
-      position: relative;
       overflow: visible;
-      transition: all 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-      animation: cartoonCardFloat 4s ease-in-out infinite;
+      transition: all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
       box-shadow: 
-        0 15px 50px rgba(255, 20, 147, 0.5),
+        0 20px 60px rgba(255, 20, 147, 0.6),
         inset 0 0 30px rgba(255, 215, 0, 0.2);
-      margin-top: 30px;
+      backface-visibility: hidden;
+      transform-style: preserve-3d;
+      left: 50%;
+      top: 50%;
+      margin-left: -190px;
+      margin-top: -325px;
     }
 
     .plan-card::before {
@@ -309,31 +375,53 @@
       75% { transform: translateY(-28px) scale(1.1) rotate(6deg); }
     }
 
+    .plan-card.active {
+      z-index: 10;
+      transform: translateZ(0px) scale(1.15);
+      opacity: 1;
+      filter: blur(0px);
+    }
+
+    .plan-card.left {
+      transform: translateX(-450px) translateZ(-400px) rotateY(35deg) scale(0.85);
+      opacity: 0.7;
+      filter: blur(2px);
+      z-index: 5;
+    }
+
+    .plan-card.right {
+      transform: translateX(450px) translateZ(-400px) rotateY(-35deg) scale(0.85);
+      opacity: 0.7;
+      filter: blur(2px);
+      z-index: 5;
+    }
+
+    .plan-card.hidden {
+      transform: translateZ(-800px) scale(0.5);
+      opacity: 0;
+      pointer-events: none;
+    }
+
     .plan-card.popular {
       border-color: #FFD700;
       background: linear-gradient(135deg, #FFF9E6 0%, #FFFACD 50%, #FFF9E6 100%);
-      transform: scale(1.08);
       box-shadow: 
         0 30px 80px rgba(255, 215, 0, 0.7),
         0 0 60px rgba(255, 20, 147, 0.5),
         inset 0 0 40px rgba(255, 215, 0, 0.3);
-      margin-top: 30px;
+    }
+
+    .plan-card.popular.active {
       animation: popularPulse 3s ease-in-out infinite;
     }
 
     @keyframes popularPulse {
       0%, 100% { 
-        transform: scale(1.08) rotate(0deg);
         box-shadow: 0 30px 80px rgba(255, 215, 0, 0.7), 0 0 60px rgba(255, 20, 147, 0.5);
       }
       50% { 
-        transform: scale(1.12) rotate(2deg);
-        box-shadow: 0 35px 90px rgba(255, 215, 0, 0.9), 0 0 80px rgba(255, 20, 147, 0.7);
+        box-shadow: 0 40px 100px rgba(255, 215, 0, 0.9), 0 0 80px rgba(255, 20, 147, 0.7);
       }
-    }
-
-    .plan-card.popular:hover {
-      transform: scale(1.15) translateY(-20px) rotate(3deg);
     }
 
     .plan-card.popular::before {
@@ -589,45 +677,117 @@
     /* Responsive */
     @media (max-width: 768px) {
       .subscription-title {
-        font-size: 42px;
+        font-size: 36px;
+      }
+
+      .subscription-title::before,
+      .subscription-title::after {
+        font-size: 25px;
+        left: -35px;
+        right: -35px;
       }
 
       .subscription-subtitle {
-        font-size: 18px;
-      }
-
-      .plans-grid {
-        grid-template-columns: 1fr;
-        gap: 25px;
+        font-size: 16px;
         padding: 0 10px;
       }
 
+      .plans-carousel-container {
+        padding: 40px 10px;
+        perspective: 1000px;
+      }
+
+      .plans-carousel {
+        height: 550px;
+      }
+
       .plan-card {
-        padding: 30px 25px;
+        width: 300px;
+        padding: 30px 20px;
+        padding-top: 50px;
+        margin-left: -150px;
+        margin-top: -275px;
       }
 
-      .plan-card.popular {
-        transform: none;
+      .plan-card.popular::before {
+        font-size: 13px;
+        padding: 12px 25px;
+        top: -20px;
       }
 
-      .plan-card.popular:hover {
-        transform: translateY(-15px);
+      .plan-name {
+        font-size: 28px;
       }
+
+      .plan-price {
+        font-size: 52px;
+      }
+
+      .plan-features li {
+        font-size: 16px;
+        padding: 10px 0;
+      }
+
+      .plan-button {
+        padding: 16px;
+        font-size: 16px;
+      }
+
+      .plan-card.left {
+        transform: translateX(-250px) translateZ(-250px) rotateY(20deg) scale(0.7);
+        opacity: 0.5;
+      }
+
+      .plan-card.right {
+        transform: translateX(250px) translateZ(-250px) rotateY(-20deg) scale(0.7);
+        opacity: 0.5;
+      }
+
+      .carousel-nav {
+        width: 50px;
+        height: 50px;
+        font-size: 20px;
+      }
+
+      .carousel-nav.prev { left: 5px; }
+      .carousel-nav.next { right: 5px; }
 
       .header {
-        padding: 20px 20px;
+        padding: 15px;
       }
 
       .logo {
-        font-size: 24px;
+        font-size: 28px;
+      }
+
+      .user-info {
+        font-size: 13px;
+      }
+
+      .logout-btn {
+        padding: 10px 14px;
+        font-size: 14px;
       }
 
       .main-container {
-        padding: 100px 20px 40px 20px;
+        padding: 90px 15px 30px 15px;
       }
 
       .subscription-header {
-        margin-bottom: 50px;
+        margin-bottom: 40px;
+      }
+
+      .special-offer-banner {
+        padding: 20px;
+        margin: 20px 10px 30px 10px;
+      }
+
+      .offer-title {
+        font-size: 18px;
+      }
+
+      .offer-text {
+        font-size: 13px;
       }
     }
 
@@ -707,33 +867,114 @@
 
     @media (max-width: 480px) {
       .subscription-title {
-        font-size: 36px;
+        font-size: 28px;
+      }
+
+      .subscription-title::before,
+      .subscription-title::after {
+        font-size: 20px;
+        left: -30px;
+        right: -30px;
+      }
+
+      .subscription-subtitle {
+        font-size: 14px;
+      }
+
+      .plans-carousel {
+        height: 520px;
+      }
+
+      .plan-card {
+        width: 280px;
+        padding: 25px 18px;
+        padding-top: 45px;
+        margin-left: -140px;
+        margin-top: -260px;
+      }
+
+      .plan-card.popular::before {
+        font-size: 11px;
+        padding: 10px 20px;
+      }
+
+      .plan-name {
+        font-size: 24px;
       }
 
       .plan-price {
-        font-size: 48px;
+        font-size: 44px;
+      }
+
+      .plan-period {
+        font-size: 14px;
       }
 
       .plan-features li {
+        font-size: 14px;
+        padding: 8px 0;
+      }
+
+      .plan-features li i {
         font-size: 16px;
+      }
+
+      .plan-button {
+        padding: 14px;
+        font-size: 14px;
+      }
+
+      .plan-card.left,
+      .plan-card.right {
+        opacity: 0.3;
+        filter: blur(2px);
+      }
+
+      .plan-card.left {
+        transform: translateX(-220px) translateZ(-200px) rotateY(15deg) scale(0.65);
+      }
+
+      .plan-card.right {
+        transform: translateX(220px) translateZ(-200px) rotateY(-15deg) scale(0.65);
+      }
+
+      .carousel-nav {
+        width: 45px;
+        height: 45px;
+        font-size: 18px;
+      }
+
+      .carousel-indicators {
+        bottom: -40px;
+      }
+
+      .indicator {
+        width: 12px;
+        height: 12px;
       }
 
       .special-offer-banner {
         flex-direction: column;
         text-align: center;
-        padding: 25px;
+        padding: 20px;
+        margin: 15px 10px 25px 10px;
+      }
+
+      .offer-icon {
+        font-size: 36px;
       }
 
       .offer-title {
-        font-size: 20px;
+        font-size: 16px;
       }
 
       .offer-text {
-        font-size: 14px;
+        font-size: 12px;
       }
 
       .offer-arrow {
         transform: rotate(90deg);
+        font-size: 28px;
       }
     }
   </style>
@@ -767,65 +1008,78 @@
       </div>
     </section>
 
-    <!-- Grid de planes -->
-    <div class="plans-grid">
-      <!-- Plan Básico -->
-      <div class="plan-card">
-        <h3 class="plan-name">Básico</h3>
-        <div class="plan-price">$4.99</div>
-        <div class="plan-period">por mes</div>
-        <ul class="plan-features">
-          <li><i class="fas fa-check"></i> Acceso a todo el catálogo</li>
-          <li><i class="fas fa-check"></i> Calidad HD (720p)</li>
-          <li><i class="fas fa-check"></i> 1 dispositivo simultáneo</li>
-          <li><i class="fas fa-check"></i> Descarga para ver offline</li>
-          <li><i class="fas fa-times"></i> Sin anuncios</li>
-        </ul>
-        <button class="plan-button secondary" onclick="selectPlan('basic', 'Plan Básico', '$4.99')">
-          <i class="fas fa-spinner spinner"></i>
-          Elegir Plan Básico
-        </button>
+    <!-- Carrusel 3D de planes -->
+    <div class="plans-carousel-container">
+      <div class="plans-carousel" id="plansCarousel">
+        <!-- Plan Básico -->
+        <div class="plan-card" data-index="0">
+          <h3 class="plan-name">Básico</h3>
+          <div class="plan-price">$4.99</div>
+          <div class="plan-period">por mes</div>
+          <ul class="plan-features">
+            <li><i class="fas fa-check"></i> Acceso a todo el catálogo</li>
+            <li><i class="fas fa-check"></i> Calidad HD (720p)</li>
+            <li><i class="fas fa-check"></i> 1 dispositivo simultáneo</li>
+            <li><i class="fas fa-check"></i> Descarga para ver offline</li>
+            <li><i class="fas fa-times"></i> Sin anuncios</li>
+          </ul>
+          <button class="plan-button secondary" onclick="selectPlan('basic', 'Plan Básico', '$4.99')">
+            <i class="fas fa-spinner spinner"></i>
+            Elegir Plan Básico
+          </button>
+        </div>
+
+        <!-- Plan Premium (Más Popular) -->
+        <div class="plan-card popular" data-index="1">
+          <h3 class="plan-name">Premium</h3>
+          <div class="plan-price">$9.99</div>
+          <div class="plan-period">por mes</div>
+          <ul class="plan-features">
+            <li><i class="fas fa-check"></i> Acceso a todo el catálogo</li>
+            <li><i class="fas fa-check"></i> Calidad 4K Ultra HD</li>
+            <li><i class="fas fa-check"></i> 4 dispositivos simultáneos</li>
+            <li><i class="fas fa-check"></i> Descarga ilimitada</li>
+            <li><i class="fas fa-check"></i> Sin anuncios</li>
+            <li><i class="fas fa-check"></i> Contenido exclusivo</li>
+            <li><i class="fas fa-check"></i> Estrenos anticipados</li>
+          </ul>
+          <button class="plan-button primary" onclick="selectPlan('premium', 'Plan Premium', '$9.99')">
+            <i class="fas fa-spinner spinner"></i>
+            Elegir Plan Premium
+          </button>
+        </div>
+
+        <!-- Plan Familiar -->
+        <div class="plan-card" data-index="2">
+          <h3 class="plan-name">Familiar</h3>
+          <div class="plan-price">$14.99</div>
+          <div class="plan-period">por mes</div>
+          <ul class="plan-features">
+            <li><i class="fas fa-check"></i> Acceso a todo el catálogo</li>
+            <li><i class="fas fa-check"></i> Calidad 4K Ultra HD</li>
+            <li><i class="fas fa-check"></i> 6 dispositivos simultáneos</li>
+            <li><i class="fas fa-check"></i> Perfiles familiares</li>
+            <li><i class="fas fa-check"></i> Control parental</li>
+            <li><i class="fas fa-check"></i> Sin anuncios</li>
+            <li><i class="fas fa-check"></i> Contenido exclusivo</li>
+            <li><i class="fas fa-check"></i> Soporte prioritario</li>
+          </ul>
+          <button class="plan-button secondary" onclick="selectPlan('family', 'Plan Familiar', '$14.99')">
+            <i class="fas fa-spinner spinner"></i>
+            Elegir Plan Familiar
+          </button>
+        </div>
       </div>
 
-      <!-- Plan Premium (Más Popular) -->
-      <div class="plan-card popular">
-        <h3 class="plan-name">Premium</h3>
-        <div class="plan-price">$9.99</div>
-        <div class="plan-period">por mes</div>
-        <ul class="plan-features">
-          <li><i class="fas fa-check"></i> Acceso a todo el catálogo</li>
-          <li><i class="fas fa-check"></i> Calidad 4K Ultra HD</li>
-          <li><i class="fas fa-check"></i> 4 dispositivos simultáneos</li>
-          <li><i class="fas fa-check"></i> Descarga ilimitada</li>
-          <li><i class="fas fa-check"></i> Sin anuncios</li>
-          <li><i class="fas fa-check"></i> Contenido exclusivo</li>
-          <li><i class="fas fa-check"></i> Estrenos anticipados</li>
-        </ul>
-        <button class="plan-button primary" onclick="selectPlan('premium', 'Plan Premium', '$9.99')">
-          <i class="fas fa-spinner spinner"></i>
-          Elegir Plan Premium
-        </button>
-      </div>
+      <!-- Navegación -->
+      <div class="carousel-nav prev" onclick="prevPlan()">‹</div>
+      <div class="carousel-nav next" onclick="nextPlan()">›</div>
 
-      <!-- Plan Familiar -->
-      <div class="plan-card">
-        <h3 class="plan-name">Familiar</h3>
-        <div class="plan-price">$14.99</div>
-        <div class="plan-period">por mes</div>
-        <ul class="plan-features">
-          <li><i class="fas fa-check"></i> Acceso a todo el catálogo</li>
-          <li><i class="fas fa-check"></i> Calidad 4K Ultra HD</li>
-          <li><i class="fas fa-check"></i> 6 dispositivos simultáneos</li>
-          <li><i class="fas fa-check"></i> Perfiles familiares</li>
-          <li><i class="fas fa-check"></i> Control parental</li>
-          <li><i class="fas fa-check"></i> Sin anuncios</li>
-          <li><i class="fas fa-check"></i> Contenido exclusivo</li>
-          <li><i class="fas fa-check"></i> Soporte prioritario</li>
-        </ul>
-        <button class="plan-button secondary" onclick="selectPlan('family', 'Plan Familiar', '$14.99')">
-          <i class="fas fa-spinner spinner"></i>
-          Elegir Plan Familiar
-        </button>
+      <!-- Indicadores -->
+      <div class="carousel-indicators">
+        <div class="indicator active" onclick="goToPlan(0)"></div>
+        <div class="indicator" onclick="goToPlan(1)"></div>
+        <div class="indicator" onclick="goToPlan(2)"></div>
       </div>
     </div>
   </main>
