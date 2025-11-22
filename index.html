@@ -3716,7 +3716,7 @@
         const fallbackCSS = `
           .fas.fa-home::before { content: '⌂'; }
           .fas.fa-search::before { content: '🔍'; }
-          .fas.fa-crown::before { content: '👑'; }
+          .fas.fa-crown::before { content: '★'; }
           .fas.fa-cog::before { content: '⚙️'; }
           .fas.fa-play::before { content: '▶️'; }
           .fas.fa-pause::before { content: '⏸️'; }
@@ -3731,11 +3731,11 @@
           .fas.fa-forward::before { content: '⏩'; }
           .fas.fa-language::before { content: '🌍'; }
           .fas.fa-closed-captioning::before { content: 'CC'; }
-          .fas.fa-film::before { content: '🎥'; }
+          .fas.fa-film::before { content: '▶'; }
           .fas.fa-spinner::before { content: '♾️'; }
           .fas.fa-check-circle::before { content: '✓'; }
           .fas.fa-certificate::before { content: '🏅'; }
-          .fas.fa-star::before { content: '⭐'; }
+          .fas.fa-star::before { content: '★'; }
           .fas.fa-user-plus::before { content: '👥'; }
           .fas.fa-user-check::before { content: '✓'; }
         `;
@@ -4279,7 +4279,7 @@
           </div>
           <div class="vip-followers-count" id="followers-${user.uid}">${user.followers.toLocaleString()} seguidores</div>
           <div style="font-size: 13px; color: ${user.vipType === 'exclusive' || user.isExclusive ? '#ffd700' : '#71767b'}; margin-top: 4px; font-weight: ${user.vipType === 'exclusive' || user.isExclusive ? '800' : '500'}; text-transform: uppercase; letter-spacing: 0.5px; text-shadow: ${user.vipType === 'exclusive' || user.isExclusive ? '0 0 10px rgba(255, 215, 0, 0.5)' : 'none'};">
-            ${user.vipType === 'exclusive' || user.isExclusive ? '👑 ' : ''}${vipLabel}
+            ${vipLabel}
           </div>
         </div>
         <button class="vip-follow-btn" onclick="toggleFollowReal('${user.uid}')">
@@ -5998,7 +5998,7 @@
 
         countdownEl.innerHTML = `
           <div style="color: #1d9bf0; font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px;">
-            🎬 ESTRENO MUNDIAL
+            ESTRENO MUNDIAL
           </div>
           <div style="display: flex; justify-content: center; gap: 12px; margin-bottom: 12px;">
             <div style="background: rgba(29, 155, 240, 0.2); border-radius: 8px; padding: 8px; min-width: 45px; border: 1px solid rgba(29, 155, 240, 0.3);">
