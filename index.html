@@ -3883,6 +3883,43 @@
 
       <div class="settings-group">
         <h3 class="settings-group-title">
+          <i class="fas fa-shield-alt"></i>
+          Privacidad y Seguridad
+        </h3>
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-name">Nombre Completo</div>
+            <div class="setting-description" id="userFullName">Cargando...</div>
+          </div>
+        </div>
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-name">Correo Electrónico</div>
+            <div class="setting-description" id="userEmail">Cargando...</div>
+          </div>
+        </div>
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-name">ID de Usuario</div>
+            <div class="setting-description" id="userId" style="font-family: monospace; font-size: 12px;">Cargando...</div>
+          </div>
+        </div>
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-name">Plan Actual</div>
+            <div class="setting-description" id="currentPlan">Cargando...</div>
+          </div>
+        </div>
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-name">Fecha de Registro</div>
+            <div class="setting-description" id="registrationDate">Cargando...</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="settings-group">
+        <h3 class="settings-group-title">
           <i class="fas fa-user"></i>
           Cuenta
         </h3>
@@ -3891,7 +3928,13 @@
             <div class="setting-name">Perfil Actual</div>
             <div class="setting-description" id="currentProfileName">Cargando...</div>
           </div>
-          <div id="userAvatar" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px;"></div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <div id="userAvatar" style="width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 16px;"></div>
+            <button class="settings-btn secondary" onclick="editProfile()" style="width: auto; padding: 8px 16px; font-size: 14px;">
+              <i class="fas fa-edit"></i>
+              Editar
+            </button>
+          </div>
         </div>
         <div class="setting-item">
           <div class="setting-info">
@@ -4544,6 +4587,74 @@
 
 
 
+    // Cargar información de privacidad en tiempo real
+    async function loadPrivacyInfo() {
+      if (!currentFirebaseUser) return;
+
+      try {
+        // Cargar datos del usuario desde Firebase
+        const userRef = database.ref('users/' + currentFirebaseUser.uid);
+        const snapshot = await userRef.once('value');
+        const userData = snapshot.val();
+
+        if (userData) {
+          // Nombre completo
+          document.getElementById('userFullName').textContent = userData.name || userData.profile?.name || 'No especificado';
+          
+          // Correo electrónico
+          document.getElementById('userEmail').textContent = currentFirebaseUser.email || 'No especificado';
+          
+          // ID de usuario
+          document.getElementById('userId').textContent = currentFirebaseUser.uid;
+          
+          // Plan actual
+          if (userData.subscription) {
+            const planName = userData.subscription.name || 'Plan ' + userData.subscription.plan;
+            document.getElementById('currentPlan').textContent = planName + ' - ' + userData.subscription.price;
+          } else {
+            document.getElementById('currentPlan').textContent = 'Sin plan activo';
+          }
+          
+          // Fecha de registro
+          if (currentFirebaseUser.metadata && currentFirebaseUser.metadata.creationTime) {
+            const creationDate = new Date(currentFirebaseUser.metadata.creationTime);
+            document.getElementById('registrationDate').textContent = creationDate.toLocaleDateString('es-ES', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric'
+            });
+          } else {
+            document.getElementById('registrationDate').textContent = 'No disponible';
+          }
+        }
+
+        // Escuchar cambios en tiempo real
+        userRef.on('value', (snapshot) => {
+          const updatedData = snapshot.val();
+          if (updatedData) {
+            // Actualizar nombre
+            document.getElementById('userFullName').textContent = updatedData.name || updatedData.profile?.name || 'No especificado';
+            
+            // Actualizar plan
+            if (updatedData.subscription) {
+              const planName = updatedData.subscription.name || 'Plan ' + updatedData.subscription.plan;
+              document.getElementById('currentPlan').textContent = planName + ' - ' + updatedData.subscription.price;
+            }
+          }
+        });
+
+      } catch (error) {
+        console.error('Error cargando información de privacidad:', error);
+      }
+    }
+
+    // Editar perfil
+    function editProfile() {
+      if (confirm('¿Deseas editar tu perfil? Serás redirigido a la configuración de perfil.')) {
+        window.location.href = 'profile-setup.html';
+      }
+    }
+
     // Ver historial - Abrir sección
     function viewHistory() {
       showHistorySection();
@@ -4730,6 +4841,9 @@
       if (userProfile) {
         document.getElementById('currentProfileName').textContent = userProfile.name || 'Usuario';
       }
+
+      // Cargar información de privacidad en tiempo real
+      loadPrivacyInfo();
 
       // Cargar configuraciones guardadas
       const settings = JSON.parse(localStorage.getItem('zambik_settings') || '{}');
