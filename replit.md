@@ -81,18 +81,22 @@ Series y películas incluidas:
 
 ## Configuración de Firebase
 
+**IMPORTANTE**: Las credenciales de Firebase ahora se manejan a través de variables de entorno por seguridad.
+
 ```javascript
 const firebaseConfig = {
-  apiKey: "AIzaSyCFQ_geG0HIv2EZ-bfKc97TJNtf2sdqPzc",
-  authDomain: "clack-koder.firebaseapp.com",
-  databaseURL: "https://clack-koder-default-rtdb.firebaseio.com",
-  projectId: "clack-koder",
-  storageBucket: "clack-koder.firebasestorage.app",
-  messagingSenderId: "478151254938",
-  appId: "1:478151254938:web:e2c00e3a5426bd192b9023",
-  measurementId: "G-P29ME5Z3S1"
+  apiKey: process.env.FIREBASE_API_KEY,
+  authDomain: process.env.FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.FIREBASE_DATABASE_URL,
+  projectId: process.env.FIREBASE_PROJECT_ID,
+  storageBucket: process.env.FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.FIREBASE_APP_ID,
+  measurementId: process.env.FIREBASE_MEASUREMENT_ID
 };
 ```
+
+Ver `.env.example` para configurar las variables de entorno.
 
 ## Estructura de Datos en Firebase
 
