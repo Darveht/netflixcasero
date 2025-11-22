@@ -4764,14 +4764,19 @@
 
       // Alternar sonido del trailer
       function toggleTrailerSound() {
-        if (videoElement) {
-          videoElement.muted = !videoElement.muted;
-          const soundBtn = document.getElementById('trailerSoundBtn');
+        const trailerVideo = document.getElementById('seriesDetailVideo');
+        if (trailerVideo) {
+          trailerVideo.muted = !trailerVideo.muted;
+          const soundBtn = document.getElementById('soundToggle');
           if (soundBtn) {
-            soundBtn.innerHTML = videoElement.muted ? 
+            soundBtn.innerHTML = trailerVideo.muted ? 
               '<i class="fas fa-volume-mute"></i>' : 
               '<i class="fas fa-volume-up"></i>';
           }
+        }
+        
+        if (videoElement) {
+          videoElement.muted = !videoElement.muted;
         }
       }
 
@@ -5884,14 +5889,19 @@
 
       // Alternar sonido del trailer
       function toggleTrailerSound() {
-        if (videoElement) {
-          videoElement.muted = !videoElement.muted;
-          const soundBtn = document.getElementById('trailerSoundBtn');
+        const trailerVideo = document.getElementById('seriesDetailVideo');
+        if (trailerVideo) {
+          trailerVideo.muted = !trailerVideo.muted;
+          const soundBtn = document.getElementById('soundToggle');
           if (soundBtn) {
-            soundBtn.innerHTML = videoElement.muted ? 
+            soundBtn.innerHTML = trailerVideo.muted ? 
               '<i class="fas fa-volume-mute"></i>' : 
               '<i class="fas fa-volume-up"></i>';
           }
+        }
+        
+        if (videoElement) {
+          videoElement.muted = !videoElement.muted;
         }
       }
 
