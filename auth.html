@@ -410,32 +410,18 @@
     };
 
     // Inicializar Firebase
-    console.log('Inicializando Firebase...');
     firebase.initializeApp(firebaseConfig);
     const auth = firebase.auth();
     const database = firebase.database();
-    console.log('Firebase inicializado correctamente');
+
+    // Variable para evitar múltiples redirecciones
+    let isProcessing = false;
 
     // Esperar a que el DOM esté listo
     document.addEventListener('DOMContentLoaded', function() {
-      console.log('DOM listo, configurando event listeners...');
-      
-      // Verificar si el usuario ya está autenticado
-      auth.onAuthStateChanged((user) => {
-        console.log('onAuthStateChanged llamado, usuario:', user ? user.email : 'No autenticado');
-        if (user) {
-          // Usuario autenticado, verificar si tiene suscripción
-          console.log('Usuario detectado, verificando suscripción...');
-          checkUserSubscription(user);
-        }
-      });
-
       // Configurar event listeners de los formularios
       const loginForm = document.getElementById('loginForm');
       const registerForm = document.getElementById('registerForm');
-      
-      console.log('loginForm encontrado:', loginForm ? 'Sí' : 'No');
-      console.log('registerForm encontrado:', registerForm ? 'Sí' : 'No');
       
       if (loginForm) {
         loginForm.addEventListener('submit', handleLogin);
@@ -444,6 +430,14 @@
       if (registerForm) {
         registerForm.addEventListener('submit', handleRegister);
       }
+
+      // Verificar autenticación solo una vez al cargar
+      auth.onAuthStateChanged((user) => {
+        if (user && !isProcessing) {
+          isProcessing = true;
+          checkUserSubscription(user);
+        }
+      });
     });
 
     // Cambiar pestañas
@@ -490,43 +484,57 @@
     // Manejar login
     async function handleLogin(e) {
       e.preventDefault();
-      console.log('Formulario de login enviado');
       
-      const email = document.getElementById('loginEmail').value;
+      if (isProcessing) return;
+      
+      const email = document.getElementById('loginEmail').value.trim();
       const password = document.getElementById('loginPassword').value;
       const button = e.target.querySelector('.auth-button');
       
-      console.log('Intentando iniciar sesión con:', email);
+      if (!email || !password) {
+        showMessage('Por favor completa todos los campos');
+        return;
+      }
+      
       setButtonLoading(button, true);
       hideMessage();
+      isProcessing = true;
 
       try {
-        console.log('Llamando a signInWithEmailAndPassword...');
-        await auth.signInWithEmailAndPassword(email, password);
-        console.log('Login exitoso');
+        const userCredential = await auth.signInWithEmailAndPassword(email, password);
         showMessage('¡Inicio de sesión exitoso! Redirigiendo...', 'success');
         
-        // onAuthStateChanged se encargará de la redirección
+        // Esperar un momento y luego verificar suscripción
+        setTimeout(async () => {
+          await checkUserSubscription(userCredential.user);
+        }, 500);
         
       } catch (error) {
         console.error('Error en login:', error);
         showMessage(getErrorMessage(error.code));
         setButtonLoading(button, false);
+        isProcessing = false;
       }
     }
 
     // Manejar registro
     async function handleRegister(e) {
       e.preventDefault();
-      console.log('Formulario de registro enviado');
       
-      const name = document.getElementById('registerName').value;
-      const email = document.getElementById('registerEmail').value;
+      if (isProcessing) return;
+      
+      const name = document.getElementById('registerName').value.trim();
+      const email = document.getElementById('registerEmail').value.trim();
       const password = document.getElementById('registerPassword').value;
       const confirmPassword = document.getElementById('confirmPassword').value;
       const button = e.target.querySelector('.auth-button');
       
-      // Validar contraseñas
+      // Validaciones
+      if (!name || !email || !password || !confirmPassword) {
+        showMessage('Por favor completa todos los campos');
+        return;
+      }
+      
       if (password !== confirmPassword) {
         showMessage('Las contraseñas no coinciden');
         return;
@@ -539,11 +547,10 @@
       
       setButtonLoading(button, true);
       hideMessage();
+      isProcessing = true;
 
       try {
-        console.log('Creando usuario con:', email);
         const userCredential = await auth.createUserWithEmailAndPassword(email, password);
-        console.log('Usuario creado exitosamente');
         
         // Actualizar perfil con el nombre
         await userCredential.user.updateProfile({
@@ -561,15 +568,16 @@
 
         showMessage('¡Cuenta creada exitosamente! Redirigiendo...', 'success');
         
-        // Redirigir a selección de plan (usuarios nuevos siempre van a subscription)
+        // Redirigir directamente a subscription
         setTimeout(() => {
           window.location.href = 'subscription.html';
-        }, 1000);
+        }, 1500);
         
       } catch (error) {
         console.error('Error:', error);
         showMessage(getErrorMessage(error.code));
         setButtonLoading(button, false);
+        isProcessing = false;
       }
     }
 
@@ -593,34 +601,41 @@
 
     // Verificar suscripción del usuario
     async function checkUserSubscription(user) {
+      if (!user) return;
+      
       try {
-        console.log('checkUserSubscription llamada para usuario:', user.uid);
         const userRef = database.ref('users/' + user.uid);
         const snapshot = await userRef.once('value');
         const userData = snapshot.val();
         
-        console.log('Datos del usuario obtenidos:', userData);
+        if (!userData) {
+          // No hay datos, crear entrada básica
+          await userRef.set({
+            email: user.email,
+            name: user.displayName || '',
+            createdAt: firebase.database.ServerValue.TIMESTAMP,
+            subscription: null,
+            profile: null
+          });
+          window.location.href = 'subscription.html';
+          return;
+        }
         
-        if (userData && userData.subscription) {
-          console.log('Usuario tiene suscripción');
-          // Tiene suscripción, verificar si tiene perfil
+        if (userData.subscription) {
+          // Tiene suscripción, verificar perfil
           if (userData.profile) {
-            console.log('Usuario tiene perfil, redirigiendo a index.html');
-            // Todo completo, ir a la plataforma
             window.location.href = 'index.html';
           } else {
-            console.log('Usuario NO tiene perfil, redirigiendo a profile-setup.html');
-            // Tiene suscripción pero no perfil
             window.location.href = 'profile-setup.html';
           }
         } else {
-          console.log('Usuario NO tiene suscripción, redirigiendo a subscription.html');
           // No tiene suscripción
           window.location.href = 'subscription.html';
         }
       } catch (error) {
         console.error('Error verificando suscripción:', error);
-        window.location.href = 'subscription.html';
+        isProcessing = false;
+        showMessage('Error al verificar la cuenta. Intenta de nuevo.');
       }
     }
 
