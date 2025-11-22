@@ -1,5 +1,6 @@
 # Variables de entorno
 .env
+config.js
 
 # Node modules
 node_modules/

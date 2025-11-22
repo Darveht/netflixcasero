@@ -4,6 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Zambik - Pago Seguro</title>
+  <script src="config.js"></script>
   <script src="https://js.stripe.com/v3/"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
@@ -162,8 +163,8 @@
     const auth = firebase.auth();
     const database = firebase.database();
 
-    // Stripe - Reemplaza con tu clave pública
-    const stripe = Stripe('pk_live_TU_CLAVE_PUBLICA');
+    // Stripe
+    const stripe = Stripe(STRIPE_CONFIG.publishableKey);
 
     let elements;
     let currentUser;
