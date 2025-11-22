@@ -246,6 +246,9 @@
       height: 650px;
       transform-style: preserve-3d;
       transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .carousel-nav {
@@ -274,8 +277,8 @@
       box-shadow: 0 15px 50px rgba(255, 215, 0, 0.9);
     }
 
-    .carousel-nav.prev { left: -35px; }
-    .carousel-nav.next { right: -35px; }
+    .carousel-nav.prev { left: 20px; }
+    .carousel-nav.next { right: 20px; }
 
     .carousel-indicators {
       position: absolute;
@@ -674,7 +677,7 @@
       }
     }
 
-    /* Responsive */
+    /* Responsive - Carrusel horizontal en móviles */
     @media (max-width: 768px) {
       .subscription-title {
         font-size: 36px;
@@ -693,20 +696,54 @@
       }
 
       .plans-carousel-container {
-        padding: 40px 10px;
-        perspective: 1000px;
+        padding: 40px 0;
+        perspective: none;
+        overflow: hidden;
       }
 
       .plans-carousel {
-        height: 550px;
+        height: auto;
+        display: flex;
+        flex-direction: row;
+        gap: 20px;
+        padding: 20px;
+        overflow-x: auto;
+        overflow-y: hidden;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+        transform-style: flat;
+      }
+
+      .plans-carousel::-webkit-scrollbar {
+        display: none;
       }
 
       .plan-card {
-        width: 300px;
-        padding: 30px 20px;
-        padding-top: 50px;
-        margin-left: -150px;
-        margin-top: -275px;
+        position: relative;
+        width: 85vw;
+        max-width: 340px;
+        min-width: 300px;
+        padding: 35px 25px;
+        padding-top: 55px;
+        margin: 0;
+        left: auto;
+        top: auto;
+        flex-shrink: 0;
+        scroll-snap-align: center;
+        transform: none !important;
+        opacity: 1 !important;
+        filter: none !important;
+      }
+
+      .plan-card.active,
+      .plan-card.left,
+      .plan-card.right,
+      .plan-card.hidden {
+        position: relative;
+        transform: none !important;
+        opacity: 1 !important;
+        filter: none !important;
       }
 
       .plan-card.popular::before {
@@ -723,8 +760,12 @@
         font-size: 52px;
       }
 
+      .plan-features {
+        margin-bottom: 30px;
+      }
+
       .plan-features li {
-        font-size: 16px;
+        font-size: 15px;
         padding: 10px 0;
       }
 
@@ -733,24 +774,15 @@
         font-size: 16px;
       }
 
-      .plan-card.left {
-        transform: translateX(-250px) translateZ(-250px) rotateY(20deg) scale(0.7);
-        opacity: 0.5;
-      }
-
-      .plan-card.right {
-        transform: translateX(250px) translateZ(-250px) rotateY(-20deg) scale(0.7);
-        opacity: 0.5;
-      }
-
       .carousel-nav {
-        width: 50px;
-        height: 50px;
-        font-size: 20px;
+        display: none;
       }
 
-      .carousel-nav.prev { left: 5px; }
-      .carousel-nav.next { right: 5px; }
+      .carousel-indicators {
+        position: relative;
+        bottom: auto;
+        margin-top: 30px;
+      }
 
       .header {
         padding: 15px;
@@ -882,32 +914,39 @@
       }
 
       .plans-carousel {
-        height: 520px;
+        padding: 15px;
+        gap: 15px;
       }
 
       .plan-card {
-        width: 280px;
-        padding: 25px 18px;
-        padding-top: 45px;
-        margin-left: -140px;
-        margin-top: -260px;
+        width: 82vw;
+        max-width: 300px;
+        min-width: 280px;
+        padding: 30px 20px;
+        padding-top: 50px;
       }
 
       .plan-card.popular::before {
         font-size: 11px;
         padding: 10px 20px;
+        top: -18px;
       }
 
       .plan-name {
-        font-size: 24px;
+        font-size: 26px;
       }
 
       .plan-price {
-        font-size: 44px;
+        font-size: 48px;
       }
 
       .plan-period {
         font-size: 14px;
+        margin-bottom: 25px;
+      }
+
+      .plan-features {
+        margin-bottom: 25px;
       }
 
       .plan-features li {
@@ -921,31 +960,11 @@
 
       .plan-button {
         padding: 14px;
-        font-size: 14px;
-      }
-
-      .plan-card.left,
-      .plan-card.right {
-        opacity: 0.3;
-        filter: blur(2px);
-      }
-
-      .plan-card.left {
-        transform: translateX(-220px) translateZ(-200px) rotateY(15deg) scale(0.65);
-      }
-
-      .plan-card.right {
-        transform: translateX(220px) translateZ(-200px) rotateY(-15deg) scale(0.65);
-      }
-
-      .carousel-nav {
-        width: 45px;
-        height: 45px;
-        font-size: 18px;
+        font-size: 15px;
       }
 
       .carousel-indicators {
-        bottom: -40px;
+        margin-top: 25px;
       }
 
       .indicator {
