@@ -28,6 +28,8 @@
       overscroll-behavior: contain;
       color: #ffffff;
       position: relative;
+      -webkit-text-size-adjust: 100%;
+      -webkit-font-smoothing: antialiased;
     }
 
     @keyframes gradientShift {
@@ -1384,6 +1386,8 @@
       z-index: 1000;
       box-shadow: 0 -10px 40px rgba(255, 107, 53, 0.5);
       animation: navFloat 6s ease-in-out infinite;
+      -webkit-backdrop-filter: blur(20px);
+      padding-bottom: env(safe-area-inset-bottom, 20px);
     }
 
     @keyframes navFloat {
@@ -1851,6 +1855,68 @@
       .carousel-item {
         width: 200px;
         height: 112px;
+      }
+
+      /* Header móvil */
+      .header {
+        padding: 15px;
+      }
+
+      .search-wrapper {
+        border: 3px solid #00FF88;
+      }
+
+      /* Títulos de sección móvil */
+      .section-title {
+        font-size: 32px;
+        padding: 0 15px;
+      }
+
+      /* Navegación móvil */
+      .bottom-nav {
+        padding: 15px 0;
+      }
+
+      .bottom-nav button {
+        padding: 12px 15px;
+        min-width: 70px;
+        font-size: 12px;
+      }
+
+      .bottom-nav button i {
+        font-size: 22px;
+        margin-bottom: 6px;
+      }
+
+      /* Carruseles móvil */
+      .carousel {
+        padding: 0 10px;
+        gap: 8px;
+      }
+
+      .carousel-item {
+        width: 160px;
+        height: 90px;
+        border: 4px solid #00A2FF;
+      }
+
+      .movie-badge, .premiere-badge, .live-badge {
+        padding: 6px 12px;
+        font-size: 11px;
+        top: 8px;
+        right: 8px;
+      }
+
+      .carousel-item-overlay {
+        padding: 10px;
+      }
+
+      .carousel-item-title {
+        font-size: 13px;
+      }
+
+      .carousel-item-info {
+        font-size: 10px;
       }
 
       /* Vista detallada responsive */
@@ -2738,86 +2804,7 @@
 
   <!-- Sección principal -->
   <div id="homeSection" class="app-container">
-    <!-- Sección de Programación en Vivo estilo Roblox -->
-    <div class="live-programming-section" style="padding: 45px 20px; background: linear-gradient(135deg, rgba(0, 162, 255, 0.2), rgba(0, 120, 212, 0.2)); border-bottom: 3px solid rgba(0, 255, 136, 0.4); margin: 25px 20px; border-radius: 20px; backdrop-filter: blur(10px); box-shadow: 0 8px 30px rgba(0, 162, 255, 0.3);">
-      <div class="live-header" style="text-align: center; margin-bottom: 35px;">
-        <h2 style="font-size: 36px; font-weight: 900; color: #ffffff; margin-bottom: 10px; display: flex; align-items: center; justify-content: center; gap: 15px; text-shadow: 2px 2px 4px rgba(0, 32, 64, 0.8);">
-          <i class="fas fa-broadcast-tower" style="color: #00FF88; animation: robloxLive 2s ease-in-out infinite; font-size: 40px;"></i>
-          PROGRAMACIÓN EN VIVO
-        </h2>
-        <p style="color: #ffffff; font-size: 18px; font-weight: 600; text-shadow: 1px 1px 2px rgba(0, 32, 64, 0.6);">Próximos estrenos exclusivos en tiempo real</p>
-      </div>
 
-      <div class="live-content-card" style="background: linear-gradient(135deg, rgba(0, 120, 212, 0.3), rgba(0, 90, 159, 0.3)); border-radius: 20px; padding: 30px; border: 3px solid rgba(0, 255, 136, 0.4); position: relative; overflow: hidden; backdrop-filter: blur(15px);">
-        <!-- Efecto de brillo animado estilo Roblox -->
-        <div style="position: absolute; top: -3px; left: -3px; right: -3px; bottom: -3px; background: linear-gradient(45deg, transparent, rgba(0, 255, 136, 0.4), transparent); border-radius: 23px; z-index: -1; animation: robloxBorderGlow 3s ease-in-out infinite;"></div>
-        
-        <div style="display: flex; gap: 20px; align-items: center;">
-          <div class="live-poster" style="position: relative; width: 120px; height: 160px; border-radius: 12px; overflow: hidden; flex-shrink: 0;">
-            <img src="https://i.ytimg.com/vi/i229gWn3Z5A/maxresdefault.jpg" alt="Cortometraje 17 Agosto" style="width: 100%; height: 100%; object-fit: cover;">
-            <div class="locked-overlay" style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(135deg, rgba(0, 0, 0, 0.9), rgba(20, 20, 20, 0.9)); display: flex; flex-direction: column; align-items: center; justify-content: center; color: white; border-radius: 12px; backdrop-filter: blur(8px);">
-              <div class="locked-icon" style="font-size: 32px; margin-bottom: 8px; color: #ff0000; animation: lockPulse 2s ease-in-out infinite;">
-                <i class="fas fa-lock"></i>
-              </div>
-              <div style="font-size: 10px; text-align: center; font-weight: 700; text-transform: uppercase; letter-spacing: 1px;">BLOQUEADO</div>
-            </div>
-          </div>
-
-          <div class="live-info" style="flex: 1;">
-            <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
-              <span class="live-badge" style="background: linear-gradient(45deg, #FF3838, #FF6B6B); color: white; padding: 6px 15px; border-radius: 20px; font-size: 13px; font-weight: 800; text-transform: uppercase; animation: robloxLive 1.5s ease-in-out infinite; border: 2px solid rgba(255, 255, 255, 0.4); box-shadow: 0 3px 12px rgba(255, 56, 56, 0.5);">
-                <div class="live-dot" style="width: 10px; height: 10px; background: white; border-radius: 50%; display: inline-block; margin-right: 8px; animation: robloxDotPulse 1s ease-in-out infinite; box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);"></div>
-                ESTRENO EN VIVO
-              </span>
-              <span style="background: rgba(255, 255, 255, 0.1); padding: 4px 8px; border-radius: 8px; font-size: 11px; color: #71767b; font-weight: 600;">Cortometraje</span>
-            </div>
-            
-            <h3 style="font-size: 24px; font-weight: 800; color: #ffffff; margin-bottom: 8px;">CORTOMETRAJE EXCLUSIVO</h3>
-            
-            <div class="live-date-info" style="background: linear-gradient(135deg, rgba(0, 162, 255, 0.3), rgba(0, 120, 212, 0.3)); padding: 15px; border-radius: 12px; margin-bottom: 20px; border: 2px solid rgba(0, 255, 136, 0.4); backdrop-filter: blur(10px);">
-              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 6px;">
-                <i class="fas fa-calendar-alt" style="color: #00FF88; font-size: 18px;"></i>
-                <span style="font-weight: 800; color: #ffffff; font-size: 16px; text-shadow: 1px 1px 2px rgba(0, 32, 64, 0.5);">17 DE AGOSTO 2024</span>
-              </div>
-              <div style="display: flex; align-items: center; gap: 10px;">
-                <i class="fas fa-clock" style="color: #00FF88; font-size: 18px;"></i>
-                <span style="font-size: 15px; color: #ffffff; font-weight: 600;">8:00 PM (Hora Local)</span>
-              </div>
-            </div>
-
-            <!-- Cuenta regresiva estilo Roblox -->
-            <div id="liveCountdown" class="live-countdown" style="display: flex; gap: 12px; margin-bottom: 20px; justify-content: center;">
-              <div class="countdown-segment" style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7)); border-radius: 12px; padding: 12px 10px; min-width: 45px; text-align: center; border: 2px solid rgba(0, 255, 136, 0.4); box-shadow: 0 4px 15px rgba(0, 162, 255, 0.3);">
-                <div id="liveDays" style="font-size: 20px; font-weight: 900; color: #002040; text-shadow: 1px 1px 2px rgba(0, 32, 64, 0.3);">00</div>
-                <div style="font-size: 9px; color: #005A9F; font-weight: 700; margin-top: 3px;">DÍAS</div>
-              </div>
-              <div class="countdown-segment" style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7)); border-radius: 12px; padding: 12px 10px; min-width: 45px; text-align: center; border: 2px solid rgba(0, 255, 136, 0.4); box-shadow: 0 4px 15px rgba(0, 162, 255, 0.3);">
-                <div id="liveHours" style="font-size: 20px; font-weight: 900; color: #002040; text-shadow: 1px 1px 2px rgba(0, 32, 64, 0.3);">00</div>
-                <div style="font-size: 9px; color: #005A9F; font-weight: 700; margin-top: 3px;">HRS</div>
-              </div>
-              <div class="countdown-segment" style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7)); border-radius: 12px; padding: 12px 10px; min-width: 45px; text-align: center; border: 2px solid rgba(0, 255, 136, 0.4); box-shadow: 0 4px 15px rgba(0, 162, 255, 0.3);">
-                <div id="liveMinutes" style="font-size: 20px; font-weight: 900; color: #002040; text-shadow: 1px 1px 2px rgba(0, 32, 64, 0.3);">00</div>
-                <div style="font-size: 9px; color: #005A9F; font-weight: 700; margin-top: 3px;">MIN</div>
-              </div>
-              <div class="countdown-segment" style="background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7)); border-radius: 12px; padding: 12px 10px; min-width: 45px; text-align: center; border: 2px solid rgba(0, 255, 136, 0.4); box-shadow: 0 4px 15px rgba(0, 162, 255, 0.3);">
-                <div id="liveSeconds" style="font-size: 20px; font-weight: 900; color: #002040; text-shadow: 1px 1px 2px rgba(0, 32, 64, 0.3);">00</div>
-                <div style="font-size: 9px; color: #005A9F; font-weight: 700; margin-top: 3px;">SEG</div>
-              </div>
-            </div>
-
-            <!-- Botón de notificación estilo Roblox -->
-            <button id="notifyButton" onclick="toggleNotification()" style="background: linear-gradient(45deg, #00FF88, #00D4AA); border: 2px solid rgba(255, 255, 255, 0.3); color: #002040; padding: 15px 25px; border-radius: 30px; font-size: 15px; font-weight: 800; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 10px; margin-bottom: 15px; box-shadow: 0 5px 18px rgba(0, 255, 136, 0.4); text-transform: uppercase; letter-spacing: 1px;">
-              <i class="fas fa-bell" id="notifyIcon" style="font-size: 16px;"></i>
-              <span id="notifyText">NOTIFICARME</span>
-            </button>
-
-            <div style="font-size: 14px; color: #71767b; line-height: 1.4;">
-              Un cortometraje exclusivo que se transmitirá en vivo por única vez. ¡No te lo pierdas!
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- Secciones de contenido -->
     <div class="content-sections">
