@@ -931,51 +931,10 @@
       }
     });
 
-    // Agregar botón para ir directamente a iniciar sesión
-    function goToLogin() {
-      window.location.href = 'login.html';
-    }
-
     // Inicializar partículas al cargar la página
     document.addEventListener('DOMContentLoaded', () => {
       createParticles();
       console.log('Zambik Landing page loaded');
-      
-      // Agregar botón de "Ya tengo cuenta" en la parte superior
-      const loginButton = document.createElement('button');
-      loginButton.style.cssText = `
-        position: fixed;
-        top: 20px;
-        right: 20px;
-        background: linear-gradient(45deg, #00FF88, #00D4AA);
-        border: 3px solid #ffffff;
-        color: #002040;
-        padding: 12px 24px;
-        border-radius: 25px;
-        font-size: 16px;
-        font-weight: 800;
-        cursor: pointer;
-        z-index: 1000;
-        transition: all 0.3s ease;
-        text-transform: uppercase;
-        letter-spacing: 1px;
-        box-shadow: 0 6px 20px rgba(0, 255, 136, 0.4);
-      `;
-      
-      loginButton.innerHTML = '<i class="fas fa-sign-in-alt" style="margin-right: 8px;"></i>Ya tengo cuenta';
-      loginButton.onclick = goToLogin;
-      
-      loginButton.addEventListener('mouseenter', () => {
-        loginButton.style.transform = 'translateY(-3px) scale(1.05)';
-        loginButton.style.boxShadow = '0 10px 30px rgba(0, 255, 136, 0.6)';
-      });
-      
-      loginButton.addEventListener('mouseleave', () => {
-        loginButton.style.transform = 'translateY(0) scale(1)';
-        loginButton.style.boxShadow = '0 6px 20px rgba(0, 255, 136, 0.4)';
-      });
-      
-      document.body.appendChild(loginButton);
     });
   </script>
 </body>
