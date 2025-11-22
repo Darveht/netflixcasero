@@ -3680,8 +3680,21 @@
     </button>
 
     <div class="search-results-header">
-      <div class="search-results-title" id="searchResultsTitle">Resultados de búsqueda</div>
+      <div class="search-results-title" id="searchResultsTitle">Buscar Contenido</div>
       <div class="search-results-count" id="searchResultsCount"></div>
+    </div>
+
+    <!-- Barra de búsqueda dentro de la sección -->
+    <div style="padding: 20px; max-width: 600px; margin: 0 auto;">
+      <div class="search-wrapper">
+        <div class="search-icon">
+          <i class="fas fa-search"></i>
+        </div>
+        <input type="text" id="searchSectionInput" placeholder="Buscar series y películas" style="flex: 1; padding: 12px 0; border: none; background: transparent; color: #002040; font-size: 15px; outline: none; font-weight: 600;">
+        <button class="search-btn" id="searchSectionBtn" onclick="performSearchFromSection()">
+          <i class="fas fa-arrow-right"></i>
+        </button>
+      </div>
     </div>
 
     <div id="searchLoading" class="search-loading hidden">
@@ -4239,6 +4252,13 @@
     function showSearchSection() {
       hideAllSections();
       document.getElementById('searchSection').classList.add('active');
+      // Limpiar resultados anteriores
+      document.getElementById('searchResultsGrid').innerHTML = '';
+      document.getElementById('searchNoResults').classList.add('hidden');
+      document.getElementById('searchResultsTitle').textContent = 'Buscar Contenido';
+      document.getElementById('searchResultsCount').textContent = '';
+      document.getElementById('searchSectionInput').value = '';
+      document.getElementById('searchSectionInput').focus();
     }
 
     // Mostrar sección VIP
@@ -4297,6 +4317,7 @@
     function setupSearch() {
       const searchInput = document.getElementById('searchInput');
       const searchBtn = document.getElementById('searchBtn');
+      const searchSectionInput = document.getElementById('searchSectionInput');
 
       if (searchBtn) {
         searchBtn.addEventListener('click', performSearch);
@@ -4309,6 +4330,32 @@
           }
         });
       }
+
+      if (searchSectionInput) {
+        searchSectionInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            performSearchFromSection();
+          }
+        });
+      }
+    }
+
+    // Realizar búsqueda desde la sección de búsqueda
+    function performSearchFromSection() {
+      const query = document.getElementById('searchSectionInput').value.trim();
+      if (!query) return;
+
+      // Mostrar loading
+      document.getElementById('searchLoading').classList.remove('hidden');
+      document.getElementById('searchResultsGrid').innerHTML = '';
+      document.getElementById('searchNoResults').classList.add('hidden');
+
+      // Simular búsqueda
+      setTimeout(() => {
+        const results = searchContent(query);
+        displaySearchResults(results, query);
+        document.getElementById('searchLoading').classList.add('hidden');
+      }, 1000);
     }
 
     // Realizar búsqueda
@@ -5141,6 +5188,15 @@
       document.getElementById('textSize').value = settings.textSize || 'medium';
       document.getElementById('wifiOnlyToggle').checked = settings.wifiOnly || false;
       document.getElementById('dataSaverToggle').checked = settings.dataSaver || false;
+
+      // Aplicar configuraciones actuales
+      applyTheme(settings.theme || 'default');
+      applyTextSize(settings.textSize || 'medium');
+      
+      // Aplicar idioma actual
+      if (settings.language) {
+        translateInterface(settings.language);
+      }
     }
 
     // Guardar ajustes
@@ -5163,7 +5219,229 @@
       };
 
       localStorage.setItem('zambik_settings', JSON.stringify(settings));
+      applySettingsInRealTime(settings);
       showSettingsMessage('Configuración guardada correctamente');
+    }
+
+    // Cambiar calidad de video en tiempo real
+    function changeVideoQuality(quality) {
+      if (!videoElement || !currentSeries) return;
+      
+      const currentTime = videoElement.currentTime;
+      const wasPlaying = !videoElement.paused;
+      
+      // Buscar URL de la calidad seleccionada
+      let newVideoUrl = null;
+      
+      if (currentSeries.videoQualities && currentSeries.videoQualities[quality]) {
+        newVideoUrl = currentSeries.videoQualities[quality];
+      } else if (currentSeries.episodes && currentSeries.episodes[0]) {
+        // Si no hay múltiples calidades, usar la URL por defecto
+        newVideoUrl = currentSeries.episodes[0].videoUrl;
+      }
+      
+      if (newVideoUrl && newVideoUrl !== videoElement.src) {
+        // Mostrar indicador de carga
+        const loadingIndicator = document.createElement('div');
+        loadingIndicator.style.cssText = `
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: rgba(0, 0, 0, 0.9);
+          color: white;
+          padding: 20px 30px;
+          border-radius: 15px;
+          font-size: 16px;
+          font-weight: 700;
+          z-index: 10000;
+          border: 3px solid #FFD700;
+        `;
+        loadingIndicator.innerHTML = `
+          <i class="fas fa-spinner fa-spin" style="margin-right: 10px;"></i>
+          Cambiando calidad a ${quality}...
+        `;
+        document.body.appendChild(loadingIndicator);
+        
+        // Cambiar fuente del video
+        videoElement.src = newVideoUrl;
+        videoElement.load();
+        
+        // Restaurar posición y estado
+        videoElement.addEventListener('loadedmetadata', function onLoaded() {
+          videoElement.currentTime = currentTime;
+          
+          if (wasPlaying) {
+            videoElement.play();
+          }
+          
+          // Remover indicador
+          if (loadingIndicator.parentNode) {
+            loadingIndicator.remove();
+          }
+          
+          videoElement.removeEventListener('loadedmetadata', onLoaded);
+        });
+      }
+    }
+
+    // Aplicar ajustes en tiempo real
+    function applySettingsInRealTime(settings) {
+      // Aplicar calidad de video si hay un video reproduciéndose
+      if (videoElement && !videoElement.paused && settings.videoQuality) {
+        changeVideoQuality(settings.videoQuality);
+      }
+
+      // Aplicar subtítulos por defecto
+      if (videoElement && videoElement.textTracks) {
+        const textTracks = videoElement.textTracks;
+        for (let i = 0; i < textTracks.length; i++) {
+          textTracks[i].mode = settings.defaultSubtitles ? 'showing' : 'disabled';
+        }
+      }
+
+      // Aplicar tema
+      applyTheme(settings.theme);
+      
+      // Aplicar tamaño de texto
+      applyTextSize(settings.textSize);
+    }
+
+    // Aplicar tema
+    function applyTheme(theme) {
+      const body = document.body;
+      body.classList.remove('theme-dark', 'theme-light', 'theme-default');
+      
+      if (theme === 'dark') {
+        body.classList.add('theme-dark');
+      } else if (theme === 'light') {
+        body.classList.add('theme-light');
+      } else {
+        body.classList.add('theme-default');
+      }
+    }
+
+    // Aplicar tamaño de texto
+    function applyTextSize(size) {
+      const root = document.documentElement;
+      
+      if (size === 'small') {
+        root.style.fontSize = '14px';
+      } else if (size === 'large') {
+        root.style.fontSize = '18px';
+      } else {
+        root.style.fontSize = '16px';
+      }
+    }
+
+    // Configurar listeners para cambios en tiempo real
+    function setupRealtimeSettings() {
+      // Autoplay
+      document.getElementById('autoplayToggle')?.addEventListener('change', function() {
+        const settings = JSON.parse(localStorage.getItem('zambik_settings') || '{}');
+        settings.autoplay = this.checked;
+        localStorage.setItem('zambik_settings', JSON.stringify(settings));
+        showSettingsMessage(this.checked ? 'Reproducción automática activada' : 'Reproducción automática desactivada');
+      });
+
+      // Calidad de video - Cambio en tiempo real
+      document.getElementById('videoQuality')?.addEventListener('change', function() {
+        const settings = JSON.parse(localStorage.getItem('zambik_settings') || '{}');
+        settings.videoQuality = this.value;
+        localStorage.setItem('zambik_settings', JSON.stringify(settings));
+        
+        // Aplicar calidad inmediatamente si hay video reproduciéndose
+        if (videoElement && !videoElement.paused && currentSeries) {
+          changeVideoQuality(this.value);
+        }
+        
+        showSettingsMessage(`Calidad de video: ${this.value}`);
+      });
+
+      // Subtítulos por defecto - Cambio en tiempo real
+      document.getElementById('defaultSubtitles')?.addEventListener('change', function() {
+        const settings = JSON.parse(localStorage.getItem('zambik_settings') || '{}');
+        settings.defaultSubtitles = this.checked;
+        localStorage.setItem('zambik_settings', JSON.stringify(settings));
+        
+        // Aplicar inmediatamente si hay video
+        if (videoElement && videoElement.textTracks) {
+          const textTracks = videoElement.textTracks;
+          for (let i = 0; i < textTracks.length; i++) {
+            textTracks[i].mode = this.checked ? 'showing' : 'disabled';
+          }
+          
+          // Actualizar botón de subtítulos en el reproductor
+          const subtitlesBtn = document.getElementById('subtitlesBtn');
+          if (subtitlesBtn) {
+            subtitlesBtn.style.color = this.checked ? '#FFD700' : '#ffffff';
+          }
+        }
+        
+        showSettingsMessage(this.checked ? '✅ Subtítulos activados' : '❌ Subtítulos desactivados');
+      });
+
+      // Idioma de interfaz - Cambio en tiempo real
+      document.getElementById('interfaceLanguage')?.addEventListener('change', function() {
+        const settings = JSON.parse(localStorage.getItem('zambik_settings') || '{}');
+        settings.language = this.value;
+        localStorage.setItem('zambik_settings', JSON.stringify(settings));
+        handleLanguageChange(this.value);
+      });
+
+      // Audio preferido - Cambio en tiempo real
+      document.getElementById('preferredAudio')?.addEventListener('change', function() {
+        const settings = JSON.parse(localStorage.getItem('zambik_settings') || '{}');
+        settings.preferredAudio = this.value;
+        localStorage.setItem('zambik_settings', JSON.stringify(settings));
+        
+        // Aplicar inmediatamente si hay video reproduciéndose
+        if (videoElement && !videoElement.paused && currentSeries) {
+          changeAudioTrack(this.value);
+        }
+        
+        const audioNames = {
+          'original': 'Audio Original',
+          'es': 'Español',
+          'en': 'English'
+        };
+        
+        showSettingsMessage(`🎙️ Audio: ${audioNames[this.value] || this.value}`);
+      });
+
+      // Tema
+      document.getElementById('themeSelect')?.addEventListener('change', function() {
+        const settings = JSON.parse(localStorage.getItem('zambik_settings') || '{}');
+        settings.theme = this.value;
+        localStorage.setItem('zambik_settings', JSON.stringify(settings));
+        applyTheme(this.value);
+        showSettingsMessage(`Tema cambiado a: ${this.value}`);
+      });
+
+      // Tamaño de texto
+      document.getElementById('textSize')?.addEventListener('change', function() {
+        const settings = JSON.parse(localStorage.getItem('zambik_settings') || '{}');
+        settings.textSize = this.value;
+        localStorage.setItem('zambik_settings', JSON.stringify(settings));
+        applyTextSize(this.value);
+        showSettingsMessage(`Tamaño de texto: ${this.value}`);
+      });
+
+      // WiFi only
+      document.getElementById('wifiOnlyToggle')?.addEventListener('change', function() {
+        const settings = JSON.parse(localStorage.getItem('zambik_settings') || '{}');
+        settings.wifiOnly = this.checked;
+        localStorage.setItem('zambik_settings', JSON.stringify(settings));
+        showSettingsMessage(this.checked ? 'Solo WiFi activado' : 'Solo WiFi desactivado');
+      });
+
+      // Ahorro de datos
+      document.getElementById('dataSaverToggle')?.addEventListener('change', function() {
+        const settings = JSON.parse(localStorage.getItem('zambik_settings') || '{}');
+        settings.dataSaver = this.checked;
+        localStorage.setItem('zambik_settings', JSON.stringify(settings));
+        showSettingsMessage(this.checked ? 'Ahorro de datos activado' : 'Ahorro de datos desactivado');
+      });
     }
 
     // Restablecer ajustes
@@ -5201,10 +5479,61 @@
       }, 3000);
     }
 
-    // Manejar cambio de idioma
+    // Manejar cambio de idioma en tiempo real
     function handleLanguageChange(language) {
       localStorage.setItem('zambik_language', language);
-      showSettingsMessage('Idioma cambiado. Recarga la página para ver los cambios.');
+      currentLanguage = language;
+      
+      // Aplicar traducción inmediatamente
+      translateInterface(language);
+      
+      showSettingsMessage(`Idioma cambiado a: ${language === 'es' ? 'Español' : language === 'en' ? 'English' : 'Português'}`);
+    }
+
+    // Traducir interfaz en tiempo real
+    function translateInterface(language) {
+      if (language === 'es') {
+        // Español (por defecto)
+        document.querySelectorAll('.bottom-nav button span').forEach((span, index) => {
+          const texts = ['Inicio', 'Buscar', 'VIP', 'Ajustes'];
+          span.textContent = texts[index];
+        });
+        
+        // Títulos de secciones
+        document.querySelectorAll('.section-title').forEach(title => {
+          if (title.textContent.includes('Movies')) title.textContent = 'PELÍCULAS';
+          if (title.textContent.includes('Trending')) title.textContent = 'TENDENCIAS';
+          if (title.textContent.includes('Horror')) title.textContent = 'TERROR';
+        });
+        
+      } else if (language === 'en') {
+        // Inglés
+        document.querySelectorAll('.bottom-nav button span').forEach((span, index) => {
+          const texts = ['Home', 'Search', 'VIP', 'Settings'];
+          span.textContent = texts[index];
+        });
+        
+        // Títulos de secciones
+        document.querySelectorAll('.section-title').forEach(title => {
+          if (title.textContent.includes('PELÍCULAS')) title.textContent = 'MOVIES';
+          if (title.textContent.includes('TENDENCIAS')) title.textContent = 'TRENDING';
+          if (title.textContent.includes('TERROR')) title.textContent = 'HORROR';
+        });
+        
+      } else if (language === 'pt') {
+        // Portugués
+        document.querySelectorAll('.bottom-nav button span').forEach((span, index) => {
+          const texts = ['Início', 'Buscar', 'VIP', 'Configurações'];
+          span.textContent = texts[index];
+        });
+        
+        // Títulos de secciones
+        document.querySelectorAll('.section-title').forEach(title => {
+          if (title.textContent.includes('MOVIES') || title.textContent.includes('PELÍCULAS')) title.textContent = 'FILMES';
+          if (title.textContent.includes('TRENDING') || title.textContent.includes('TENDENCIAS')) title.textContent = 'TENDÊNCIAS';
+          if (title.textContent.includes('HORROR') || title.textContent.includes('TERROR')) title.textContent = 'TERROR';
+        });
+      }
     }
 
     // Sistema de programación en vivo - 17 de agosto
@@ -5468,6 +5797,19 @@
       if (authenticated) {
         initializePremiereSystem();
         initializeLiveProgramming(); // Nuevo: inicializar sistema en vivo
+        setupRealtimeSettings(); // Configurar ajustes en tiempo real
+        
+        // Cargar y aplicar configuraciones guardadas
+        const settings = JSON.parse(localStorage.getItem('zambik_settings') || '{}');
+        applyTheme(settings.theme || 'default');
+        applyTextSize(settings.textSize || 'medium');
+        
+        // Aplicar idioma guardado
+        if (settings.language) {
+          currentLanguage = settings.language;
+          translateInterface(settings.language);
+        }
+        
         // Ejecutar debug de usuarios exclusivos
         setTimeout(() => {
           debugExclusiveUsers();
@@ -5662,6 +6004,12 @@
         subtitles: {
           spanish: 'subtitles/double-vision-es.vtt',
           english: 'subtitles/double-vision-en.vtt'
+        },
+        videoQualities: {
+          '1080p': 'https://dl.dropboxusercontent.com/scl/fi/knmd1rvklx9qkmzz38d5x/2968597981486262751.mp4?rlkey=hpz7w3qyd67yboabi09svgl64&st=2h4ym2d1',
+          '720p': 'https://dl.dropboxusercontent.com/scl/fi/knmd1rvklx9qkmzz38d5x/2968597981486262751.mp4?rlkey=hpz7w3qyd67yboabi09svgl64&st=2h4ym2d1',
+          '480p': 'https://dl.dropboxusercontent.com/scl/fi/knmd1rvklx9qkmzz38d5x/2968597981486262751.mp4?rlkey=hpz7w3qyd67yboabi09svgl64&st=2h4ym2d1',
+          'auto': 'https://dl.dropboxusercontent.com/scl/fi/knmd1rvklx9qkmzz38d5x/2968597981486262751.mp4?rlkey=hpz7w3qyd67yboabi09svgl64&st=2h4ym2d1'
         },
         episodes: [
           {
@@ -6141,7 +6489,7 @@
       }
     }
 
-    // Función para alternar subtítulos
+    // Función para alternar subtítulos con animación
     function toggleSubtitles() {
       if (!videoElement || !videoElement.textTracks) return;
 
@@ -6163,15 +6511,106 @@
 
       if (activeTrack) {
         activeTrack.mode = 'disabled';
-        subtitlesBtn.style.color = '#71767b';
-        showErrorMessage('Subtítulos desactivados');
+        subtitlesBtn.style.color = '#ffffff';
+        subtitlesBtn.style.transform = 'scale(0.9)';
+        setTimeout(() => subtitlesBtn.style.transform = 'scale(1)', 200);
+        
+        // Actualizar configuración
+        const settings = JSON.parse(localStorage.getItem('zambik_settings') || '{}');
+        settings.defaultSubtitles = false;
+        localStorage.setItem('zambik_settings', JSON.stringify(settings));
+        
+        showErrorMessage('❌ Subtítulos desactivados');
       } else {
         textTracks[0].mode = 'showing';
-        subtitlesBtn.style.color = '#1d9bf0';
+        subtitlesBtn.style.color = '#FFD700';
+        subtitlesBtn.style.transform = 'scale(1.2)';
+        setTimeout(() => subtitlesBtn.style.transform = 'scale(1)', 200);
+        
+        // Actualizar configuración
+        const settings = JSON.parse(localStorage.getItem('zambik_settings') || '{}');
+        settings.defaultSubtitles = true;
+        localStorage.setItem('zambik_settings', JSON.stringify(settings));
+        
+        showErrorMessage('✅ Subtítulos activados');
       }
     }
 
-    // Función para alternar idioma de audio
+    // Cambiar pista de audio en tiempo real
+    function changeAudioTrack(audioLang) {
+      if (!videoElement || !currentSeries) return;
+      
+      const currentTime = videoElement.currentTime;
+      const wasPlaying = !videoElement.paused;
+      
+      // Buscar URL de audio
+      let newAudioUrl = null;
+      
+      if (currentSeries.audioTracks && currentSeries.audioTracks[audioLang]) {
+        newAudioUrl = currentSeries.audioTracks[audioLang];
+      } else if (currentSeries.episodes && currentSeries.episodes[0]) {
+        // Si no hay múltiples audios, usar la URL por defecto
+        newAudioUrl = currentSeries.episodes[0].videoUrl;
+      }
+      
+      if (newAudioUrl && newAudioUrl !== videoElement.src) {
+        // Mostrar indicador
+        const loadingIndicator = document.createElement('div');
+        loadingIndicator.style.cssText = `
+          position: fixed;
+          top: 50%;
+          left: 50%;
+          transform: translate(-50%, -50%);
+          background: linear-gradient(45deg, #FFD700, #FFA500);
+          color: #000000;
+          padding: 20px 30px;
+          border-radius: 20px;
+          font-size: 18px;
+          font-weight: 900;
+          z-index: 10000;
+          border: 4px solid #FF1493;
+          box-shadow: 0 10px 30px rgba(255, 215, 0, 0.8);
+        `;
+        
+        const audioNames = {
+          'original': '🎙️ Audio Original',
+          'es': '🇪🇸 Español',
+          'en': '🇺🇸 English'
+        };
+        
+        loadingIndicator.innerHTML = `
+          <i class="fas fa-spinner fa-spin" style="margin-right: 10px;"></i>
+          Cambiando a ${audioNames[audioLang] || audioLang}...
+        `;
+        document.body.appendChild(loadingIndicator);
+        
+        // Cambiar fuente
+        videoElement.src = newAudioUrl;
+        videoElement.load();
+        
+        // Restaurar posición
+        videoElement.addEventListener('loadedmetadata', function onLoaded() {
+          videoElement.currentTime = currentTime;
+          
+          if (wasPlaying) {
+            videoElement.play();
+          }
+          
+          if (loadingIndicator.parentNode) {
+            loadingIndicator.remove();
+          }
+          
+          videoElement.removeEventListener('loadedmetadata', onLoaded);
+        });
+        
+        // Actualizar track actual
+        if (currentSeries.audioTracks) {
+          currentSeries.currentAudioTrack = audioLang;
+        }
+      }
+    }
+
+    // Función para alternar idioma de audio (botón en reproductor)
     function toggleAudioLanguage() {
       if (!currentSeries || !currentSeries.audioTracks) {
         showErrorMessage('No hay pistas de audio alternativas disponibles');
@@ -6183,15 +6622,7 @@
       const nextIndex = (currentIndex + 1) % tracks.length;
       const nextTrack = tracks[nextIndex];
 
-      currentSeries.currentAudioTrack = nextTrack;
-      videoElement.src = currentSeries.audioTracks[nextTrack];
-
-      const currentTime = videoElement.currentTime;
-      videoElement.load();
-      videoElement.currentTime = currentTime;
-      videoElement.play();
-
-      showErrorMessage(`Audio: ${nextTrack}`);
+      changeAudioTrack(nextTrack);
     }
 
     // Función para configurar subtítulos
