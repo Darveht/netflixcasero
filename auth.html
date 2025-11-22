@@ -417,13 +417,33 @@
     const database = firebase.database();
     console.log('Firebase inicializado correctamente');
 
-    // Verificar si el usuario ya está autenticado
-    auth.onAuthStateChanged((user) => {
-      console.log('onAuthStateChanged llamado, usuario:', user ? user.email : 'No autenticado');
-      if (user) {
-        // Usuario autenticado, verificar si tiene suscripción
-        console.log('Usuario detectado, verificando suscripción...');
-        checkUserSubscription(user);
+    // Esperar a que el DOM esté listo
+    document.addEventListener('DOMContentLoaded', function() {
+      console.log('DOM listo, configurando event listeners...');
+      
+      // Verificar si el usuario ya está autenticado
+      auth.onAuthStateChanged((user) => {
+        console.log('onAuthStateChanged llamado, usuario:', user ? user.email : 'No autenticado');
+        if (user) {
+          // Usuario autenticado, verificar si tiene suscripción
+          console.log('Usuario detectado, verificando suscripción...');
+          checkUserSubscription(user);
+        }
+      });
+
+      // Configurar event listeners de los formularios
+      const loginForm = document.getElementById('loginForm');
+      const registerForm = document.getElementById('registerForm');
+      
+      console.log('loginForm encontrado:', loginForm ? 'Sí' : 'No');
+      console.log('registerForm encontrado:', registerForm ? 'Sí' : 'No');
+      
+      if (loginForm) {
+        loginForm.addEventListener('submit', handleLogin);
+      }
+      
+      if (registerForm) {
+        registerForm.addEventListener('submit', handleRegister);
       }
     });
 
@@ -469,7 +489,7 @@
     }
 
     // Manejar login
-    document.getElementById('loginForm').addEventListener('submit', async (e) => {
+    async function handleLogin(e) {
       e.preventDefault();
       console.log('Formulario de login enviado');
       
@@ -494,11 +514,12 @@
         showMessage(getErrorMessage(error.code));
         setButtonLoading(button, false);
       }
-    });
+    }
 
     // Manejar registro
-    document.getElementById('registerForm').addEventListener('submit', async (e) => {
+    async function handleRegister(e) {
       e.preventDefault();
+      console.log('Formulario de registro enviado');
       
       const name = document.getElementById('registerName').value;
       const email = document.getElementById('registerEmail').value;
@@ -521,7 +542,9 @@
       hideMessage();
 
       try {
+        console.log('Creando usuario con:', email);
         const userCredential = await auth.createUserWithEmailAndPassword(email, password);
+        console.log('Usuario creado exitosamente');
         
         // Actualizar perfil con el nombre
         await userCredential.user.updateProfile({
@@ -549,7 +572,7 @@
         showMessage(getErrorMessage(error.code));
         setButtonLoading(button, false);
       }
-    });
+    }
 
     // Resetear contraseña
     async function resetPassword() {
