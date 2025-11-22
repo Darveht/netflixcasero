@@ -1174,7 +1174,7 @@
 
     // Seleccionar plan
     async function selectPlan(planType, planName, planPrice) {
-      if (currentUser) {
+      if (!currentUser) {
         alert('Error: Usuario no autenticado');
         return;
       }
