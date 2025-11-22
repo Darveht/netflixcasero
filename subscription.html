@@ -568,16 +568,20 @@
 
     // Seleccionar plan
     async function selectPlan(planType, planName, planPrice) {
+      console.log('=== Seleccionando plan:', planType, planName, planPrice);
+      
       if (!currentUser) {
         alert('Error: Usuario no autenticado');
         return;
       }
 
-      // Encontrar el botón clickeado
-      const button = event.target;
-      setButtonLoading(button, true);
+      // Encontrar todos los botones y deshabilitar mientras se procesa
+      const allButtons = document.querySelectorAll('.plan-button');
+      allButtons.forEach(btn => setButtonLoading(btn, true));
 
       try {
+        console.log('Creando objeto de suscripción...');
+        
         // Crear objeto de suscripción
         const subscription = {
           plan: planType,
@@ -588,12 +592,18 @@
           features: getPlanFeatures(planType)
         };
 
+        console.log('Guardando en Firebase...', subscription);
+        
         // Guardar suscripción en Firebase
         await database.ref('users/' + currentUser.uid + '/subscription').set(subscription);
+        
+        console.log('✓ Suscripción guardada exitosamente');
 
         // Mostrar mensaje de éxito
         showSuccessMessage(planName);
 
+        console.log('Redirigiendo a profile-setup.html en 3.5 segundos...');
+        
         // Redirigir a configuración de perfil después de 3 segundos
         setTimeout(() => {
           window.location.href = 'profile-setup.html';
@@ -602,8 +612,10 @@
       } catch (error) {
         console.error('Error seleccionando plan:', error);
         alert('Error al seleccionar el plan. Intenta nuevamente.');
-      } finally {
-        setButtonLoading(button, false);
+        
+        // Reactivar todos los botones
+        const allButtons = document.querySelectorAll('.plan-button');
+        allButtons.forEach(btn => setButtonLoading(btn, false));
       }
     }
 
