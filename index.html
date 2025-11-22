@@ -722,6 +722,22 @@
       z-index: 3000;
       display: none;
       overflow-y: auto;
+      background-attachment: fixed;
+    }
+
+    .series-detail::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="30" cy="30" r="8" fill="%23FFD700" opacity="0.9"/><circle cx="170" cy="50" r="6" fill="%23FF1493" opacity="0.8"/><circle cx="100" cy="150" r="10" fill="%2300FF88" opacity="0.9"/><circle cx="50" cy="120" r="7" fill="%239D4EDD" opacity="0.8"/><circle cx="150" cy="180" r="9" fill="%23FF6B35" opacity="0.9"/><polygon points="80,20 85,30 75,30" fill="%23FFD700" opacity="0.7"/><polygon points="160,100 170,115 150,115" fill="%23FF1493" opacity="0.7"/></svg>');
+      background-size: 200px 200px;
+      animation: cartoonShapes 25s ease-in-out infinite;
+      z-index: -1;
+      pointer-events: none;
     }
 
     .series-detail.active {
@@ -793,26 +809,28 @@
       top: 20px;
       right: 20px;
       background: linear-gradient(45deg, #FF6B35, #F7931E);
-      border: 2px solid rgba(255, 255, 255, 0.3);
+      border: 5px solid #ffffff;
       color: #ffffff;
-      width: 45px;
-      height: 45px;
+      width: 60px;
+      height: 60px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 22px;
+      font-size: 28px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
       backdrop-filter: blur(15px);
       z-index: 10;
-      box-shadow: 0 4px 15px rgba(255, 107, 53, 0.4);
+      box-shadow: 0 8px 25px rgba(255, 107, 53, 0.6);
+      animation: buttonBreathe 3s ease-in-out infinite;
     }
 
     .series-close-btn:hover {
       background: linear-gradient(45deg, #F7931E, #FF6B35);
-      transform: scale(1.15) rotate(90deg);
-      box-shadow: 0 6px 20px rgba(255, 107, 53, 0.6);
+      transform: scale(1.2) rotate(90deg);
+      box-shadow: 0 15px 40px rgba(255, 107, 53, 0.8);
+      animation: buttonWobble 0.6s ease-in-out;
     }
 
     /* Botón de play circular estilo Roblox */
@@ -917,11 +935,17 @@
     }
 
     .series-detail-title {
-      font-size: 48px;
-      font-weight: 800;
-      margin-bottom: 16px;
-      text-shadow: 2px 2px 8px rgba(0,0,0,0.8);
-      color: #ffffff;
+      font-size: 64px;
+      font-weight: 900;
+      margin-bottom: 20px;
+      text-shadow: 
+        5px 5px 0px #FF1493,
+        10px 10px 0px #9D4EDD,
+        15px 15px 0px rgba(0, 0, 0, 0.3);
+      color: #FFD700;
+      animation: logoWobble 3s ease-in-out infinite;
+      text-transform: uppercase;
+      letter-spacing: 4px;
     }
 
     .series-detail-meta {
@@ -934,22 +958,30 @@
     }
 
     .series-detail-meta span {
-      background: rgba(0, 0, 0, 0.6);
-      padding: 4px 12px;
-      border-radius: 20px;
+      background: linear-gradient(45deg, #00FF88, #00D4AA);
+      color: #002040;
+      padding: 8px 16px;
+      border-radius: 25px;
       backdrop-filter: blur(8px);
+      font-weight: 800;
+      border: 3px solid #ffffff;
+      box-shadow: 0 4px 15px rgba(0, 255, 136, 0.4);
+      text-transform: uppercase;
+      letter-spacing: 1px;
     }
 
     .series-detail-description {
-      font-size: 18px;
+      font-size: 20px;
       line-height: 1.6;
       color: #ffffff;
-      text-shadow: 1px 1px 4px rgba(0,0,0,0.8);
-      background: rgba(0, 0, 0, 0.4);
-      padding: 20px;
-      border-radius: 12px;
-      backdrop-filter: blur(12px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
+      text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
+      background: rgba(0, 0, 0, 0.7);
+      padding: 25px;
+      border-radius: 25px;
+      backdrop-filter: blur(20px);
+      border: 5px solid rgba(255, 255, 255, 0.2);
+      font-weight: 600;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
     }
 
     .series-actions {
@@ -963,48 +995,52 @@
 
 
     .series-btn {
-      padding: 18px 35px;
-      border: none;
-      border-radius: 25px;
-      font-weight: 800;
-      font-size: 18px;
+      padding: 20px 40px;
+      border: 6px solid #ffffff;
+      border-radius: 50px;
+      font-weight: 900;
+      font-size: 20px;
       cursor: pointer;
-      transition: all 0.3s ease;
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
       display: flex;
       align-items: center;
       gap: 12px;
-      min-width: 180px;
+      min-width: 200px;
       justify-content: center;
       text-transform: uppercase;
-      letter-spacing: 1px;
+      letter-spacing: 2px;
+      animation: buttonBreathe 3s ease-in-out infinite;
+      text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
     }
 
     .series-btn.primary {
-      background: linear-gradient(45deg, #00FF88, #00D4AA);
-      color: #002040;
-      box-shadow: 0 6px 20px rgba(0, 255, 136, 0.4);
-      border: 2px solid rgba(255, 255, 255, 0.3);
+      background: linear-gradient(45deg, #FFD700, #FFA500);
+      color: #000000;
+      box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6);
+      border-color: #FF1493;
     }
 
     .series-btn.primary:hover {
-      background: linear-gradient(45deg, #00D4AA, #00B894);
-      transform: translateY(-4px);
-      box-shadow: 0 10px 30px rgba(0, 255, 136, 0.6);
+      background: linear-gradient(45deg, #FFA500, #FFD700);
+      transform: translateY(-8px) scale(1.05);
+      box-shadow: 0 15px 40px rgba(255, 215, 0, 0.8);
+      animation: buttonWobble 0.6s ease-in-out;
     }
 
     .series-btn.secondary {
-      background: linear-gradient(45deg, #00A2FF, #0078D4);
-      color: #ffffff;
-      border: 2px solid rgba(255, 255, 255, 0.4);
+      background: linear-gradient(45deg, #00FF88, #00D4AA);
+      color: #002040;
+      border-color: #ffffff;
       backdrop-filter: blur(15px);
-      box-shadow: 0 6px 20px rgba(0, 162, 255, 0.3);
+      box-shadow: 0 8px 25px rgba(0, 255, 136, 0.4);
     }
 
     .series-btn.secondary:hover {
-      background: linear-gradient(45deg, #0078D4, #005A9F);
-      border-color: rgba(255, 255, 255, 0.6);
-      transform: translateY(-4px);
-      box-shadow: 0 10px 30px rgba(0, 162, 255, 0.5);
+      background: linear-gradient(45deg, #00D4AA, #00B894);
+      border-color: #FFD700;
+      transform: translateY(-8px) scale(1.05);
+      box-shadow: 0 15px 40px rgba(0, 255, 136, 0.6);
+      animation: buttonWobble 0.6s ease-in-out;
     }
 
     .series-btn i {
@@ -1017,30 +1053,39 @@
     }
 
     .episodes-title {
-      font-size: 20px;
-      font-weight: 800;
-      margin-bottom: 20px;
-      color: #ffffff;
+      font-size: 36px;
+      font-weight: 900;
+      margin-bottom: 25px;
+      color: #FFD700;
+      text-shadow: 
+        3px 3px 0px #FF1493,
+        6px 6px 0px rgba(0, 0, 0, 0.3);
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      animation: titleBounce 4s ease-in-out infinite;
     }
 
     .episode-item {
       display: flex;
       gap: 20px;
       padding: 20px;
-      border-radius: 15px;
-      margin-bottom: 15px;
-      background: linear-gradient(135deg, rgba(0, 120, 212, 0.2), rgba(0, 90, 159, 0.2));
+      border-radius: 25px;
+      margin-bottom: 20px;
+      background: rgba(0, 0, 0, 0.7);
       cursor: pointer;
-      transition: all 0.3s ease;
-      border: 2px solid rgba(0, 162, 255, 0.3);
-      backdrop-filter: blur(10px);
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      border: 5px solid #00A2FF;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 8px 25px rgba(0, 162, 255, 0.4);
+      animation: itemFloat 5s ease-in-out infinite;
     }
 
     .episode-item:hover {
-      background: linear-gradient(135deg, rgba(0, 162, 255, 0.3), rgba(0, 120, 212, 0.3));
+      background: rgba(0, 255, 136, 0.1);
       border-color: #00FF88;
-      transform: translateY(-3px);
-      box-shadow: 0 8px 25px rgba(0, 162, 255, 0.4);
+      transform: translateY(-8px) scale(1.02);
+      box-shadow: 0 15px 40px rgba(0, 255, 136, 0.6);
+      animation: itemWobble 0.6s ease-in-out;
     }
 
     .episode-thumbnail {
