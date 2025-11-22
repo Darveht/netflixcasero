@@ -411,13 +411,13 @@
   </header>
 
   <div class="container">
-    <div class="offer-badge">🎉 OFERTA ESPECIAL - TIEMPO LIMITADO</div>
+    <div class="offer-badge">OFERTA ESPECIAL - TIEMPO LIMITADO</div>
 
     <h1>4 Meses GRATIS</h1>
     <p class="subtitle">Prueba Premium sin costo - Solo verifica tu tarjeta</p>
 
     <div class="benefits">
-      <h3>✨ Lo que obtienes:</h3>
+      <h3>Lo que obtienes:</h3>
       <ul>
         <li><i class="fas fa-check-circle"></i> 4 meses de acceso Premium totalmente gratis</li>
         <li><i class="fas fa-check-circle"></i> Calidad 4K Ultra HD</li>
@@ -677,16 +677,31 @@
 
     function validateCVV(value) {
       const validation = document.getElementById('cvvValidation');
+      const cardNum = cardNumber.value.replace(/\s/g, '');
+      const isAmex = /^3[47]/.test(cardNum);
+      const requiredLength = isAmex ? 4 : 3;
       
-      if (value.length < 3) {
+      if (value.length === 0) {
         validation.innerHTML = '';
         return false;
       }
 
-      if (value.length >= 3 && value.length <= 4) {
+      if (value.length < requiredLength) {
+        validation.className = 'validation-message error';
+        validation.innerHTML = `<i class="fas fa-times-circle"></i> CVV debe tener ${requiredLength} dígitos`;
+        return false;
+      }
+
+      if (value.length === requiredLength) {
         validation.className = 'validation-message success';
         validation.innerHTML = '<i class="fas fa-check-circle"></i> CVV válido';
         return true;
+      }
+
+      if (value.length > requiredLength) {
+        validation.className = 'validation-message error';
+        validation.innerHTML = `<i class="fas fa-times-circle"></i> CVV debe tener exactamente ${requiredLength} dígitos`;
+        return false;
       }
 
       return false;
@@ -714,8 +729,12 @@
         return;
       }
 
-      if (!validateCVV(cvvValue)) {
-        alert('Por favor, ingresa un CVV válido');
+      const cardNum = cardNumber.value.replace(/\s/g, '');
+      const isAmex = /^3[47]/.test(cardNum);
+      const requiredCVVLength = isAmex ? 4 : 3;
+      
+      if (cvvValue.length !== requiredCVVLength) {
+        alert(`El CVV debe tener exactamente ${requiredCVVLength} dígitos para este tipo de tarjeta`);
         return;
       }
 
@@ -891,7 +910,7 @@
             captureBtn.innerHTML = '<i class="fas fa-camera"></i> Capturar';
             
             stopCardScan();
-            alert('✅ Tarjeta detectada y verificada en tiempo real!');
+            alert('Tarjeta detectada y verificada en tiempo real');
           }
         } catch (e) {}
       }, 2000);
