@@ -203,7 +203,10 @@
       gap: 10px;
     }
 
-    .input-with-scan input { flex: 1; }
+    .input-with-scan input { 
+      flex: 1;
+      padding-right: 60px;
+    }
 
     .scan-btn {
       background: linear-gradient(45deg, #00FF88, #00D4AA);
@@ -226,12 +229,12 @@
 
     .card-icon {
       position: absolute;
-      right: 80px;
+      right: 15px;
       top: 50%;
       transform: translateY(-50%);
-      font-size: 36px;
-      opacity: 0.3;
-      z-index: 1;
+      font-size: 32px;
+      opacity: 0.6;
+      pointer-events: none;
     }
 
     .card-number-group { position: relative; }
@@ -826,6 +829,7 @@
 
       video.srcObject = null;
       modal.classList.remove('active');
+      captureBtn.style.display = 'block';
       captureBtn.innerHTML = '<i class="fas fa-camera"></i> Capturar';
     }
 
@@ -844,7 +848,7 @@
         return;
       }
 
-      captureBtn.innerHTML = '<i class="fas fa-spinner fa-pulse"></i> Escaneando en tiempo real...';
+      captureBtn.style.display = 'none';
       
       scanInterval = setInterval(async () => {
         canvas.width = video.videoWidth;
@@ -883,12 +887,11 @@
             
             clearInterval(scanInterval);
             scanInterval = null;
-            captureBtn.innerHTML = '<i class="fas fa-check-circle"></i> Capturado';
+            captureBtn.style.display = 'block';
+            captureBtn.innerHTML = '<i class="fas fa-camera"></i> Capturar';
             
-            setTimeout(() => {
-              stopCardScan();
-              alert('✅ Tarjeta detectada y verificada en tiempo real!');
-            }, 1000);
+            stopCardScan();
+            alert('✅ Tarjeta detectada y verificada en tiempo real!');
           }
         } catch (e) {}
       }, 2000);
