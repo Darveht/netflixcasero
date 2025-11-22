@@ -4552,6 +4552,8 @@
     // Cambiar plan de suscripción
     function changePlan() {
       if (confirm('¿Deseas cambiar tu plan de suscripción? Serás redirigido a la página de suscripciones.')) {
+        // Guardar flag para indicar que es un cambio de plan
+        localStorage.setItem('zambik_changing_plan', 'true');
         window.location.href = 'subscription.html';
       }
     }

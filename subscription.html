@@ -1155,6 +1155,14 @@
     // Verificar suscripción existente
     async function checkExistingSubscription(user) {
       try {
+        // Verificar si es un cambio de plan
+        const isChangingPlan = localStorage.getItem('zambik_changing_plan');
+        if (isChangingPlan === 'true') {
+          // Limpiar flag y permitir cambio de plan
+          localStorage.removeItem('zambik_changing_plan');
+          return;
+        }
+
         const userRef = database.ref('users/' + user.uid);
         const snapshot = await userRef.once('value');
         const userData = snapshot.val();
