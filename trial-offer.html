@@ -250,6 +250,37 @@
       position: relative;
     }
 
+    .input-with-scan {
+      position: relative;
+      display: flex;
+      gap: 10px;
+    }
+
+    .input-with-scan input {
+      flex: 1;
+    }
+
+    .scan-btn {
+      background: linear-gradient(45deg, #00FF88, #00D4AA);
+      border: 2px solid rgba(255, 255, 255, 0.3);
+      color: #002040;
+      padding: 16px 20px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 18px;
+      min-width: 60px;
+    }
+
+    .scan-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 15px rgba(0, 255, 136, 0.4);
+    }
+
+    .scan-btn:active {
+      transform: translateY(0);
+    }
+
     .validation-message {
       margin-top: 8px;
       font-size: 13px;
@@ -306,6 +337,115 @@
 
     .security-note i {
       color: #10b981;
+    }
+
+    /* Modal de escáner */
+    .scanner-modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.95);
+      z-index: 9999;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      padding: 20px;
+    }
+
+    .scanner-modal.active {
+      display: flex;
+    }
+
+    .scanner-container {
+      position: relative;
+      max-width: 500px;
+      width: 100%;
+      background: #000;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 3px solid #00FF88;
+      box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
+    }
+
+    #videoPreview {
+      width: 100%;
+      height: auto;
+      display: block;
+    }
+
+    .scanner-overlay {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 85%;
+      height: 200px;
+      border: 3px solid #00FF88;
+      border-radius: 15px;
+      box-shadow: 0 0 0 9999px rgba(0, 0, 0, 0.5);
+      pointer-events: none;
+    }
+
+    .scanner-line {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, #00FF88, transparent);
+      animation: scan 2s linear infinite;
+    }
+
+    @keyframes scan {
+      0% { top: 0; }
+      100% { top: 100%; }
+    }
+
+    .scanner-controls {
+      display: flex;
+      gap: 15px;
+      margin-top: 20px;
+      justify-content: center;
+    }
+
+    .scanner-btn {
+      padding: 15px 30px;
+      border: none;
+      border-radius: 12px;
+      font-size: 16px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.3s ease;
+    }
+
+    .scanner-btn.capture {
+      background: linear-gradient(45deg, #00FF88, #00D4AA);
+      color: #002040;
+    }
+
+    .scanner-btn.cancel {
+      background: linear-gradient(45deg, #FF6B35, #F7931E);
+      color: #ffffff;
+    }
+
+    .scanner-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 15px rgba(0, 255, 136, 0.4);
+    }
+
+    .scanner-instructions {
+      color: #ffffff;
+      text-align: center;
+      margin-bottom: 15px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+
+    canvas {
+      display: none;
     }
 
     .terms {
@@ -384,13 +524,18 @@
 
       <div class="form-group card-number-group">
         <label for="cardNumber">Número de Tarjeta</label>
-        <input 
-          type="text" 
-          id="cardNumber" 
-          placeholder="1234 5678 9012 3456"
-          maxlength="19"
-          required
-        >
+        <div class="input-with-scan">
+          <input 
+            type="text" 
+            id="cardNumber" 
+            placeholder="1234 5678 9012 3456"
+            maxlength="19"
+            required
+          >
+          <button type="button" class="scan-btn" onclick="startCardScan()">
+            <i class="fas fa-camera"></i>
+          </button>
+        </div>
         <i id="cardIcon" class="card-icon"></i>
         <div id="cardNumberValidation" class="validation-message"></div>
       </div>
@@ -450,6 +595,31 @@
     </div>
   </div>
 
+  <!-- Modal de escáner -->
+  <div id="scannerModal" class="scanner-modal">
+    <div class="scanner-instructions">
+      <i class="fas fa-credit-card" style="font-size: 24px; margin-bottom: 10px;"></i>
+      <div>Coloca tu tarjeta dentro del recuadro verde</div>
+    </div>
+    <div class="scanner-container">
+      <video id="videoPreview" autoplay playsinline></video>
+      <div class="scanner-overlay">
+        <div class="scanner-line"></div>
+      </div>
+    </div>
+    <div class="scanner-controls">
+      <button class="scanner-btn capture" onclick="captureCard()">
+        <i class="fas fa-camera"></i> Capturar
+      </button>
+      <button class="scanner-btn cancel" onclick="stopCardScan()">
+        <i class="fas fa-times"></i> Cancelar
+      </button>
+    </div>
+  </div>
+
+  <canvas id="canvas"></canvas>
+
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@4/dist/tesseract.min.js"></script>
   <script>
     const firebaseConfig = {
       apiKey: "AIzaSyCFQ_geG0HIv2EZ-bfKc97TJNtf2sdqPzc",
@@ -709,6 +879,105 @@
       if (/^3[47]/.test(number)) return 'American Express';
       if (/^6(?:011|5)/.test(number)) return 'Discover';
       return 'Unknown';
+    }
+
+    // Escáner de tarjeta
+    let stream = null;
+
+    async function startCardScan() {
+      const modal = document.getElementById('scannerModal');
+      const video = document.getElementById('videoPreview');
+
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({ 
+          video: { 
+            facingMode: 'environment',
+            width: { ideal: 1280 },
+            height: { ideal: 720 }
+          } 
+        });
+        
+        video.srcObject = stream;
+        modal.classList.add('active');
+      } catch (error) {
+        console.error('Error accediendo a la cámara:', error);
+        alert('No se pudo acceder a la cámara. Por favor, ingresa los datos manualmente.');
+      }
+    }
+
+    function stopCardScan() {
+      const modal = document.getElementById('scannerModal');
+      const video = document.getElementById('videoPreview');
+
+      if (stream) {
+        stream.getTracks().forEach(track => track.stop());
+        stream = null;
+      }
+
+      video.srcObject = null;
+      modal.classList.remove('active');
+    }
+
+    async function captureCard() {
+      const video = document.getElementById('videoPreview');
+      const canvas = document.getElementById('canvas');
+      const context = canvas.getContext('2d');
+
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+      context.drawImage(video, 0, 0);
+
+      // Mostrar loading
+      const captureBtn = document.querySelector('.scanner-btn.capture');
+      captureBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+      captureBtn.disabled = true;
+
+      try {
+        const result = await Tesseract.recognize(
+          canvas,
+          'eng',
+          {
+            logger: m => console.log(m)
+          }
+        );
+
+        const text = result.data.text;
+        console.log('Texto detectado:', text);
+
+        // Extraer número de tarjeta (16 dígitos)
+        const cardNumberMatch = text.match(/\b\d{4}[\s-]?\d{4}[\s-]?\d{4}[\s-]?\d{4}\b/);
+        if (cardNumberMatch) {
+          const cardNum = cardNumberMatch[0].replace(/[\s-]/g, '');
+          document.getElementById('cardNumber').value = cardNum.match(/.{1,4}/g).join(' ');
+          validateCardNumber(cardNum);
+          detectCardType(cardNum);
+        }
+
+        // Extraer nombre (líneas con letras mayúsculas)
+        const nameMatch = text.match(/[A-Z]{2,}\s+[A-Z]{2,}/g);
+        if (nameMatch && nameMatch.length > 0) {
+          document.getElementById('cardName').value = nameMatch[0];
+        }
+
+        // Extraer fecha de vencimiento (MM/YY o MM/YYYY)
+        const expiryMatch = text.match(/\b(0[1-9]|1[0-2])[\/\s-]?(\d{2}|\d{4})\b/);
+        if (expiryMatch) {
+          const month = expiryMatch[1];
+          const year = expiryMatch[2].slice(-2);
+          document.getElementById('expiryDate').value = month + '/' + year;
+          validateExpiry(month + '/' + year);
+        }
+
+        stopCardScan();
+        alert('✅ Datos de tarjeta capturados. Verifica que sean correctos.');
+
+      } catch (error) {
+        console.error('Error procesando imagen:', error);
+        alert('No se pudo leer la tarjeta. Inténtalo de nuevo o ingresa los datos manualmente.');
+      } finally {
+        captureBtn.innerHTML = '<i class="fas fa-camera"></i> Capturar';
+        captureBtn.disabled = false;
+      }
     }
   </script>
 </body>
