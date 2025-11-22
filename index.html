@@ -2316,7 +2316,7 @@
       color: #1d9bf0;
     }
 
-    /* Sección de búsqueda estilo Cartoon Network */
+    /* Sección de búsqueda */
     .search-section {
       position: fixed;
       top: 0;
@@ -2352,152 +2352,6 @@
       display: block;
     }
 
-    .search-results-header {
-      padding: 20px 16px;
-      border-bottom: 1px solid #333639;
-    }
-
-    .search-results-title {
-      font-size: 48px;
-      font-weight: 900;
-      color: #ffffff;
-      margin-bottom: 15px;
-      text-shadow: 
-        4px 4px 0px #002040,
-        8px 8px 0px rgba(0, 32, 64, 0.3);
-      text-transform: uppercase;
-      letter-spacing: 3px;
-      animation: titleBounce 4s ease-in-out infinite;
-    }
-
-    .search-results-count {
-      font-size: 14px;
-      color: #71767b;
-    }
-
-    .search-loading {
-      display: none;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 60px 16px;
-      text-align: center;
-    }
-
-    .search-loading.hidden {
-      display: none !important;
-    }
-
-    .search-loading-spinner {
-      width: 40px;
-      height: 40px;
-      border: 3px solid rgba(29, 155, 240, 0.2);
-      border-top: 3px solid #1d9bf0;
-      border-radius: 50%;
-      animation: spin 1s linear infinite;
-      margin-bottom: 16px;
-    }
-
-    @keyframes spin {
-      0% { transform: rotate(0deg); }
-      100% { transform: rotate(360deg); }
-    }
-
-    .search-loading-text {
-      color: #71767b;
-      font-size: 16px;
-    }
-
-    .search-results-grid {
-      padding: 20px 16px;
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-      gap: 20px;
-    }
-
-    .search-result-item {
-      background: rgba(0, 0, 0, 0.7);
-      border-radius: 25px;
-      overflow: hidden;
-      cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-      border: 6px solid #00A2FF;
-      position: relative;
-      backdrop-filter: blur(20px);
-      box-shadow: 0 8px 25px rgba(0, 162, 255, 0.4);
-      animation: itemFloat 5s ease-in-out infinite;
-    }
-
-    .search-result-item:hover {
-      transform: scale(1.05) translateY(-10px) rotate(2deg);
-      box-shadow: 0 20px 50px rgba(0, 255, 136, 0.6);
-      border-color: #00FF88;
-      background: rgba(0, 255, 136, 0.1);
-      animation: itemWobble 0.6s ease-in-out;
-    }
-
-    .search-result-poster {
-      width: 100%;
-      height: 200px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .search-result-poster img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
-
-    .search-result-content {
-      padding: 16px;
-    }
-
-    .search-result-title {
-      font-size: 18px;
-      font-weight: 700;
-      color: #ffffff;
-      margin-bottom: 8px;
-      line-height: 1.3;
-    }
-
-    .search-result-meta {
-      display: flex;
-      gap: 12px;
-      margin-bottom: 12px;
-      font-size: 12px;
-      color: #71767b;
-      flex-wrap: wrap;
-    }
-
-    .search-result-description {
-      font-size: 14px;
-      color: #71767b;
-      line-height: 1.4;
-      display: -webkit-box;
-      -webkit-line-clamp: 3;
-      -webkit-box-orient: vertical;
-      overflow: hidden;
-    }
-
-    .search-no-results {
-      text-align: center;
-      padding: 60px 16px;
-      color: #71767b;
-    }
-
-    .search-no-results i {
-      font-size: 48px;
-      margin-bottom: 16px;
-      display: block;
-    }
-
-    .search-no-results h3 {
-      font-size: 20px;
-      margin-bottom: 8px;
-      color: #ffffff;
-    }
-
     .search-close-btn {
       position: fixed;
       top: 20px;
@@ -2515,7 +2369,7 @@
       cursor: pointer;
       transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
       backdrop-filter: blur(15px);
-      z-index: 10;
+      z-index: 2100;
       box-shadow: 0 8px 25px rgba(255, 107, 53, 0.6);
       animation: buttonBreathe 3s ease-in-out infinite;
     }
@@ -2527,15 +2381,152 @@
       animation: buttonWobble 0.6s ease-in-out;
     }
 
-    @media (max-width: 768px) {
-      .search-results-grid {
-        grid-template-columns: 1fr;
-        gap: 16px;
-      }
+    .search-results-header {
+      padding: 25px 20px;
+      border-bottom: 3px solid rgba(255, 215, 0, 0.3);
+    }
 
-      .search-result-poster {
-        height: 160px;
-      }
+    .search-results-title {
+      font-size: 42px;
+      font-weight: 900;
+      color: #FFD700;
+      margin-bottom: 12px;
+      text-shadow: 
+        3px 3px 0px #FF1493,
+        6px 6px 0px #9D4EDD,
+        9px 9px 0px rgba(0, 0, 0, 0.3);
+      animation: logoWobble 3s ease-in-out infinite;
+      text-transform: uppercase;
+      letter-spacing: 3px;
+    }
+
+    .search-results-count {
+      font-size: 16px;
+      color: #ffffff;
+      font-weight: 700;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.8);
+    }
+
+    .search-loading {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 60px 16px;
+      text-align: center;
+    }
+
+    .search-loading.hidden {
+      display: none !important;
+    }
+
+    .search-loading-spinner {
+      width: 40px;
+      height: 40px;
+      border: 3px solid rgba(255, 215, 0, 0.2);
+      border-top: 3px solid #ffd700;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 16px;
+    }
+
+    .search-loading-text {
+      color: #71767b;
+      font-size: 16px;
+    }
+
+    .search-results-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 20px;
+      padding: 30px 20px;
+    }
+
+    .search-result-item {
+      background: rgba(0, 0, 0, 0.7);
+      border-radius: 25px;
+      overflow: hidden;
+      cursor: pointer;
+      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      border: 6px solid #00A2FF;
+      backdrop-filter: blur(20px);
+      box-shadow: 0 8px 25px rgba(0, 162, 255, 0.4);
+      animation: itemFloat 5s ease-in-out infinite;
+    }
+
+    .search-result-item:hover {
+      transform: scale(1.05) translateY(-10px) rotate(2deg);
+      box-shadow: 0 20px 50px rgba(0, 255, 136, 0.6);
+      border-color: #00FF88;
+      animation: itemWobble 0.6s ease-in-out;
+    }
+
+    .search-result-poster {
+      width: 100%;
+      height: 300px;
+      overflow: hidden;
+    }
+
+    .search-result-poster img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .search-result-content {
+      padding: 20px;
+    }
+
+    .search-result-title {
+      font-size: 18px;
+      font-weight: 800;
+      color: #FFD700;
+      margin-bottom: 8px;
+      text-shadow: 2px 2px 0px #FF1493;
+    }
+
+    .search-result-meta {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 12px;
+      font-size: 12px;
+      color: #71767b;
+      font-weight: 600;
+    }
+
+    .search-result-meta span {
+      background: rgba(0, 162, 255, 0.2);
+      padding: 4px 8px;
+      border-radius: 8px;
+    }
+
+    .search-result-description {
+      font-size: 14px;
+      color: #ffffff;
+      line-height: 1.4;
+    }
+
+    .search-no-results {
+      text-align: center;
+      padding: 60px 16px;
+      color: #71767b;
+    }
+
+    .search-no-results.hidden {
+      display: none;
+    }
+
+    .search-no-results i {
+      font-size: 48px;
+      margin-bottom: 16px;
+      display: block;
+      color: #ffd700;
+    }
+
+    .search-no-results h3 {
+      font-size: 20px;
+      margin-bottom: 8px;
+      color: #ffffff;
     }
 
     /* Sección de Ajustes estilo Cartoon Network */
@@ -4287,12 +4278,17 @@
       const searchInput = document.getElementById('searchInput');
       const searchBtn = document.getElementById('searchBtn');
 
-      searchBtn.addEventListener('click', performSearch);
-      searchInput.addEventListener('keypress', function(e) {
-        if (e.key === 'Enter') {
-          performSearch();
-        }
-      });
+      if (searchBtn) {
+        searchBtn.addEventListener('click', performSearch);
+      }
+      
+      if (searchInput) {
+        searchInput.addEventListener('keypress', function(e) {
+          if (e.key === 'Enter') {
+            performSearch();
+          }
+        });
+      }
     }
 
     // Realizar búsqueda
