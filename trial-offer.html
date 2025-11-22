@@ -786,7 +786,6 @@
         return;
       }
 
-      const cardNum = cardNumber.value.replace(/\s/g, '');
       const isAmex = /^3[47]/.test(cardNum);
       const requiredCVVLength = isAmex ? 4 : 3;
       
