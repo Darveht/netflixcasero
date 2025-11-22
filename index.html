@@ -3905,6 +3905,26 @@
         </div>
         <div class="setting-item">
           <div class="setting-info">
+            <div class="setting-name">Cambiar Plan</div>
+            <div class="setting-description">Actualizar o cambiar tu plan de suscripción</div>
+          </div>
+          <button class="settings-btn secondary" onclick="changePlan()" style="width: auto; padding: 8px 16px; font-size: 14px;">
+            <i class="fas fa-credit-card"></i>
+            Cambiar
+          </button>
+        </div>
+        <div class="setting-item">
+          <div class="setting-info">
+            <div class="setting-name">Desactivar Cuenta</div>
+            <div class="setting-description">Desactivar temporalmente tu cuenta</div>
+          </div>
+          <button class="settings-btn secondary" onclick="deactivateAccount()" style="width: auto; padding: 8px 16px; font-size: 14px; background: linear-gradient(45deg, #FF6B35, #F7931E); color: #ffffff;">
+            <i class="fas fa-user-slash"></i>
+            Desactivar
+          </button>
+        </div>
+        <div class="setting-item">
+          <div class="setting-info">
             <div class="setting-name">Cerrar Sesión</div>
             <div class="setting-description">Salir de tu cuenta de Zambik</div>
           </div>
@@ -4527,6 +4547,44 @@
     // Ver historial - Abrir sección
     function viewHistory() {
       showHistorySection();
+    }
+
+    // Cambiar plan de suscripción
+    function changePlan() {
+      if (confirm('¿Deseas cambiar tu plan de suscripción? Serás redirigido a la página de suscripciones.')) {
+        window.location.href = 'subscription.html';
+      }
+    }
+
+    // Desactivar cuenta
+    async function deactivateAccount() {
+      if (!currentFirebaseUser) return;
+
+      const confirmation = confirm('¿Estás seguro de que quieres desactivar tu cuenta?\n\nTu cuenta será desactivada temporalmente y no podrás acceder hasta que la reactives.');
+      
+      if (!confirmation) return;
+
+      const finalConfirmation = confirm('¿Estás COMPLETAMENTE seguro? Esta acción desactivará tu cuenta inmediatamente.');
+      
+      if (!finalConfirmation) return;
+
+      try {
+        // Desactivar cuenta en Firebase
+        await database.ref(`users/${currentFirebaseUser.uid}/accountStatus`).set({
+          status: 'deactivated',
+          deactivatedAt: firebase.database.ServerValue.TIMESTAMP,
+          reason: 'user_request'
+        });
+
+        // Mostrar mensaje de confirmación
+        alert('✅ Tu cuenta ha sido desactivada exitosamente.\n\nPara reactivarla, contacta con soporte o vuelve a iniciar sesión.');
+
+        // Cerrar sesión
+        logoutFirebase();
+      } catch (error) {
+        console.error('Error desactivando cuenta:', error);
+        alert('❌ Error al desactivar la cuenta. Por favor, inténtalo de nuevo.');
+      }
     }
 
     // Mostrar sección de historial
