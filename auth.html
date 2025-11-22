@@ -11,8 +11,7 @@
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-  <!-- EmailJS -->
-  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
   
   <style>
     * {
@@ -488,8 +487,7 @@
     const auth = firebase.auth();
     const database = firebase.database();
 
-    // Inicializar EmailJS
-    emailjs.init('IQ0syOQo-pxa-s8-i');
+
 
     // Verificar si el usuario ya está autenticado
     auth.onAuthStateChanged((user) => {
@@ -609,6 +607,9 @@
           profile: null
         });
 
+        // Enviar correo de bienvenida
+        sendWelcomeEmail(name, email);
+
         showMessage('¡Cuenta creada exitosamente!', 'success');
         
         // Redirigir a selección de plan
@@ -669,23 +670,41 @@
     }
 
     // Mensajes de error en español
-    // Enviar correo de bienvenida
+    // Enviar correo de bienvenida usando Web3Forms (gratuito)
     async function sendWelcomeEmail(userName, userEmail) {
-      console.log('Intentando enviar correo a:', userEmail);
-      
+      const emailHTML = `
+        <h1 style="color: #FF1493;">¡Bienvenido a Zambik, ${userName}!</h1>
+        <p>Estamos emocionados de tenerte con nosotros.</p>
+        <h2>¿Qué puedes ver en Zambik?</h2>
+        <ul>
+          <li>🎬 Películas exclusivas de terror</li>
+          <li>📺 Series originales</li>
+          <li>🌟 Estrenos anticipados</li>
+          <li>👑 Contenido VIP</li>
+          <li>📥 Descargas offline</li>
+        </ul>
+        <p><a href="https://darveht.github.io/netflixcasero/" style="background: #FFD700; color: #000; padding: 15px 30px; text-decoration: none; border-radius: 25px; font-weight: bold;">Comenzar Ahora</a></p>
+      `;
+
       try {
-        const response = await emailjs.send('service_dy711ep', 'template_ea5rxhb', {
-          to_name: userName,
-          to_email: userEmail,
-          from_name: 'Zambik',
-          reply_to: 'noreply@zambik.com'
+        const response = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            access_key: 'TU_ACCESS_KEY_AQUI',
+            subject: `¡Bienvenido a Zambik, ${userName}!`,
+            from_name: 'Zambik',
+            to_email: userEmail,
+            message: emailHTML
+          })
         });
         
-        console.log('✅ Correo enviado exitosamente:', response);
-        alert('✅ Correo de bienvenida enviado a ' + userEmail);
+        const data = await response.json();
+        if (data.success) {
+          console.log('✅ Correo enviado');
+        }
       } catch (error) {
-        console.error('❌ Error enviando correo:', error);
-        alert('⚠️ No se pudo enviar el correo: ' + error.text);
+        console.error('Error:', error);
       }
     }
 
