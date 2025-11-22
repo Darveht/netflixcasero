@@ -489,7 +489,7 @@
     const database = firebase.database();
 
     // Inicializar EmailJS
-    emailjs.init('YOUR_PUBLIC_KEY'); // Reemplazar con tu clave pública de EmailJS
+    emailjs.init('IQ0syOQo-pxa-s8-i');
 
     // Verificar si el usuario ya está autenticado
     auth.onAuthStateChanged((user) => {
@@ -743,10 +743,9 @@
       `;
 
       try {
-        await emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', {
+        await emailjs.send('service_dy711ep', 'template_ea5rxhb', {
           to_email: userEmail,
-          to_name: userName,
-          message_html: emailHTML
+          to_name: userName
         });
         console.log('Correo de bienvenida enviado');
       } catch (error) {
