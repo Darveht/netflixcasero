@@ -15,8 +15,8 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer">
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-solid-900.woff2" as="font" type="font/woff2" crossorigin="anonymous">
   <link rel="preload" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/webfonts/fa-brands-400.woff2" as="font" type="font/woff2" crossorigin="anonymous">
-  <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   <div id="google_translate_element" style="display: none;"></div>
+  <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   <style>
     /* Reinicio básico */
     * {
@@ -5059,6 +5059,11 @@
         const settings = JSON.parse(localStorage.getItem('zambik_settings') || '{}');
         settings.language = this.value;
         localStorage.setItem('zambik_settings', JSON.stringify(settings));
+        
+        // Mostrar mensaje de carga
+        showSettingsMessage('Aplicando traducción...');
+        
+        // Cambiar idioma
         handleLanguageChange(this.value);
       });
 
@@ -5154,6 +5159,8 @@
 
     // Variable global para el widget de Google Translate
     let googleTranslateElement = null;
+    let translateAttempts = 0;
+    const maxAttempts = 20;
 
     // Inicializar Google Translate
     function googleTranslateElementInit() {
@@ -5172,14 +5179,31 @@
       localStorage.setItem('zambik_language', language);
       currentLanguage = language;
       
-      // Usar Google Translate para cambiar el idioma
-      const googleTranslateCombo = document.querySelector('.goog-te-combo');
-      if (googleTranslateCombo) {
-        googleTranslateCombo.value = language;
-        googleTranslateCombo.dispatchEvent(new Event('change'));
-      }
+      // Intentar cambiar el idioma
+      attemptLanguageChange(language);
       
       showSettingsMessage(`Idioma cambiado a: ${language === 'es' ? 'Español' : language === 'en' ? 'English' : 'Português'}`);
+    }
+
+    // Intentar cambiar el idioma con reintentos
+    function attemptLanguageChange(language) {
+      const googleTranslateCombo = document.querySelector('.goog-te-combo');
+      
+      if (googleTranslateCombo) {
+        // Encontrado, cambiar idioma
+        googleTranslateCombo.value = language;
+        googleTranslateCombo.dispatchEvent(new Event('change'));
+        translateAttempts = 0;
+      } else if (translateAttempts < maxAttempts) {
+        // No encontrado, reintentar
+        translateAttempts++;
+        setTimeout(() => attemptLanguageChange(language), 200);
+      } else {
+        // Máximo de intentos alcanzado, recargar página
+        console.log('Recargando página para aplicar traducción...');
+        translateAttempts = 0;
+        location.reload();
+      }
     }
 
     // Traducir interfaz (ahora usa Google Translate automáticamente)
@@ -5450,25 +5474,25 @@
         initializeLiveProgramming(); // Nuevo: inicializar sistema en vivo
         setupRealtimeSettings(); // Configurar ajustes en tiempo real
         
-        // Inicializar Google Translate
-        setTimeout(() => {
-          if (typeof googleTranslateElementInit === 'function') {
-            googleTranslateElementInit();
-          }
-        }, 1000);
-        
         // Cargar y aplicar configuraciones guardadas
         const settings = JSON.parse(localStorage.getItem('zambik_settings') || '{}');
         applyTheme(settings.theme || 'default');
         applyTextSize(settings.textSize || 'medium');
         
-        // Aplicar idioma guardado con Google Translate
-        if (settings.language) {
-          currentLanguage = settings.language;
-          setTimeout(() => {
-            translateInterface(settings.language);
-          }, 2000);
-        }
+        // Inicializar Google Translate
+        setTimeout(() => {
+          if (typeof googleTranslateElementInit === 'function') {
+            googleTranslateElementInit();
+          }
+          
+          // Aplicar idioma guardado con Google Translate
+          if (settings.language && settings.language !== 'es') {
+            currentLanguage = settings.language;
+            setTimeout(() => {
+              translateInterface(settings.language);
+            }, 3000);
+          }
+        }, 1000);
       }
     });
   </script>
