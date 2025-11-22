@@ -418,13 +418,11 @@
     console.log('Firebase inicializado correctamente');
 
     // Verificar si el usuario ya está autenticado
-    let isRedirecting = false;
     auth.onAuthStateChanged((user) => {
       console.log('onAuthStateChanged llamado, usuario:', user ? user.email : 'No autenticado');
-      if (user && !isRedirecting) {
+      if (user) {
         // Usuario autenticado, verificar si tiene suscripción
         console.log('Usuario detectado, verificando suscripción...');
-        isRedirecting = true;
         checkUserSubscription(user);
       }
     });
@@ -485,22 +483,16 @@
 
       try {
         console.log('Llamando a signInWithEmailAndPassword...');
-        const userCredential = await auth.signInWithEmailAndPassword(email, password);
-        console.log('Login exitoso:', userCredential.user.email);
+        await auth.signInWithEmailAndPassword(email, password);
+        console.log('Login exitoso');
         showMessage('¡Inicio de sesión exitoso! Redirigiendo...', 'success');
         
-        // Marcar que estamos redirigiendo para evitar doble llamada de onAuthStateChanged
-        isRedirecting = true;
-        
-        // Verificar suscripción y redirigir
-        console.log('Verificando suscripción del usuario...');
-        await checkUserSubscription(userCredential.user);
+        // onAuthStateChanged se encargará de la redirección
         
       } catch (error) {
         console.error('Error en login:', error);
         showMessage(getErrorMessage(error.code));
         setButtonLoading(button, false);
-        isRedirecting = false;
       }
     });
 
@@ -529,9 +521,6 @@
       hideMessage();
 
       try {
-        // Marcar que estamos redirigiendo
-        isRedirecting = true;
-        
         const userCredential = await auth.createUserWithEmailAndPassword(email, password);
         
         // Actualizar perfil con el nombre
@@ -559,7 +548,6 @@
         console.error('Error:', error);
         showMessage(getErrorMessage(error.code));
         setButtonLoading(button, false);
-        isRedirecting = false;
       }
     });
 
