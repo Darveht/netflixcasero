@@ -5966,9 +5966,16 @@
 
     // Función para mostrar detalles de serie estilo Netflix
     function showSeriesDetail(seriesId) {
+      console.log('=== DEBUG showSeriesDetail ===');
+      console.log('Opening details for:', seriesId);
+      
       const series = seriesDatabase[seriesId];
-      if (!series) return;
+      if (!series) {
+        console.error('ERROR: Series not found in database:', seriesId);
+        return;
+      }
 
+      console.log('Setting currentSeries to:', series.id, series.title);
       currentSeries = series;
 
       // Actualizar contenido
@@ -6804,6 +6811,11 @@
 
     // Función para reproducir contenido principal después del intro
     function playMainContent(episode) {
+      console.log('=== DEBUG playMainContent ===');
+      console.log('Episode received:', episode);
+      console.log('Episode title:', episode ? episode.title : 'NULL');
+      console.log('Episode videoUrl:', episode ? episode.videoUrl : 'NULL');
+      
       // Habilitar pantalla completa automática y rotación
       enableVideoFullscreenAndRotation();
 
@@ -6839,6 +6851,7 @@
 
       // Configurar fuente de video con mejor compatibilidad
       const source = document.createElement('source');
+      console.log('Setting video source to:', episode.videoUrl);
       source.src = episode.videoUrl;
       source.type = 'video/mp4'; // Asumir mp4 por defecto
       videoElement.appendChild(source);
@@ -6847,6 +6860,7 @@
       configureSubtitles();
       
       // Cargar el video después de agregar la fuente y subtítulos
+      console.log('Loading video...');
       videoElement.load();
 
       // Event listeners del contenido principal
@@ -6894,7 +6908,14 @@
 
     // Función para reproducir episodio (modificada para incluir intro)
     function playEpisode(season, episodeId) {
-      if (!currentSeries) return;
+      console.log('=== DEBUG playEpisode ===');
+      console.log('currentSeries:', currentSeries ? currentSeries.id : 'NULL');
+      console.log('currentSeries title:', currentSeries ? currentSeries.title : 'NULL');
+      
+      if (!currentSeries) {
+        console.error('ERROR: currentSeries is null!');
+        return;
+      }
 
       // Verificar si la película está disponible para reproducción
       if (currentSeries.isLocked && !isMovieAvailable(currentSeries)) {
@@ -6903,12 +6924,21 @@
       }
 
       const episode = currentSeries.episodes.find(ep => ep.id === episodeId);
-      if (!episode) return;
+      console.log('Episode found:', episode ? episode.title : 'NULL');
+      console.log('Episode videoUrl:', episode ? episode.videoUrl : 'NULL');
+      
+      if (!episode) {
+        console.error('ERROR: Episode not found!');
+        return;
+      }
 
       currentVideo = episode;
 
       // Reproducir intro de Zambik primero, luego el contenido principal
       playZambikIntro(() => {
+        console.log('=== DEBUG playMainContent callback ===');
+        console.log('About to play episode:', episode.title);
+        console.log('Video URL:', episode.videoUrl);
         playMainContent(episode);
       });
     }
