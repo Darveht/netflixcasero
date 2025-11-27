@@ -6187,6 +6187,10 @@
 
       if (videoElement) {
         videoElement.pause();
+        // IMPORTANTE: Limpiar todos los elementos source para evitar problemas de reproducción
+        while (videoElement.firstChild) {
+          videoElement.removeChild(videoElement.firstChild);
+        }
         videoElement.removeAttribute('src');
         videoElement.load();
       }
@@ -6701,7 +6705,10 @@
     function playZambikIntro(callback) {
       isPlayingIntro = true;
 
-      // Limpiar video anterior
+      // IMPORTANTE: Limpiar todos los elementos source y src anteriores
+      while (videoElement.firstChild) {
+        videoElement.removeChild(videoElement.firstChild);
+      }
       videoElement.removeAttribute('src');
       videoElement.load();
 
@@ -6825,14 +6832,22 @@
       const liveIndicator = document.getElementById('videoLiveIndicator');
       liveIndicator.style.display = 'none';
 
-      // Configurar subtítulos si están disponibles
-      configureSubtitles();
+      // IMPORTANTE: Limpiar todos los elementos source anteriores PRIMERO para evitar reproducir videos incorrectos
+      while (videoElement.firstChild) {
+        videoElement.removeChild(videoElement.firstChild);
+      }
 
       // Configurar fuente de video con mejor compatibilidad
       const source = document.createElement('source');
       source.src = episode.videoUrl;
       source.type = 'video/mp4'; // Asumir mp4 por defecto
       videoElement.appendChild(source);
+
+      // Configurar subtítulos DESPUÉS de agregar el source (para que no sean borrados)
+      configureSubtitles();
+      
+      // Cargar el video después de agregar la fuente y subtítulos
+      videoElement.load();
 
       // Event listeners del contenido principal
       const onLoadedMetadata = () => {
