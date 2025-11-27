@@ -13,6 +13,9 @@ class MyHandler(http.server.SimpleHTTPRequestHandler):
         self.send_header('Access-Control-Allow-Origin', '*')
         super().end_headers()
 
-with socketserver.TCPServer((HOST, PORT), MyHandler) as httpd:
+class ReuseAddressTCPServer(socketserver.TCPServer):
+    allow_reuse_address = True
+
+with ReuseAddressTCPServer((HOST, PORT), MyHandler) as httpd:
     print(f"Serving at http://{HOST}:{PORT}")
     httpd.serve_forever()
