@@ -23,7 +23,9 @@ Zambik es una plataforma de streaming de peliculas y series. La aplicacion permi
 - 2025-11-27: Corregido bug critico de reproduccion de video
   - El reproductor ahora limpia correctamente los elementos source anteriores antes de agregar nuevos
   - Esto previene que se reproduzca siempre el mismo video independientemente de la seleccion del usuario
-  - Funciones corregidas: playMainContent, playZambikIntro, closeVideoPlayer
+  - Funciones corregidas: playMainContent, playZambikIntro, playTrailerContent, closeVideoPlayer
+  - Orden corregido: limpiar source -> agregar nuevo source -> configurar subtitulos -> load()
+  - Esto asegura que los subtitulos persistan correctamente
 
 ## Running the Application
 El servidor se ejecuta automaticamente en el puerto 5000:
