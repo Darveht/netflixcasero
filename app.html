@@ -26,13 +26,10 @@
     }
 
     body {
-      background: linear-gradient(135deg, #1a0033 0%, #330066 25%, #000033 50%, #660033 75%, #1a0033 100%);
-      background-size: 400% 400%;
-      animation: cartoonGradient 20s ease-in-out infinite;
+      background: #000000;
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
       color: #ffffff;
       position: relative;
-      background-attachment: fixed;
       overscroll-behavior: contain;
       -webkit-text-size-adjust: 100%;
       -moz-text-size-adjust: 100%;
@@ -43,34 +40,6 @@
       font-feature-settings: 'kern' 1;
       font-kerning: auto;
       font-variant-ligatures: common-ligatures;
-    }
-
-    @keyframes cartoonGradient {
-      0%, 100% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-    }
-
-    /* Fondo animado estilo Cartoon Network */
-    body::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: 
-        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="30" cy="30" r="8" fill="%23FFD700" opacity="0.9"/><circle cx="170" cy="50" r="6" fill="%23FF1493" opacity="0.8"/><circle cx="100" cy="150" r="10" fill="%2300FF88" opacity="0.9"/><circle cx="50" cy="120" r="7" fill="%239D4EDD" opacity="0.8"/><circle cx="150" cy="180" r="9" fill="%23FF6B35" opacity="0.9"/><polygon points="80,20 85,30 75,30" fill="%23FFD700" opacity="0.7"/><polygon points="160,100 170,115 150,115" fill="%23FF1493" opacity="0.7"/></svg>');
-      background-size: 200px 200px;
-      animation: cartoonShapes 25s ease-in-out infinite;
-      z-index: -1;
-      pointer-events: none;
-    }
-
-    @keyframes cartoonShapes {
-      0%, 100% { transform: translateY(0px) rotate(0deg) scale(1); opacity: 1; }
-      25% { transform: translateY(-40px) rotate(90deg) scale(1.3); opacity: 0.8; }
-      50% { transform: translateY(20px) rotate(180deg) scale(0.8); opacity: 1; }
-      75% { transform: translateY(-20px) rotate(270deg) scale(1.2); opacity: 0.9; }
     }
 
     /* Header estilo MrBeast - OCULTO */
@@ -194,18 +163,16 @@
       padding-top: 20px;
     }
 
-    /* Banner principal estilo Roblox */
+    /* Banner principal estilo Uber */
     .hero-banner {
       position: relative;
       height: 60vh;
-      background: linear-gradient(135deg, rgba(0, 162, 255, 0.8), rgba(0, 120, 212, 0.9)), url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1920') center/cover;
+      background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.8)), url('https://images.unsplash.com/photo-1578662996442-48f60103fc96?w=1920') center/cover;
       display: flex;
       align-items: flex-end;
       padding: 40px 16px;
-      border-radius: 20px;
+      border-radius: 12px;
       margin: 20px;
-      box-shadow: 0 10px 30px rgba(0, 162, 255, 0.3);
-      border: 3px solid rgba(255, 255, 255, 0.2);
     }
 
     .hero-content {
@@ -247,30 +214,24 @@
     }
 
     .hero-btn.primary {
-      background: linear-gradient(45deg, #00FF88, #00D4AA);
-      color: #002040;
-      font-weight: 800;
-      box-shadow: 0 4px 15px rgba(0, 255, 136, 0.4);
+      background: #06C167;
+      color: #000000;
+      font-weight: 600;
     }
 
     .hero-btn.primary:hover {
-      background: linear-gradient(45deg, #00D4AA, #00B894);
-      transform: translateY(-3px);
-      box-shadow: 0 6px 20px rgba(0, 255, 136, 0.6);
+      background: #049451;
     }
 
     .hero-btn.secondary {
-      background: rgba(255,255,255,0.9);
-      color: #002040;
-      backdrop-filter: blur(12px);
-      font-weight: 700;
-      border: 2px solid rgba(0, 162, 255, 0.3);
+      background: rgba(255,255,255,0.15);
+      color: #ffffff;
+      border: 1px solid rgba(255,255,255,0.3);
+      backdrop-filter: blur(8px);
     }
 
     .hero-btn.secondary:hover {
-      background: rgba(255,255,255,1);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 15px rgba(255, 255, 255, 0.4);
+      background: rgba(255,255,255,0.25);
     }
 
     /* Secciones de carruseles */
@@ -283,24 +244,13 @@
     }
 
     .section-title {
-      font-size: 48px;
-      font-weight: 900;
-      margin-bottom: 25px;
-      padding: 0 20px;
+      font-size: 22px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      padding: 0 16px;
       color: #ffffff;
-      text-shadow: 
-        4px 4px 0px #002040,
-        8px 8px 0px rgba(0, 32, 64, 0.3);
       font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-      text-transform: uppercase;
-      letter-spacing: 3px;
-      animation: titleBounce 4s ease-in-out infinite;
-    }
-
-    @keyframes titleBounce {
-      0%, 100% { transform: translateX(0px) rotate(0deg); }
-      25% { transform: translateX(5px) rotate(1deg); }
-      75% { transform: translateX(-3px) rotate(-0.5deg); }
+      letter-spacing: -0.3px;
     }
 
     .carousel-container {
@@ -324,43 +274,20 @@
 
     .carousel-item {
       flex-shrink: 0;
-      width: 200px;
-      height: 300px;
-      border-radius: 25px;
+      width: 180px;
+      height: 270px;
+      border-radius: 8px;
       overflow: hidden;
       cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      transition: transform 0.2s ease, opacity 0.2s ease;
       position: relative;
-      background: #ffffff;
-      border: 6px solid #00A2FF;
-      box-shadow: 0 8px 25px rgba(0, 162, 255, 0.4);
-      animation: itemFloat 5s ease-in-out infinite;
-    }
-
-    .carousel-item:nth-child(odd) {
-      animation-delay: 1s;
-    }
-
-    .carousel-item:nth-child(even) {
-      animation-delay: 2s;
-    }
-
-    @keyframes itemFloat {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-8px) rotate(1deg); }
+      background: #161616;
+      border: 1px solid #2d2d2d;
     }
 
     .carousel-item:hover {
-      transform: scale(1.15) translateY(-15px) rotate(5deg);
-      box-shadow: 0 25px 60px rgba(0, 255, 136, 0.6);
-      border-color: #00FF88;
-      animation: itemWobble 0.6s ease-in-out;
-    }
-
-    @keyframes itemWobble {
-      0%, 100% { transform: scale(1.15) translateY(-15px) rotate(5deg); }
-      25% { transform: scale(1.2) translateY(-18px) rotate(8deg); }
-      75% { transform: scale(1.1) translateY(-12px) rotate(2deg); }
+      transform: scale(1.04);
+      border-color: #555555;
     }
 
     .carousel-item img {
@@ -391,80 +318,56 @@
       color: #71767b;
     }
 
-    /* Badge estilo MrBeast */
+    /* Badge estilo Uber */
     .movie-badge {
       position: absolute;
-      top: 15px;
-      right: 15px;
-      background: linear-gradient(45deg, #FF6B35, #F7931E);
-      color: white;
-      padding: 10px 18px;
-      border-radius: 30px;
-      font-size: 14px;
-      font-weight: 900;
+      top: 8px;
+      right: 8px;
+      background: rgba(0,0,0,0.75);
+      color: #ffffff;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 600;
       text-transform: uppercase;
-      animation: badgeBounce 3s ease-in-out infinite;
-      box-shadow: 0 6px 20px rgba(255, 107, 53, 0.6);
       z-index: 10;
-      border: 4px solid #ffffff;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      backdrop-filter: blur(4px);
     }
 
-    @keyframes badgeBounce {
-      0%, 100% { transform: scale(1) rotate(0deg); }
-      25% { transform: scale(1.1) rotate(5deg); }
-      75% { transform: scale(0.95) rotate(-3deg); }
-    }
-
-    /* Badge de estreno estilo cartoon */
+    /* Badge de estreno */
     .premiere-badge {
       position: absolute;
-      top: 15px;
-      left: 15px;
-      background: linear-gradient(45deg, #00FF88, #00D4AA);
-      color: #002040;
-      padding: 10px 18px;
-      border-radius: 30px;
-      font-size: 14px;
-      font-weight: 900;
+      top: 8px;
+      left: 8px;
+      background: #06C167;
+      color: #000000;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
       text-transform: uppercase;
-      animation: premiereSpin 4s ease-in-out infinite;
-      box-shadow: 0 6px 20px rgba(0, 255, 136, 0.6);
       z-index: 10;
-      border: 4px solid #ffffff;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
 
-    @keyframes premiereSpin {
-      0%, 90%, 100% { transform: rotate(0deg) scale(1); }
-      95% { transform: rotate(360deg) scale(1.1); }
-    }
-
-    /* Badge EN VIVO estilo explosivo */
+    /* Badge EN VIVO */
     .live-badge {
       position: absolute;
-      top: 15px;
-      left: 15px;
-      background: linear-gradient(45deg, #FF3838, #FF6B6B);
-      color: white;
-      padding: 10px 18px;
-      border-radius: 30px;
-      font-size: 14px;
-      font-weight: 900;
+      top: 8px;
+      left: 8px;
+      background: #d93025;
+      color: #ffffff;
+      padding: 4px 10px;
+      border-radius: 4px;
+      font-size: 11px;
+      font-weight: 700;
       text-transform: uppercase;
-      animation: liveExplosion 2s ease-in-out infinite;
-      box-shadow: 0 6px 20px rgba(255, 56, 56, 0.8);
       z-index: 10;
-      border: 4px solid #ffffff;
-      letter-spacing: 1px;
+      letter-spacing: 0.5px;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-    }
-
-    @keyframes liveExplosion {
-      0%, 100% { transform: scale(1) rotate(0deg); }
-      50% { transform: scale(1.2) rotate(10deg); }
     }
 
     /* Overlay de bloqueo estilo Roblox */
@@ -474,79 +377,57 @@
       left: 0;
       right: 0;
       bottom: 0;
-      background: linear-gradient(135deg, rgba(0, 120, 212, 0.95), rgba(0, 90, 159, 0.95));
+      background: rgba(0,0,0,0.85);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       color: white;
-      border-radius: 15px;
+      border-radius: 8px;
       z-index: 15;
-      backdrop-filter: blur(12px);
-      border: 3px solid rgba(0, 255, 136, 0.4);
-      box-shadow: inset 0 0 20px rgba(0, 162, 255, 0.3);
+      backdrop-filter: blur(8px);
     }
 
     .locked-icon {
-      font-size: 45px;
-      margin-bottom: 12px;
-      color: #00FF88;
-      text-shadow: 0 0 25px rgba(0, 255, 136, 0.8);
-      animation: robloxLockPulse 2s ease-in-out infinite;
+      font-size: 28px;
+      margin-bottom: 10px;
+      color: #ababab;
     }
 
     .locked-text {
-      font-size: 14px;
+      font-size: 12px;
       text-align: center;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      font-weight: 600;
       margin-bottom: 4px;
     }
 
     .release-date {
       font-size: 11px;
-      color: #71767b;
+      color: #ababab;
       margin-top: 4px;
-      font-weight: 600;
     }
 
-    @keyframes robloxLockPulse {
-      0%, 100% {
-        transform: scale(1) rotate(-5deg);
-        opacity: 0.8;
-        text-shadow: 0 0 25px rgba(0, 255, 136, 0.8);
-      }
-      50% {
-        transform: scale(1.15) rotate(5deg);
-        opacity: 1;
-        text-shadow: 0 0 35px rgba(0, 255, 136, 1);
-      }
-    }
-
-    /* Cuenta regresiva estilo Roblox */
+    /* Cuenta regresiva */
     .countdown-overlay {
       position: absolute;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: linear-gradient(135deg, rgba(0, 162, 255, 0.9), rgba(0, 120, 212, 0.9));
+      background: rgba(0,0,0,0.85);
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
       color: white;
-      border-radius: 15px;
+      border-radius: 8px;
       z-index: 20;
-      backdrop-filter: blur(15px);
-      border: 3px solid rgba(0, 255, 136, 0.3);
-      box-shadow: 0 0 30px rgba(0, 162, 255, 0.5);
+      backdrop-filter: blur(8px);
     }
 
     .countdown-title {
-      font-size: 14px;
-      font-weight: 700;
+      font-size: 13px;
+      font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 1px;
       margin-bottom: 12px;
@@ -560,32 +441,28 @@
     }
 
     .countdown-segment {
-      background: linear-gradient(135deg, rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.7));
-      border-radius: 12px;
-      padding: 10px 8px;
-      min-width: 40px;
+      background: #1a1a1a;
+      border-radius: 6px;
+      padding: 8px 6px;
+      min-width: 36px;
       text-align: center;
-      backdrop-filter: blur(8px);
-      border: 2px solid rgba(0, 255, 136, 0.4);
-      box-shadow: 0 4px 15px rgba(0, 162, 255, 0.3);
+      border: 1px solid #2d2d2d;
     }
 
     .countdown-number {
-      font-size: 20px;
-      font-weight: 900;
+      font-size: 18px;
+      font-weight: 700;
       line-height: 1;
       display: block;
-      color: #002040;
-      text-shadow: 1px 1px 2px rgba(0, 32, 64, 0.3);
+      color: #ffffff;
     }
 
     .countdown-label {
       font-size: 9px;
       text-transform: uppercase;
-      opacity: 0.9;
-      font-weight: 700;
+      font-weight: 500;
       margin-top: 3px;
-      color: #005A9F;
+      color: #ababab;
     }
 
     .countdown-premiere-time {
@@ -712,35 +589,17 @@
       }
     }
 
-    /* Vista expandida de serie estilo Cartoon Network */
+    /* Vista expandida de serie estilo Uber */
     .series-detail {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: linear-gradient(135deg, #1a0033 0%, #330066 25%, #000033 50%, #660033 75%, #1a0033 100%);
-      background-size: 400% 400%;
-      animation: cartoonGradient 20s ease-in-out infinite;
+      background: #000000;
       z-index: 3000;
       display: none;
       overflow-y: auto;
-      background-attachment: fixed;
-    }
-
-    .series-detail::before {
-      content: '';
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-image: 
-        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><circle cx="30" cy="30" r="8" fill="%23FFD700" opacity="0.9"/><circle cx="170" cy="50" r="6" fill="%23FF1493" opacity="0.8"/><circle cx="100" cy="150" r="10" fill="%2300FF88" opacity="0.9"/><circle cx="50" cy="120" r="7" fill="%239D4EDD" opacity="0.8"/><circle cx="150" cy="180" r="9" fill="%23FF6B35" opacity="0.9"/><polygon points="80,20 85,30 75,30" fill="%23FFD700" opacity="0.7"/><polygon points="160,100 170,115 150,115" fill="%23FF1493" opacity="0.7"/></svg>');
-      background-size: 200px 200px;
-      animation: cartoonShapes 25s ease-in-out infinite;
-      z-index: -1;
-      pointer-events: none;
     }
 
     .series-detail.active {
@@ -809,66 +668,57 @@
 
     .series-close-btn {
       position: absolute;
-      top: 20px;
-      right: 20px;
-      background: linear-gradient(45deg, #FF6B35, #F7931E);
-      border: 5px solid #ffffff;
+      top: 16px;
+      right: 16px;
+      background: rgba(0,0,0,0.6);
+      border: 1px solid #2d2d2d;
       color: #ffffff;
-      width: 60px;
-      height: 60px;
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 28px;
+      font-size: 18px;
       cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-      backdrop-filter: blur(15px);
+      transition: background 0.2s ease;
+      backdrop-filter: blur(8px);
       z-index: 10;
-      box-shadow: 0 8px 25px rgba(255, 107, 53, 0.6);
-      animation: buttonBreathe 3s ease-in-out infinite;
     }
 
     .series-close-btn:hover {
-      background: linear-gradient(45deg, #F7931E, #FF6B35);
-      transform: scale(1.2) rotate(90deg);
-      box-shadow: 0 15px 40px rgba(255, 107, 53, 0.8);
-      animation: buttonWobble 0.6s ease-in-out;
+      background: rgba(0,0,0,0.85);
     }
 
-    /* Botón de play circular estilo Roblox */
+    /* Botón de play circular */
     .netflix-play-btn {
       position: absolute;
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 90px;
-      height: 90px;
-      background: linear-gradient(45deg, #00FF88, #00D4AA);
-      border: 4px solid rgba(255, 255, 255, 0.6);
+      width: 72px;
+      height: 72px;
+      background: rgba(255,255,255,0.15);
+      border: 2px solid rgba(255,255,255,0.6);
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       cursor: pointer;
       z-index: 10;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(15px);
-      box-shadow: 0 6px 25px rgba(0, 255, 136, 0.5);
+      transition: background 0.2s ease;
+      backdrop-filter: blur(8px);
     }
 
     .netflix-play-btn:hover {
-      transform: translate(-50%, -50%) scale(1.15);
-      background: linear-gradient(45deg, #00D4AA, #00B894);
-      box-shadow: 0 10px 35px rgba(0, 255, 136, 0.7);
-      border-color: rgba(255, 255, 255, 0.9);
+      transform: translate(-50%, -50%) scale(1.08);
+      background: rgba(255,255,255,0.25);
     }
 
     .netflix-play-btn i {
-      font-size: 32px;
-      color: #002040;
-      margin-left: 6px;
-      text-shadow: 1px 1px 2px rgba(0, 32, 64, 0.3);
+      font-size: 28px;
+      color: #ffffff;
+      margin-left: 4px;
     }
 
     /* Loading spinner mejorado para el botón */
@@ -938,53 +788,37 @@
     }
 
     .series-detail-title {
-      font-size: 64px;
-      font-weight: 900;
-      margin-bottom: 20px;
-      text-shadow: 
-        5px 5px 0px #FF1493,
-        10px 10px 0px #9D4EDD,
-        15px 15px 0px rgba(0, 0, 0, 0.3);
-      color: #FFD700;
-      animation: logoWobble 3s ease-in-out infinite;
-      text-transform: uppercase;
-      letter-spacing: 4px;
+      font-size: 40px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #ffffff;
+      letter-spacing: -1px;
     }
 
     .series-detail-meta {
       display: flex;
-      gap: 16px;
-      margin-bottom: 20px;
-      font-size: 16px;
-      color: #e7e9ea;
-      font-weight: 600;
+      gap: 8px;
+      margin-bottom: 16px;
+      font-size: 14px;
+      color: #ababab;
+      flex-wrap: wrap;
     }
 
     .series-detail-meta span {
-      background: linear-gradient(45deg, #00FF88, #00D4AA);
-      color: #002040;
-      padding: 8px 16px;
-      border-radius: 25px;
-      backdrop-filter: blur(8px);
-      font-weight: 800;
-      border: 3px solid #ffffff;
-      box-shadow: 0 4px 15px rgba(0, 255, 136, 0.4);
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      background: rgba(255,255,255,0.1);
+      color: #ffffff;
+      padding: 4px 12px;
+      border-radius: 4px;
+      font-weight: 500;
+      border: 1px solid rgba(255,255,255,0.2);
+      font-size: 13px;
     }
 
     .series-detail-description {
-      font-size: 20px;
+      font-size: 15px;
       line-height: 1.6;
-      color: #ffffff;
-      text-shadow: 2px 2px 4px rgba(0,0,0,0.8);
-      background: rgba(0, 0, 0, 0.7);
-      padding: 25px;
-      border-radius: 25px;
-      backdrop-filter: blur(20px);
-      border: 5px solid rgba(255, 255, 255, 0.2);
-      font-weight: 600;
-      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
+      color: #ababab;
+      font-weight: 400;
     }
 
     .series-actions {
@@ -998,56 +832,40 @@
 
 
     .series-btn {
-      padding: 20px 40px;
-      border: 6px solid #ffffff;
-      border-radius: 50px;
-      font-weight: 900;
-      font-size: 20px;
+      padding: 14px 28px;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      font-size: 15px;
       cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      transition: background 0.2s ease;
       display: flex;
       align-items: center;
-      gap: 12px;
-      min-width: 200px;
+      gap: 8px;
       justify-content: center;
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      animation: buttonBreathe 3s ease-in-out infinite;
-      text-shadow: 2px 2px 0px rgba(0, 0, 0, 0.3);
     }
 
     .series-btn.primary {
-      background: linear-gradient(45deg, #FFD700, #FFA500);
+      background: #06C167;
       color: #000000;
-      box-shadow: 0 8px 25px rgba(255, 215, 0, 0.6);
-      border-color: #FF1493;
     }
 
     .series-btn.primary:hover {
-      background: linear-gradient(45deg, #FFA500, #FFD700);
-      transform: translateY(-8px) scale(1.05);
-      box-shadow: 0 15px 40px rgba(255, 215, 0, 0.8);
-      animation: buttonWobble 0.6s ease-in-out;
+      background: #049451;
     }
 
     .series-btn.secondary {
-      background: linear-gradient(45deg, #00FF88, #00D4AA);
-      color: #002040;
-      border-color: #ffffff;
-      backdrop-filter: blur(15px);
-      box-shadow: 0 8px 25px rgba(0, 255, 136, 0.4);
+      background: rgba(255,255,255,0.1);
+      color: #ffffff;
+      border: 1px solid rgba(255,255,255,0.2);
     }
 
     .series-btn.secondary:hover {
-      background: linear-gradient(45deg, #00D4AA, #00B894);
-      border-color: #FFD700;
-      transform: translateY(-8px) scale(1.05);
-      box-shadow: 0 15px 40px rgba(0, 255, 136, 0.6);
-      animation: buttonWobble 0.6s ease-in-out;
+      background: rgba(255,255,255,0.18);
     }
 
     .series-btn i {
-      font-size: 20px;
+      font-size: 16px;
     }
 
     /* Lista de episodios */
@@ -1056,39 +874,28 @@
     }
 
     .episodes-title {
-      font-size: 36px;
-      font-weight: 900;
-      margin-bottom: 25px;
-      color: #FFD700;
-      text-shadow: 
-        3px 3px 0px #FF1493,
-        6px 6px 0px rgba(0, 0, 0, 0.3);
-      text-transform: uppercase;
-      letter-spacing: 2px;
-      animation: titleBounce 4s ease-in-out infinite;
+      font-size: 20px;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #ffffff;
+      letter-spacing: -0.3px;
     }
 
     .episode-item {
       display: flex;
-      gap: 20px;
-      padding: 20px;
-      border-radius: 25px;
-      margin-bottom: 20px;
-      background: rgba(0, 0, 0, 0.7);
+      gap: 16px;
+      padding: 16px;
+      border-radius: 8px;
+      margin-bottom: 12px;
+      background: #161616;
       cursor: pointer;
-      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-      border: 5px solid #00A2FF;
-      backdrop-filter: blur(20px);
-      box-shadow: 0 8px 25px rgba(0, 162, 255, 0.4);
-      animation: itemFloat 5s ease-in-out infinite;
+      transition: background 0.2s ease;
+      border: 1px solid #2d2d2d;
     }
 
     .episode-item:hover {
-      background: rgba(0, 255, 136, 0.1);
-      border-color: #00FF88;
-      transform: translateY(-8px) scale(1.02);
-      box-shadow: 0 15px 40px rgba(0, 255, 136, 0.6);
-      animation: itemWobble 0.6s ease-in-out;
+      background: #1a1a1a;
+      border-color: #555555;
     }
 
     .episode-thumbnail {
@@ -1112,7 +919,7 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      background: linear-gradient(45deg, #00FF88, #00D4AA);
+      background: rgba(0,0,0,0.6);
       border-radius: 50%;
       width: 36px;
       height: 36px;
@@ -1160,14 +967,14 @@
       line-height: 1.4;
     }
 
-    /* Reproductor de video estilo Cartoon Network */
+    /* Reproductor de video */
     .video-player {
       position: fixed;
       top: 0;
       left: 0;
       right: 0;
       bottom: 0;
-      background: linear-gradient(135deg, #000000 0%, #1a0033 50%, #000000 100%);
+      background: #000000;
       z-index: 4000;
       display: none;
     }
@@ -1572,82 +1379,52 @@
       }
     }
 
-    /* Navegación inferior estilo MrBeast */
+    /* Navegación inferior estilo Uber */
     .bottom-nav {
       position: fixed;
       bottom: 0;
       left: 0;
       right: 0;
-      background: linear-gradient(135deg, #FF6B35, #F7931E);
-      backdrop-filter: blur(20px);
-      border-top: 6px solid #ffffff;
+      background: #000000;
+      border-top: 1px solid #2d2d2d;
       display: flex;
       justify-content: space-around;
-      padding: 20px 0;
+      padding: 12px 0;
       z-index: 1000;
-      box-shadow: 0 -10px 40px rgba(255, 107, 53, 0.5);
-      animation: navFloat 6s ease-in-out infinite;
       -webkit-backdrop-filter: blur(20px);
-      padding-bottom: env(safe-area-inset-bottom, 20px);
-    }
-
-    @keyframes navFloat {
-      0%, 100% { transform: translateY(0px); }
-      50% { transform: translateY(-3px); }
+      padding-bottom: env(safe-area-inset-bottom, 12px);
     }
 
     .bottom-nav button {
-      background: rgba(255, 255, 255, 0.9);
-      border: 4px solid #ffffff;
-      color: #002040;
+      background: transparent;
+      border: none;
+      color: #ababab;
       display: flex;
       flex-direction: column;
       align-items: center;
-      font-size: 14px;
-      font-weight: 900;
+      font-size: 11px;
+      font-weight: 500;
       cursor: pointer;
-      padding: 15px 20px;
-      border-radius: 25px;
-      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-      min-width: 90px;
-      backdrop-filter: blur(15px);
-      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
-      text-transform: uppercase;
-      letter-spacing: 1px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      transition: color 0.2s ease;
+      min-width: 64px;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-      animation: navButtonFloat 4s ease-in-out infinite;
-    }
-
-    .bottom-nav button:nth-child(1) { animation-delay: 0s; }
-    .bottom-nav button:nth-child(2) { animation-delay: 0.5s; }
-    .bottom-nav button:nth-child(3) { animation-delay: 1s; }
-    .bottom-nav button:nth-child(4) { animation-delay: 1.5s; }
-
-    @keyframes navButtonFloat {
-      0%, 100% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-5px) rotate(2deg); }
     }
 
     .bottom-nav button:hover,
     .bottom-nav button.active {
       color: #ffffff;
-      background: linear-gradient(45deg, #00FF88, #00D4AA);
-      border-color: #002040;
-      transform: translateY(-8px) scale(1.1);
-      box-shadow: 0 12px 30px rgba(0, 255, 136, 0.5);
-      animation: navButtonWobble 0.6s ease-in-out;
     }
 
-    @keyframes navButtonWobble {
-      0%, 100% { transform: translateY(-8px) scale(1.1) rotate(0deg); }
-      25% { transform: translateY(-10px) scale(1.15) rotate(5deg); }
-      75% { transform: translateY(-6px) scale(1.05) rotate(-3deg); }
+    .bottom-nav button.active i {
+      color: #06C167;
     }
 
     .bottom-nav button i {
-      font-size: 28px;
-      margin-bottom: 8px;
-      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      font-size: 22px;
+      margin-bottom: 4px;
+      transition: color 0.2s ease;
     }
 
     .bottom-nav button:hover i,
