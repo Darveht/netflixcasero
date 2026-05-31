@@ -505,6 +505,104 @@ hr,
   border-color: var(--uber-border) !important;
 }
 
+/* Botones adicionales y elementos de interfaz */
+.series-close-btn,
+.netflix-play-btn,
+.unlock-button {
+  border-radius: 999px !important;
+  border: 1px solid var(--uber-border) !important;
+  background: rgba(0,0,0,0.7) !important;
+  color: var(--uber-white) !important;
+}
+
+.series-close-btn:hover,
+.netflix-play-btn:hover {
+  background: rgba(0,0,0,0.9) !important;
+}
+
+/* Overlay de estreno en vivo — neutralizar gradiente rojo */
+.premiere-live-overlay,
+.countdown-overlay {
+  background: rgba(0,0,0,0.88) !important;
+  color: var(--uber-white) !important;
+}
+
+/* Badge EN VIVO — mantener rojo Uber-neutral */
+.live-badge,
+.live-badge-inline {
+  background: #d93025 !important;
+  color: var(--uber-white) !important;
+  border-color: #d93025 !important;
+}
+
+/* Banner de oferta especial */
+.special-offer-banner {
+  background: var(--uber-surface-elevated) !important;
+  border-color: var(--uber-green) !important;
+  border-radius: var(--uber-radius-lg) !important;
+}
+
+/* Overlay de bloqueo */
+.locked-overlay {
+  background: rgba(0,0,0,0.85) !important;
+  border-radius: var(--uber-radius-lg) !important;
+}
+
+/* Avatar con gradiente inline → neutralizar */
+.avatar-option[style*="linear-gradient"],
+.avatar-option[style*="gradient"] {
+  background: var(--uber-surface-muted) !important;
+  border-color: var(--uber-border) !important;
+}
+
+.avatar-option.selected {
+  border-color: var(--uber-green) !important;
+  outline: 2px solid var(--uber-green) !important;
+}
+
+/* Fondo de trial-offer.html */
+body[style*="linear-gradient"] {
+  background: var(--uber-black) !important;
+}
+
+/* Contenedor de oferta trial */
+.offer-container,
+.trial-container,
+.scanner-container {
+  background: var(--uber-surface-elevated) !important;
+  border: 1px solid var(--uber-border) !important;
+  border-radius: var(--uber-radius-lg) !important;
+}
+
+/* Mensaje de éxito fijo */
+.success-message {
+  background: var(--uber-surface-elevated) !important;
+  border: 1px solid var(--uber-green) !important;
+  color: var(--uber-white) !important;
+  border-radius: var(--uber-radius-lg) !important;
+}
+
+/* Carrusel 3D — quitar blur en tarjetas laterales */
+.plan-card.left,
+.plan-card.right {
+  filter: none !important;
+}
+
+/* Navegación inferior */
+.bottom-nav button i {
+  color: var(--uber-muted);
+}
+
+.bottom-nav button.active i {
+  color: var(--uber-white);
+}
+
+/* Sección de búsqueda */
+.search-section {
+  background: var(--uber-black) !important;
+  border-top: 1px solid var(--uber-border) !important;
+}
+
 /* Responsive polish */
 @media (max-width: 768px) {
   .welcome-container,

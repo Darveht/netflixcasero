@@ -535,7 +535,7 @@
         generateAvatars();
         document.getElementById('profileName').value = user.displayName || '';
       } else {
-        window.location.href = 'auth.html';
+        window.location.href = 'login.html';
       }
     });
 
@@ -688,7 +688,7 @@
     async function logout() {
       try {
         await auth.signOut();
-        window.location.href = 'auth.html';
+        window.location.href = 'login.html';
       } catch (error) {
         console.error('Error cerrando sesión:', error);
       }

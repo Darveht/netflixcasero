@@ -4020,10 +4020,10 @@
 
             } catch (error) {
               console.error('Error verificando usuario:', error);
-              window.location.href = 'auth.html';
+              window.location.href = 'login.html';
             }
           } else {
-            window.location.href = 'auth.html';
+            window.location.href = 'login.html';
           }
         });
       });
@@ -4052,7 +4052,7 @@
     function logoutFirebase() {
       auth.signOut().then(() => {
         localStorage.clear();
-        window.location.href = 'auth.html';
+        window.location.href = 'login.html';
       }).catch((error) => {
         console.error('Error cerrando sesión:', error);
       });
