@@ -1,0 +1,1 @@
+- [Zambik UI style system](zambik-ui-style.md) — all cartoon/MrBeast styles replaced with Uber design; color palette locked.
