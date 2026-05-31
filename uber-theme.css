@@ -1,0 +1,525 @@
+/*
+  Zambik Uber-inspired theme
+  Clean black/white interface, restrained spacing, neutral surfaces and one practical green accent.
+*/
+:root {
+  --uber-black: #000000;
+  --uber-surface: #111111;
+  --uber-surface-elevated: #161616;
+  --uber-surface-muted: #1f1f1f;
+  --uber-border: #2b2b2b;
+  --uber-border-strong: #3a3a3a;
+  --uber-white: #ffffff;
+  --uber-text: #f5f5f5;
+  --uber-muted: #a6a6a6;
+  --uber-subtle: #6b6b6b;
+  --uber-green: #06c167;
+  --uber-green-hover: #04a457;
+  --uber-danger: #e11900;
+  --uber-radius: 8px;
+  --uber-radius-lg: 12px;
+  --uber-font: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+html,
+body {
+  background: var(--uber-black) !important;
+  color: var(--uber-text) !important;
+  font-family: var(--uber-font) !important;
+  letter-spacing: -0.01em;
+}
+
+*,
+*::before,
+*::after {
+  text-shadow: none !important;
+  box-shadow: none !important;
+  filter: none !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  * {
+    transition-duration: 180ms !important;
+    transition-timing-function: ease !important;
+  }
+}
+
+/* Quita efectos caricaturescos sin tocar la estructura ni la lógica. */
+* {
+  animation-duration: 0.001ms !important;
+  animation-iteration-count: 1 !important;
+  animation-timing-function: linear !important;
+}
+
+body::before,
+body::after,
+.profile-container::before,
+.profile-container::after,
+.offer-container::before,
+.offer-container::after,
+.trial-container::before,
+.trial-container::after,
+.particles {
+  content: none !important;
+  display: none !important;
+}
+
+/* Superficies principales */
+.header,
+.profile-header,
+.offers-modal,
+.search-section,
+.settings-section,
+.history-section,
+.series-detail,
+.video-modal,
+.video-player-modal,
+.profile-container,
+.auth-container,
+.app-container,
+.main-container {
+  background: var(--uber-black) !important;
+}
+
+.welcome-container,
+.forms-container,
+.plan-card,
+.payment-section,
+.feature-card,
+.profile-form,
+.avatars-grid,
+.step,
+.settings-group,
+.setting-item,
+.history-item,
+.search-result-item,
+.episode-item,
+.info-tab-content,
+.live-content-card,
+.trial-card,
+.offer-card,
+.subscription-card,
+.content-card,
+.container,
+.form-section,
+.benefits,
+.terms,
+.scanner-instructions,
+.scanner-container,
+.scanner-controls,
+.success-message,
+.success-animation {
+  background: var(--uber-surface-elevated) !important;
+  border: 1px solid var(--uber-border) !important;
+  border-radius: var(--uber-radius-lg) !important;
+}
+
+.header,
+.profile-header,
+.bottom-nav {
+  border-color: var(--uber-border) !important;
+}
+
+.logo,
+.logo h1,
+.profile-title,
+.subscription-title,
+.welcome-title,
+.offers-title,
+.settings-title,
+.history-title,
+.section-title,
+.series-detail-title,
+.plan-name,
+.plan-price,
+.feature-title,
+.trial-title,
+.offer-title,
+.hero-title {
+  color: var(--uber-white) !important;
+  font-weight: 700 !important;
+  letter-spacing: -0.04em !important;
+  text-transform: none !important;
+}
+
+.subtitle,
+.logo p,
+.profile-subtitle,
+.subscription-subtitle,
+.welcome-description,
+.offers-subtitle,
+.settings-subtitle,
+.history-subtitle,
+.setting-description,
+.plan-period,
+.feature-description,
+.series-detail-description,
+.carousel-item-info,
+.search-result-description,
+.episode-description,
+.trial-description,
+.offer-description,
+.security-note,
+.validation-message,
+.user-info,
+.form-label {
+  color: var(--uber-muted) !important;
+  font-weight: 400 !important;
+  text-transform: none !important;
+}
+
+.welcome-subtitle,
+.auth-link a,
+.plan-features li i,
+.step-number,
+.settings-group-title i,
+.history-item-time i,
+.feature-icon,
+.payment-method i {
+  color: var(--uber-green) !important;
+}
+
+/* Botones estilo Uber: sobrios, legibles y sin brillo. */
+button,
+.main-btn,
+.auth-button,
+.offers-button,
+.plan-button,
+.hero-btn,
+.series-btn,
+.settings-btn,
+.history-btn,
+.profile-button,
+.logout-btn,
+.search-btn,
+.close-button,
+.search-close-btn,
+.settings-close-btn,
+.history-close-btn,
+.unlock-button,
+.carousel-nav,
+.cta-button,
+.claim-button,
+.submit-button,
+.back-button,
+.primary-button,
+.secondary-button,
+.login-link,
+.back-btn,
+.submit-btn,
+.scan-btn,
+.scanner-btn,
+.btn,
+.btn-primary,
+.btn-secondary {
+  border-radius: var(--uber-radius) !important;
+  border: 1px solid transparent !important;
+  font-family: var(--uber-font) !important;
+  font-weight: 600 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+  transform: none !important;
+}
+
+.main-btn.primary,
+.auth-button,
+.offers-button,
+.plan-button.primary,
+.hero-btn.primary,
+.series-btn.primary,
+.settings-btn.primary,
+.profile-button,
+.cta-button,
+.claim-button,
+.submit-button,
+.primary-button,
+.submit-btn,
+.btn-primary,
+.scanner-btn.capture,
+.step-number,
+.plan-card.popular::before {
+  background: var(--uber-green) !important;
+  color: var(--uber-black) !important;
+  border-color: var(--uber-green) !important;
+}
+
+.main-btn.primary:hover,
+.auth-button:hover,
+.offers-button:hover,
+.plan-button.primary:hover,
+.hero-btn.primary:hover,
+.series-btn.primary:hover,
+.settings-btn.primary:hover,
+.profile-button:hover,
+.cta-button:hover,
+.claim-button:hover,
+.submit-button:hover,
+.primary-button:hover,
+.submit-btn:hover,
+.btn-primary:hover,
+.scanner-btn.capture:hover {
+  background: var(--uber-green-hover) !important;
+  border-color: var(--uber-green-hover) !important;
+}
+
+.main-btn.secondary,
+.plan-button.secondary,
+.hero-btn.secondary,
+.series-btn.secondary,
+.settings-btn.secondary,
+.history-btn.secondary,
+.logout-btn,
+.search-btn,
+.close-button,
+.search-close-btn,
+.settings-close-btn,
+.history-close-btn,
+.unlock-button,
+.carousel-nav,
+.secondary-button,
+.back-button,
+.back-btn,
+.scan-btn,
+.scanner-btn.cancel,
+.btn-secondary,
+.auth-tab.active,
+.login-link {
+  background: var(--uber-white) !important;
+  color: var(--uber-black) !important;
+  border-color: var(--uber-white) !important;
+}
+
+.main-btn.secondary:hover,
+.plan-button.secondary:hover,
+.hero-btn.secondary:hover,
+.series-btn.secondary:hover,
+.settings-btn.secondary:hover,
+.history-btn.secondary:hover,
+.logout-btn:hover,
+.search-btn:hover,
+.close-button:hover,
+.search-close-btn:hover,
+.settings-close-btn:hover,
+.history-close-btn:hover,
+.unlock-button:hover,
+.carousel-nav:hover,
+.secondary-button:hover,
+.back-button:hover,
+.back-btn:hover,
+.scan-btn:hover,
+.scanner-btn.cancel:hover,
+.btn-secondary:hover,
+.login-link:hover {
+  background: #e7e7e7 !important;
+  border-color: #e7e7e7 !important;
+}
+
+/* Formularios */
+input,
+select,
+textarea,
+.form-input,
+.setting-select,
+.header input,
+#searchSectionInput {
+  background: var(--uber-surface-muted) !important;
+  color: var(--uber-white) !important;
+  border: 1px solid var(--uber-border) !important;
+  border-radius: var(--uber-radius) !important;
+  font-family: var(--uber-font) !important;
+  font-weight: 400 !important;
+}
+
+input:focus,
+select:focus,
+textarea:focus,
+.form-input:focus,
+.setting-select:focus,
+.header input:focus,
+#searchSectionInput:focus {
+  outline: 2px solid var(--uber-white) !important;
+  outline-offset: 2px !important;
+  border-color: var(--uber-white) !important;
+}
+
+.search-wrapper,
+.auth-tabs,
+.payment-method,
+.info-tab,
+.toggle-slider,
+.indicator,
+.avatar-option {
+  background: var(--uber-surface-muted) !important;
+  border: 1px solid var(--uber-border) !important;
+  border-radius: var(--uber-radius) !important;
+}
+
+.avatar-option,
+#userAvatar,
+.indicator,
+.carousel-nav,
+.close-button,
+.search-close-btn,
+.settings-close-btn,
+.history-close-btn {
+  border-radius: 999px !important;
+}
+
+.auth-tab,
+.info-tab,
+.bottom-nav button {
+  color: var(--uber-muted) !important;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+}
+
+.auth-tab.active,
+.info-tab.active,
+.bottom-nav button.active {
+  color: var(--uber-black) !important;
+  background: var(--uber-white) !important;
+}
+
+.bottom-nav {
+  background: var(--uber-black) !important;
+  border-top: 1px solid var(--uber-border) !important;
+}
+
+/* Tarjetas y contenido de streaming */
+.hero-banner,
+.series-detail-header,
+.carousel-item,
+.search-result-poster,
+.history-item-poster,
+.episode-thumbnail {
+  border-radius: var(--uber-radius-lg) !important;
+  border: 1px solid var(--uber-border) !important;
+  overflow: hidden !important;
+}
+
+.carousel-item-overlay,
+.series-detail-overlay,
+.history-progress-overlay {
+  background: linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.88) 100%) !important;
+}
+
+.movie-badge,
+.premiere-badge,
+.plan-card.popular::before,
+.live-badge,
+.badge,
+.status-badge,
+.offer-badge,
+.age-badge {
+  background: var(--uber-white) !important;
+  color: var(--uber-black) !important;
+  border: 1px solid var(--uber-white) !important;
+  border-radius: 999px !important;
+  font-weight: 700 !important;
+  letter-spacing: 0 !important;
+  text-transform: none !important;
+}
+
+.premiere-badge,
+.live-badge,
+.status-badge.active,
+.badge.active,
+.age-badge {
+  background: var(--uber-green) !important;
+  color: var(--uber-black) !important;
+  border-color: var(--uber-green) !important;
+}
+
+/* Anula colores inline o gradientes chillones generados dinámicamente. */
+[style*="linear-gradient"],
+[style*="#FFD700"],
+[style*="#FFA500"],
+[style*="#FF1493"],
+[style*="#FF6B35"],
+[style*="#F7931E"],
+[style*="#00FF88"],
+[style*="255, 215"],
+[style*="255, 20, 147"],
+[style*="255, 107, 53"],
+[style*="0, 255, 136"] {
+  background: var(--uber-surface-elevated) !important;
+  color: var(--uber-white) !important;
+  border-color: var(--uber-border) !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+}
+
+[style*="color: #FF1493"],
+[style*="color:#FF1493"],
+[style*="color: #00FF88"],
+[style*="color:#00FF88"],
+[style*="color: #FFD700"],
+[style*="color:#FFD700"] {
+  color: var(--uber-white) !important;
+}
+
+button[style*="linear-gradient"],
+.settings-btn[style*="linear-gradient"],
+.notification[style*="linear-gradient"] {
+  background: var(--uber-white) !important;
+  color: var(--uber-black) !important;
+  border-color: var(--uber-white) !important;
+}
+
+.message,
+.notification,
+.toast,
+.welcome-message {
+  background: var(--uber-surface-elevated) !important;
+  border: 1px solid var(--uber-border) !important;
+  color: var(--uber-white) !important;
+  border-radius: var(--uber-radius-lg) !important;
+}
+
+.message.error,
+.notification.error {
+  border-color: var(--uber-danger) !important;
+}
+
+.message.success,
+.notification.success {
+  border-color: var(--uber-green) !important;
+}
+
+.progress-bar,
+.history-progress-bar,
+.video-progress-fill,
+.toggle-switch input:checked + .toggle-slider,
+.indicator.active {
+  background: var(--uber-green) !important;
+}
+
+hr,
+.plan-features li,
+.setting-item,
+.payment-method,
+.info-tab-content {
+  border-color: var(--uber-border) !important;
+}
+
+/* Responsive polish */
+@media (max-width: 768px) {
+  .welcome-container,
+  .forms-container,
+  .plan-card,
+  .settings-group,
+  .payment-section {
+    border-radius: var(--uber-radius-lg) !important;
+  }
+
+  .logo,
+  .logo h1,
+  .welcome-title,
+  .subscription-title,
+  .profile-title {
+    letter-spacing: -0.035em !important;
+  }
+}
