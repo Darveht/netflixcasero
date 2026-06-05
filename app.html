@@ -295,6 +295,18 @@
       color: #71767b;
     }
 
+    .catalog-empty-state {
+      min-width: 280px;
+      width: min(520px, calc(100vw - 32px));
+      padding: 24px;
+      border: 1px dashed #3a3a3a;
+      border-radius: 12px;
+      background: #111111;
+      color: #a6a6a6;
+      font-size: 15px;
+      line-height: 1.4;
+    }
+
     /* Badge estilo Uber */
     .movie-badge {
       position: absolute;
@@ -702,13 +714,8 @@
     }
 
     .netflix-play-btn.loading::after {
-      content: '';
-      width: 20px;
-      height: 20px;
-      border: 2px solid transparent;
-      border-top: 2px solid #1d9bf0;
-      border-radius: 50%;
-      animation: innerSpin 0.8s linear infinite;
+      content: none;
+      display: none;
     }
 
     @keyframes netflixSpin {
@@ -3092,41 +3099,7 @@
       <div class="section">
         <h2 class="section-title">Películas</h2>
         <div class="carousel-container">
-          <div class="carousel" id="moviesCarousel">
-            <div class="carousel-item" onclick="showSeriesDetail('dontlookaway')">
-              <img src="https://i.ytimg.com/vi/4f3hG-5grlw/maxresdefault.jpg" alt="DON'T LOOK AWAY">
-              <div class="movie-badge">Película</div>
-              <div class="carousel-item-overlay">
-                <div class="carousel-item-title">DON'T LOOK AWAY</div>
-                <div class="carousel-item-info">2025 • Terror • Thriller</div>
-              </div>
-            </div>
-            <div class="carousel-item" onclick="handleMovieClick('notemuevas')">
-              <img src="https://i.ibb.co/DDh79krZ/image.png" alt="NO TE MUEVAS">
-              <div class="movie-badge">Película</div>
-              <div id="notemuevas-badge" class="premiere-badge">Estreno</div>
-              <div class="carousel-item-overlay">
-                <div class="carousel-item-title">NO TE MUEVAS</div>
-                <div class="carousel-item-info">2025 • Terror</div>
-              </div>
-            </div>
-            <div class="carousel-item" onclick="showSeriesDetail('doublevision')">
-              <img src="https://m.media-amazon.com/images/M/MV5BODZiOGIxZTQtZjA2My00NzY3LTlkZTktZmFlZjJkOThhN2NjXkEyXkFqcGc@._V1_QL75_UX190_CR0,2,190,281_.jpg" alt="DOUBLE VISION">
-              <div class="movie-badge">Película</div>
-              <div class="carousel-item-overlay">
-                <div class="carousel-item-title">DOUBLE VISION</div>
-                <div class="carousel-item-info">2025 • Terror</div>
-              </div>
-            </div>
-            <div class="carousel-item" onclick="showSeriesDetail('thecandleman')">
-              <img src="https://i.ytimg.com/vi/i229gWn3Z5A/maxresdefault.jpg" alt="THE CANDLE MAN">
-              <div class="movie-badge">Cortometraje</div>
-              <div class="carousel-item-overlay">
-                <div class="carousel-item-title">THE CANDLE MAN</div>
-                <div class="carousel-item-info">2024 • Terror</div>
-              </div>
-            </div>
-          </div>
+          <div class="carousel" id="moviesCarousel"></div>
         </div>
       </div>
 
@@ -3134,16 +3107,7 @@
       <div class="section">
         <h2 class="section-title">Tendencias</h2>
         <div class="carousel-container">
-          <div class="carousel" id="trendingCarousel">
-            <div class="carousel-item" onclick="showSeriesDetail('dontlookaway')">
-              <img src="https://i0.wp.com/lugarnenhum.net/wp-content/uploads/2019/02/dont-look-away-e1549769239207-1024x512.png?resize=1024%2C512&ssl=1" alt="DON'T LOOK AWAY">
-              <div class="movie-badge">Película</div>
-              <div class="carousel-item-overlay">
-                <div class="carousel-item-title">DON'T LOOK AWAY</div>
-                <div class="carousel-item-info">2025 • Terror</div>
-              </div>
-            </div>
-          </div>
+          <div class="carousel" id="trendingCarousel"></div>
         </div>
       </div>
 
@@ -3151,9 +3115,7 @@
       <div class="section">
         <h2 class="section-title">Anime</h2>
         <div class="carousel-container">
-          <div class="carousel" id="animeCarousel">
-
-          </div>
+          <div class="carousel" id="animeCarousel"></div>
         </div>
       </div>
 
@@ -3161,74 +3123,46 @@
       <div class="section">
         <h2 class="section-title">Terror</h2>
         <div class="carousel-container">
-          <div class="carousel" id="terrorCarousel">
-            <div class="carousel-item" onclick="handleMovieClick('notemuevas')">
-              <img src="https://i.ibb.co/DDh79krZ/image.png" alt="NO TE MUEVAS">
-              <div class="movie-badge">Película</div>
-              <div id="notemuevas-badge" class="premiere-badge">Estreno</div>
-              <div class="carousel-item-overlay">
-                <div class="carousel-item-title">NO TE MUEVAS</div>
-                <div class="carousel-item-info">2025 • Terror</div>
-              </div>
-            </div>
-            <div class="carousel-item" onclick="showSeriesDetail('dontlookaway')">
-              <img src="https://i.ytimg.com/vi/4f3hG-5grlw/maxresdefault.jpg" alt="DON'T LOOK AWAY">
-              <div class="movie-badge">Película</div>
-              <div class="carousel-item-overlay">
-                <div class="carousel-item-title">DON'T LOOK AWAY</div>
-                <div class="carousel-item-info">Película completa</div>
-              </div>
-            </div>
-          </div>
+          <div class="carousel" id="terrorCarousel"></div>
         </div>
       </div>
-
-      
     </div>
   </div>
+
 
   <!-- Vista detallada de serie -->
   <div id="seriesDetail" class="series-detail">
     <div class="series-detail-header" id="seriesDetailHeader">
-      <!-- Imagen de fondo -->
       <div class="series-detail-background" id="seriesDetailBackground"></div>
 
-      <!-- Video de trailer de fondo -->
       <video class="series-detail-video" id="seriesDetailVideo"
              muted autoplay loop playsinline webkit-playsinline x5-playsinline
              style="display: none;">
       </video>
 
-      <!-- Overlay gradiente -->
       <div class="series-detail-overlay"></div>
 
-      <!-- Botón de play circular -->
       <div class="netflix-play-btn" id="netflixPlayBtn" onclick="playMainMovie()">
         <i class="fas fa-play"></i>
       </div>
 
-      <!-- Indicador de sonido -->
       <div class="sound-indicator" id="soundToggle" onclick="toggleTrailerSound()">
         <i class="fas fa-volume-mute"></i>
       </div>
 
-      <!-- Botón de cerrar -->
       <button class="series-close-btn" onclick="closeSeriesDetail()">
         <i class="fas fa-times"></i>
       </button>
 
-      <!-- Contenido de texto -->
       <div class="series-detail-content">
-        <h1 class="series-detail-title" id="seriesDetailTitle">DON'T LOOK AWAY</h1>
+        <h1 class="series-detail-title" id="seriesDetailTitle">Título</h1>
         <div class="series-detail-meta" id="seriesDetailMeta">
-          <span>2025</span>
-          <span>Película</span>
-          <span>Terror</span>
-          <span>18+</span>
+          <span>Año</span>
+          <span>Tipo</span>
+          <span>Género</span>
+          <span>Clasificación</span>
         </div>
-        <p class="series-detail-description" id="seriesDetailDescription">
-          Una aterradora experiencia cinematográfica que desafía los límites del horror psicológico.
-        </p>
+        <p class="series-detail-description" id="seriesDetailDescription">Selecciona contenido para ver sus detalles.</p>
       </div>
     </div>
 
@@ -3247,23 +3181,20 @@
       </button>
     </div>
 
-    <!-- Información adicional -->
     <div class="series-info-section">
       <div class="info-tabs">
         <button class="info-tab active" onclick="showInfoTab('episodes')">Episodios</button>
         <button class="info-tab" onclick="showInfoTab('details')">Detalles</button>
         <button class="info-tab" onclick="showInfoTab('similar')">Similares</button>
       </div>
-      
+
       <div id="episodesTab" class="info-tab-content active">
         <div class="episodes-section">
           <h3 class="episodes-title">Película</h3>
-          <div id="episodesList">
-            <!-- Los episodios se cargarán dinámicamente -->
-          </div>
+          <div id="episodesList"></div>
         </div>
       </div>
-      
+
       <div id="detailsTab" class="info-tab-content">
         <div class="details-content">
           <div class="detail-row">
@@ -3288,15 +3219,11 @@
           </div>
         </div>
       </div>
-      
+
       <div id="similarTab" class="info-tab-content">
-        <div class="similar-content" id="similarContent">
-          <!-- Contenido similar se cargará aquí -->
-        </div>
+        <div class="similar-content" id="similarContent"></div>
       </div>
     </div>
-
-
   </div>
 
   <!-- Reproductor de video -->
@@ -4007,8 +3934,8 @@
 
     // Función para manejar clics de películas especiales
     function handleMovieClick(movieId) {
-      if (movieId === 'notemuevas') {
-        showSeriesDetail('notemuevas');
+      if (seriesDatabase[movieId]) {
+        showSeriesDetail(movieId);
       }
     }
 
@@ -4021,6 +3948,9 @@
 
       // Configurar búsqueda
       setupSearch();
+
+      // Renderizar catálogo desde una sola fuente de datos
+      renderCatalogSections();
 
       // Actualizar indicadores cada minuto
       updateReleaseIndicators();
@@ -5450,126 +5380,79 @@
 
     // Base de datos de series y episodios
     const seriesDatabase = {
-
-      notemuevas: {
-        id: 'notemuevas',
-        title: "NO TE MUEVAS",
-        year: '2025',
-        genre: 'Terror, Thriller, Suspenso',
-        rating: '18+',
-        type: 'movie',
-        isLocked: false,
-        isLive: false,
-        hasCountdown: false,
-        description: 'Una terrorífica película de suspense que te mantendrá inmóvil del terror. Cuando te dicen "no te muevas", más vale que obedezcas.',
-        poster: 'https://i.ibb.co/DDh79krZ/image.png',
-        trailer: 'https://dl.dropboxusercontent.com/scl/fi/h5ekhsy1045o93jdnp6ff/copy_426DEAF5-2226-49A9-9851-729E4CF8A1AB.mov?rlkey=ar8anbypid3bm3fxosbet22fb&st=embhl2dy&dl=1',
-        youtubeReference: '#',
-        director: 'Desconocido',
-        cast: 'Elenco por confirmar',
-        duration: '1h 45min',
-        subtitles: {
-          spanish: {
-            type: 'inline',
-            cues: [
-              { start: '00:03:09.000', end: '00:03:10.000', text: '¿Qué me pasó?' },
-              { start: '00:04:11.000', end: '00:04:12.500', text: '<v.sound-effect>{risas}</v.sound-effect>' },
-              { start: '00:04:12.500', end: '00:04:14.000', text: 'Eres un insípido niño' }
-            ]
-          },
-          english: {
-            type: 'inline',
-            cues: [
-              { start: '00:03:09.000', end: '00:03:10.000', text: 'What happened to me?' },
-              { start: '00:04:11.000', end: '00:04:12.500', text: '<v.sound-effect>{laughter}</v.sound-effect>' },
-              { start: '00:04:12.500', end: '00:04:14.000', text: 'You are an insipid child' }
-            ]
-          },
-          portuguese: {
-            type: 'inline',
-            cues: [
-              { start: '00:03:09.000', end: '00:03:10.000', text: 'O que aconteceu comigo?' },
-              { start: '00:04:11.000', end: '00:04:12.500', text: '<v.sound-effect>{risos}</v.sound-effect>' },
-              { start: '00:04:12.500', end: '00:04:14.000', text: 'Você é uma criança insípida' }
-            ]
-          }
-        },
-        episodes: [
-          {
-            id: 1,
-            title: "NO TE MUEVAS",
-            description: 'Una terrorífica película de suspense que te mantendrá inmóvil del terror.',
-            duration: null,
-            thumbnail: 'https://i.ibb.co/DDh79krZ/image.png',
-            videoUrl: 'https://dl.dropboxusercontent.com/scl/fi/h5ekhsy1045o93jdnp6ff/copy_426DEAF5-2226-49A9-9851-729E4CF8A1AB.mov?rlkey=ar8anbypid3bm3fxosbet22fb&st=embhl2dy&dl=1'
-          }
-        ]
-      },
-
-      dontlookaway: {
-        id: 'dontlookaway',
-        title: "DON'T LOOK AWAY",
-        year: '2025',
-        genre: 'Terror, Thriller, Suspenso',
-        rating: '18+',
-        type: 'movie', // Detector de tipo
-        description: 'Una película de terror psicológico que te mantendrá al borde del asiento. La historia sigue a un grupo de personas que se enfrentan a una amenaza sobrenatural que los obliga a no apartar la mirada.',
-        poster: 'https://i.ytimg.com/vi/4f3hG-5grlw/maxresdefault.jpg',
-        trailer: 'https://dl.dropboxusercontent.com/scl/fi/1kpsf3351raocgyiwb1rd/3984583787530253122.mp4?rlkey=ac3xzejk67taj2odw9q94rc07&st=y2152ek3',
-        youtubeReference: 'https://youtu.be/4f3hG-5grlw?si=adowKM2_Y8GX4G99',
-        director: 'Desconocido',
-        cast: 'Elenco por confirmar',
-        duration: '2h 10min',
-        audioTracks: {
-          original: 'https://dl.dropboxusercontent.com/scl/fi/1kpsf3351raocgyiwb1rd/3984583787530253122.mp4?rlkey=ac3xzejk67taj2odw9q94rc07&st=y2152ek3',
-          spanish: 'https://dl.dropboxusercontent.com/scl/fi/1kpsf3351raocgyiwb1rd/3984583787530253122.mp4?rlkey=ac3xzejk67taj2odw9q94rc07&st=y2152ek3',
-          english: 'https://dl.dropboxusercontent.com/scl/fi/1kpsf3351raocgyiwb1rd/3984583787530253122.mp4?rlkey=ac3xzejk67taj2odw9q94rc07&st=y2152ek3'
-        },
-        currentAudioTrack: 'original',
-        subtitles: {
-          spanish: 'subtitles/dont-look-away-es.vtt',
-          english: 'subtitles/dont-look-away-en.vtt'
-        },
-        episodes: [
-          {
-            id: 1,
-            title: "DON'T LOOK AWAY",
-            description: 'Una aterradora experiencia cinematográfica que desafía los límites del horror psicológico.',
-            duration: null,
-            thumbnail: 'https://i.ytimg.com/vi/4f3hG-5grlw/maxresdefault.jpg',
-            videoUrl: 'https://dl.dropboxusercontent.com/scl/fi/1kpsf3351raocgyiwb1rd/3984583787530253122.mp4?rlkey=ac3xzejk67taj2odw9q94rc07&st=y2152ek3'
-          }
-        ]
-      },
-      thecandleman: {
-        id: 'thecandleman',
-        title: "THE CANDLE MAN",
-        year: '2024',
-        genre: 'Terror, Cortometraje',
-        rating: '18+',
-        type: 'shortfilm', // Usar 'shortfilm' para cortometraje
-        description: 'En la oscuridad total de un apagón, un hombre enciende velas para iluminar su hogar. Sin embargo, cada vela que apaga despierta la ira de un demonio infernal que odia la extinción de las llamas. En un escalofriante clímax, el hombre descubre que algunas tinieblas no pueden ser vencidas por la luz.',
-        poster: 'https://i.ytimg.com/vi/i229gWn3Z5A/maxresdefault.jpg',
-        trailer: 'https://www.dropbox.com/scl/fi/5ktcz9zq60w5hq2s2arde/602596538962659684.mp4?rlkey=q35ez2mg7lu30xx31s5vahxso&st=r1c3005h&dl=0', // Dropbox link converted to direct streaming
-        youtubeReference: '#',
-        director: 'Desconocido',
-        cast: 'Actor principal',
-        duration: '15min',
-        subtitles: {}, // No subtitles provided for this short film
-        episodes: [
-          {
-            id: 1,
-            title: "THE CANDLE MAN",
-            description: 'Un hombre enciende velas para alejar la oscuridad, sin saber que cada vela apagada enfurece a un demonio.',
-            duration: null,
-            thumbnail: 'https://i.ytimg.com/vi/i229gWn3Z5A/maxresdefault.jpg',
-            videoUrl: 'https://www.dropbox.com/scl/fi/5ktcz9zq60w5hq2s2arde/602596538962659684.mp4?rlkey=q35ez2mg7lu30xx31s5vahxso&st=r1c3005h&dl=0' // Dropbox link converted to direct streaming
-          }
-        ]
-      },
-
-
+      // Catálogo limpio: las películas anteriores fueron retiradas.
+      // Agrega aquí las nuevas películas cuando estén listas para publicarse.
     };
+
+    const contentSections = [
+      { carouselId: 'moviesCarousel', types: ['movie', 'shortfilm'] },
+      { carouselId: 'trendingCarousel', featuredOnly: true },
+      { carouselId: 'animeCarousel', genre: 'Anime' },
+      { carouselId: 'terrorCarousel', genre: 'Terror' }
+    ];
+
+    function getContentTypeLabel(series) {
+      if (series.type === 'shortfilm') return 'Cortometraje';
+      if (series.type === 'movie') return 'Película';
+      return 'Serie';
+    }
+
+    function createCatalogEmptyState(message = 'No hay películas disponibles. Pronto agregaremos nuevo contenido.') {
+      const emptyState = document.createElement('div');
+      emptyState.className = 'catalog-empty-state';
+      emptyState.textContent = message;
+      return emptyState;
+    }
+
+    function createContentCard(series) {
+      const card = document.createElement('div');
+      card.className = 'carousel-item';
+      card.onclick = () => showSeriesDetail(series.id);
+      card.innerHTML = `
+        <img src="${series.poster}" alt="${series.title}" loading="lazy">
+        <div class="movie-badge">${getContentTypeLabel(series)}</div>
+        <div class="carousel-item-overlay">
+          <div class="carousel-item-title">${series.title}</div>
+          <div class="carousel-item-info">${series.year} • ${series.genre.split(',')[0]}</div>
+        </div>
+      `;
+      return card;
+    }
+
+    function getCatalogItemsForSection(sectionConfig) {
+      const items = Object.values(seriesDatabase);
+
+      if (sectionConfig.featuredOnly) {
+        return items.filter(series => series.isFeatured || series.isTrending).slice(0, 10);
+      }
+
+      if (sectionConfig.types) {
+        return items.filter(series => sectionConfig.types.includes(series.type));
+      }
+
+      if (sectionConfig.genre) {
+        return items.filter(series => (series.genre || '').toLowerCase().includes(sectionConfig.genre.toLowerCase()));
+      }
+
+      return items;
+    }
+
+    function renderCatalogSections() {
+      contentSections.forEach(sectionConfig => {
+        const carousel = document.getElementById(sectionConfig.carouselId);
+        if (!carousel) return;
+
+        carousel.innerHTML = '';
+        const items = getCatalogItemsForSection(sectionConfig);
+
+        if (items.length === 0) {
+          carousel.appendChild(createCatalogEmptyState());
+          return;
+        }
+
+        items.forEach(series => carousel.appendChild(createContentCard(series)));
+      });
+    }
 
     // Variables globales
     let currentSeries = null;
@@ -5627,12 +5510,6 @@
 
     // Función para verificar si una película está disponible
     function isMovieAvailable(series) {
-      // NO TE MUEVAS ahora está completamente desbloqueada
-      if (series.id === 'notemuevas') {
-        return true; // Siempre disponible
-      }
-
-      // Otras películas funcionan normally
       if (!series.releaseDate) return true;
 
       const now = new Date();
@@ -5658,11 +5535,7 @@
         if (series.releaseDate) {
           const badgeElement = document.getElementById(`${series.id}-badge`);
 
-          if (series.id === 'notemuevas') {
-            // Manejo especial para NO TE MUEVAS con cuenta regresiva
-            updateCountdownToJune();
-          } else if (badgeElement) {
-            // Manejo estándar para otras películas
+          if (badgeElement) {
             const lockElement = document.getElementById(`${series.id}-lock`);
 
             if (lockElement) {
@@ -5783,8 +5656,9 @@
         return;
       }
 
-      // Mostrar loading inmediatamente
-      playBtn.classList.add('loading');
+      // Mantener solamente el icono de Play mientras carga el preview; no mostrar spinner.
+      playBtn.classList.remove('loading');
+      playBtn.innerHTML = '<i class="fas fa-play"></i>';
       soundBtn.style.display = 'none';
 
       // Configurar video con atributos correctos para evitar difuminado
@@ -5904,15 +5778,7 @@
       const playButton = document.getElementById('playButton');
       if (!playButton) return;
 
-      if (series.id === 'notemuevas') {
-        // NO TE MUEVAS siempre disponible para ver
-        playButton.innerHTML = '<i class="fas fa-play"></i> Reproducir';
-        playButton.style.background = '#1d9bf0';
-        playButton.style.color = '#fff';
-        playButton.style.cursor = 'pointer';
-        playButton.onclick = () => playEpisode(1, 1);
-      } else if (series.isLocked && !isMovieAvailable(series)) {
-        // Otras películas bloqueadas
+      if (series.isLocked && !isMovieAvailable(series)) {
         playButton.innerHTML = '<i class="fas fa-lock"></i> Próximamente';
         playButton.style.background = '#666';
         playButton.style.cursor = 'not-allowed';
@@ -6266,12 +6132,6 @@
       showErrorMessage(message);
     }
 
-    // Función para actualizar cuenta regresiva a junio
-    function updateCountdownToJune() {
-      // Esta función ya no es necesaria para NO TE MUEVAS
-      // ya que está completamente desbloqueada
-    }
-
     // Función para mostrar mensaje de estreno del 11 de junio
     function showJuneReleaseMessage(releaseDate) {
       const formattedDate = releaseDate.toLocaleDateString('es-ES', {
@@ -6295,14 +6155,10 @@
         existingCountdown.remove();
       }
 
-      // Solo mostrar para NO TE MUEVAS si está bloqueada
-      if (series.id !== 'notemuevas') return;
+      if (!series.releaseDate || isMovieAvailable(series)) return;
 
-      const hasBeenWatched = hasMovieBeenWatched('notemuevas');
-      const isAvailable = isMovieAvailable(series);
-
-      // No mostrar si ya fue vista o está disponible
-      if (hasBeenWatched || isAvailable) return;
+      const hasBeenWatched = hasMovieBeenWatched(series.id);
+      if (hasBeenWatched) return;
 
       // Crear elemento de cuenta regresiva
       const countdownEl = document.createElement('div');
@@ -6416,13 +6272,14 @@
 
         if (mediaUrl.hostname === 'www.dropbox.com' || mediaUrl.hostname === 'dropbox.com') {
           mediaUrl.hostname = 'dl.dropboxusercontent.com';
-          mediaUrl.searchParams.set('dl', '1');
-          mediaUrl.searchParams.delete('raw');
+          mediaUrl.searchParams.delete('dl');
+          mediaUrl.searchParams.set('raw', '1');
           return mediaUrl.toString();
         }
 
         if (mediaUrl.hostname === 'dl.dropboxusercontent.com') {
-          mediaUrl.searchParams.set('dl', '1');
+          mediaUrl.searchParams.delete('dl');
+          mediaUrl.searchParams.set('raw', '1');
           return mediaUrl.toString();
         }
 
@@ -6507,7 +6364,7 @@
       videoElement.setAttribute('x5-video-player-type', 'h5');
       videoElement.controls = false;
       videoElement.preload = 'metadata';
-      videoElement.crossOrigin = 'anonymous';
+      videoElement.removeAttribute('crossorigin');
 
       // Configurar título para el intro
       videoPlayerTitle.textContent = 'Zambik';
@@ -6611,7 +6468,7 @@
       videoElement.setAttribute('x5-video-player-fullscreen', 'true');
       videoElement.controls = false;
       videoElement.preload = 'metadata';
-      videoElement.crossOrigin = 'anonymous';
+      videoElement.removeAttribute('crossorigin');
 
       // Título diferente para películas vs series
       if (currentSeries.type === 'movie' || currentSeries.type === 'shortfilm') {
@@ -6756,7 +6613,7 @@
         videoElement.setAttribute('x5-video-player-type', 'h5');
         videoElement.controls = false;
         videoElement.preload = 'metadata';
-        videoElement.crossOrigin = 'anonymous';
+        videoElement.removeAttribute('crossorigin');
 
         videoPlayerTitle.textContent = `${currentSeries.title} - ${trailerVideo.title}`;
 
