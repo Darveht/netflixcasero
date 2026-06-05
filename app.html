@@ -690,8 +690,11 @@
     .netflix-play-btn.loading {
       background: rgba(255, 255, 255, 0.95);
       border: 3px solid rgba(255, 255, 255, 0.3);
-      border-top: 3px solid #1d9bf0;
-      animation: netflixSpin 1s linear infinite;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
     }
 
     .netflix-play-btn.loading i {
@@ -5799,6 +5802,7 @@
         setTimeout(() => {
           videoEl.style.opacity = '1';
           videoEl.classList.add('loaded');
+          playBtn.classList.remove('loading');
           playBtn.style.display = 'none'; // Ocultar botón de play cuando el video carga
           soundBtn.style.display = 'flex';
 
@@ -5809,6 +5813,7 @@
               console.log('Trailer playing automatically');
             }).catch(e => {
               console.log('Autoplay prevented:', e);
+              playBtn.classList.remove('loading');
               playBtn.style.display = 'flex'; // Mostrar botón si autoplay falla
             });
           }
@@ -5818,8 +5823,9 @@
       };
 
       const onCanPlay = () => {
+        playBtn.classList.remove('loading');
         playBtn.style.display = 'none'; // Asegurar que se oculte cuando puede reproducir
-        videoEl.removeEventListener('canplay', onCanPlay);
+        videoEl.oncanplay = null;
       };
 
       const onError = () => {
@@ -5832,12 +5838,12 @@
       };
 
       // Agregar event listeners
-      videoEl.addEventListener('loadeddata', onLoadedData);
-      videoEl.addEventListener('canplay', onCanPlay);
-      videoEl.addEventListener('error', onError);
+      videoEl.onloadeddata = onLoadedData;
+      videoEl.oncanplay = onCanPlay;
+      videoEl.onerror = onError;
 
       // Configurar source y cargar
-      videoEl.src = series.trailer;
+      videoEl.src = normalizeMediaUrl(series.trailer);
       videoEl.load();
     }
 
@@ -5866,8 +5872,10 @@
         return;
       }
 
-      // Cerrar detalles y reproducir
+      // Guardar la selección antes de cerrar, porque cerrar el detalle limpia currentSeries.
+      const selectedSeries = currentSeries;
       closeSeriesDetail();
+      currentSeries = selectedSeries;
       setTimeout(() => {
         playEpisode(1, 1);
       }, 300);
@@ -6079,7 +6087,7 @@
         document.body.appendChild(loadingIndicator);
         
         // Cambiar fuente
-        videoElement.src = newAudioUrl;
+        videoElement.src = normalizeMediaUrl(newAudioUrl);
         videoElement.load();
         
         // Restaurar posición
@@ -6399,6 +6407,49 @@
       currentSeries = null;
     }
 
+    // Convierte enlaces compartidos de Dropbox a URLs directas para <video>.
+    function normalizeMediaUrl(url) {
+      if (!url) return '';
+
+      try {
+        const mediaUrl = new URL(url, window.location.href);
+
+        if (mediaUrl.hostname === 'www.dropbox.com' || mediaUrl.hostname === 'dropbox.com') {
+          mediaUrl.hostname = 'dl.dropboxusercontent.com';
+          mediaUrl.searchParams.set('dl', '1');
+          mediaUrl.searchParams.delete('raw');
+          return mediaUrl.toString();
+        }
+
+        if (mediaUrl.hostname === 'dl.dropboxusercontent.com') {
+          mediaUrl.searchParams.set('dl', '1');
+          return mediaUrl.toString();
+        }
+
+        return mediaUrl.toString();
+      } catch (error) {
+        return url;
+      }
+    }
+
+    function resetVideoElement() {
+      if (!videoElement) return;
+
+      videoElement.pause();
+      videoElement.onloadedmetadata = null;
+      videoElement.onloadeddata = null;
+      videoElement.oncanplay = null;
+      videoElement.onplay = null;
+      videoElement.onpause = null;
+      videoElement.onended = null;
+      videoElement.onerror = null;
+      videoElement.removeAttribute('src');
+      while (videoElement.firstChild) {
+        videoElement.removeChild(videoElement.firstChild);
+      }
+      videoElement.load();
+    }
+
     // Función para cargar contenido (episodios o película)
     function loadContent(series) {
       const episodesList = document.getElementById('episodesList');
@@ -6447,11 +6498,7 @@
       isPlayingIntro = true;
 
       // IMPORTANTE: Limpiar todos los elementos source y src anteriores
-      while (videoElement.firstChild) {
-        videoElement.removeChild(videoElement.firstChild);
-      }
-      videoElement.removeAttribute('src');
-      videoElement.load();
+      resetVideoElement();
 
       // Configurar video para máxima compatibilidad móvil
       videoElement.setAttribute('playsinline', 'true');
@@ -6476,7 +6523,7 @@
       videoPlayer.classList.add('active');
 
       // Configurar fuente del intro
-      videoElement.src = introVideoUrl;
+      videoElement.src = normalizeMediaUrl(introVideoUrl);
 
       // Event listeners del intro
       const onIntroLoadedMetadata = () => {
@@ -6554,8 +6601,7 @@
       enableVideoFullscreenAndRotation();
 
       // Limpiar video anterior
-      videoElement.removeAttribute('src');
-      videoElement.load();
+      resetVideoElement();
 
       // Configurar video para máxima compatibilidad móvil
       videoElement.setAttribute('playsinline', 'true');
@@ -6585,8 +6631,9 @@
 
       // Configurar fuente de video con mejor compatibilidad
       const source = document.createElement('source');
-      console.log('Setting video source to:', episode.videoUrl);
-      source.src = episode.videoUrl;
+      const mediaUrl = normalizeMediaUrl(episode.videoUrl);
+      console.log('Setting video source to:', mediaUrl);
+      source.src = mediaUrl;
       source.type = 'video/mp4'; // Asumir mp4 por defecto
       videoElement.appendChild(source);
 
@@ -6624,17 +6671,11 @@
         showErrorMessage('Error al cargar el video. Verifica tu conexión e intenta de nuevo.');
       };
 
-      // Remover listeners anteriores
-      videoElement.removeEventListener('loadedmetadata', onLoadedMetadata);
-      videoElement.removeEventListener('play', onPlay);
-      videoElement.removeEventListener('pause', onPause);
-      videoElement.removeEventListener('error', onError);
-
-      // Agregar nuevos listeners
-      videoElement.addEventListener('loadedmetadata', onLoadedMetadata);
-      videoElement.addEventListener('play', onPlay);
-      videoElement.addEventListener('pause', onPause);
-      videoElement.addEventListener('error', onError);
+      // Asignar handlers únicos para evitar callbacks viejos que reusen fuentes anteriores.
+      videoElement.onloadedmetadata = onLoadedMetadata;
+      videoElement.onplay = onPlay;
+      videoElement.onpause = onPause;
+      videoElement.onerror = onError;
 
       // Iniciar actualización de progreso
       startProgressUpdate();
@@ -6706,8 +6747,7 @@
       // Función para reproducir contenido de trailer después del intro
       function playTrailerContent(trailerVideo) {
         // Limpiar video anterior
-        videoElement.removeAttribute('src');
-        videoElement.load();
+        resetVideoElement();
 
         // Configurar video para máxima compatibilidad móvil
         videoElement.setAttribute('playsinline', 'true');
@@ -6725,7 +6765,7 @@
         liveIndicator.style.display = 'none';
 
         // Configurar fuente
-        videoElement.src = trailerVideo.videoUrl;
+        videoElement.src = normalizeMediaUrl(trailerVideo.videoUrl);
 
         // Event listeners para trailer
         const onLoadedMetadata = () => {
@@ -6758,10 +6798,10 @@
             showErrorMessage('Error al cargar el trailer');
         };
 
-        videoElement.addEventListener('loadedmetadata', onLoadedMetadata);
-        videoElement.addEventListener('play', onPlay);
-        videoElement.addEventListener('pause', onPause);
-        videoElement.addEventListener('error', onError);
+        videoElement.onloadedmetadata = onLoadedMetadata;
+        videoElement.onplay = onPlay;
+        videoElement.onpause = onPause;
+        videoElement.onerror = onError;
 
         startProgressUpdate();
       }
